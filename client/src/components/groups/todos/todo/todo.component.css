@@ -1,0 +1,60 @@
+#todo-list .todo .todoImage{
+    width: 320px;
+    height: 240px;
+    object-fit: contain;
+}
+
+#todo-list .todo div{
+    padding-left: 0;
+}
+
+#todo-list .todo div:last-of-type{
+    padding-right: 0;
+}
+
+#todo-list .todo:first-of-type{
+    border-top: 1px solid black;
+}
+
+#todo-list .todo{
+    border-bottom: 1px solid black;
+    overflow: hidden;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#todo-list .user-info{
+    display: inline-block;
+    width: 320px;
+    float: left;
+    font-weight: bold;
+}
+
+#todo-list .todo .text{
+    padding-left: 30px;
+}
+
+@media (max-width: 768px){
+    #todo-list .todo .user-info{
+        border: 1px solid transparent;
+    }
+
+    #todo-list .user-info{
+        display: block;
+        margin: 0 auto;
+        float: none;
+        text-align: center;
+    }
+
+    #todo-list .todo .text{
+        margin-top: 14px;
+        padding-left: 30px;
+    }
+}
+
+@media (max-width: 350px){
+    #todo-list .todo{
+        padding-left: 0;
+        padding-right: 0;
+    }
+}

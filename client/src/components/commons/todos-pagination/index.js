@@ -1,0 +1,95 @@
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+import { getTodos } from "../../../actions/TodoActions";
+import { setCurrentTodosPage } from "../../../actions/TodosPaginationActions";
+
+import { Grid, Button } from "react-bootstrap";
+
+import "./pagination.css";
+
+const TodosPagination = ({
+    currentTodosPage,
+    totalTodoPagesAmount,
+    sortField,
+    sortDirection,
+    setCurrentTodosPage,
+    getTodos
+}) => (
+    <Grid
+        id="pagination"
+        componentClass="section"
+    >
+
+        <span>
+            Page {currentTodosPage} of {totalTodoPagesAmount}
+        </span>
+
+        <Button
+            className="prev"
+            style={{
+                display: currentTodosPage === 1 ?
+                    'none' :
+                    'inline-block'
+            }}
+            onClick={async () => {
+                const nextPage = currentTodosPage - 1;
+
+                await getTodos(nextPage, sortField, sortDirection);
+                setCurrentTodosPage(nextPage);
+            }}
+        >
+            &lt;
+        </Button>
+
+        <Button
+            className="next"
+            style={{
+                display: currentTodosPage === totalTodoPagesAmount ?
+                    'none' :
+                    'inline-block'
+            }}
+            onClick={async () => {
+                const nextPage = currentTodosPage + 1;
+
+                await getTodos(nextPage, sortField, sortDirection);
+                setCurrentTodosPage(nextPage);
+            }}
+        >
+            &gt;
+        </Button>
+    </Grid>
+);
+
+const mapStateToProps = (state) => {
+    return {
+        currentTodosPage: state.todosPagination.currentTodosPage,
+        totalTodoPagesAmount: state.todosPagination.totalTodoPagesAmount,
+        sortField: state.todosSortParams.sortField,
+        sortDirection: state.todosSortParams.sortDirection
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setCurrentTodosPage: (pageNumber) => dispatch(
+            setCurrentTodosPage(pageNumber)
+        ),
+        getTodos: (page, sortField, sortDirection) => dispatch(
+            getTodos(page, sortField, sortDirection)
+        )
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(TodosPagination);
+
+TodosPagination.propTypes = {
+    currentTodosPage: PropTypes.number,
+    totalTodoPagesAmount: PropTypes.number,
+    sortField: PropTypes.string,
+    sortDirection: PropTypes.string
+};

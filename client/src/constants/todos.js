@@ -1,0 +1,2 @@
+export const EDIT_TODO = "EDIT_TODO";
+export const SET_EDITABLE_TODO_ID = "SET_EDITABLE_TODO_ID";
