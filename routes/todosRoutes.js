@@ -53,6 +53,7 @@ module.exports = (app) => {
                     "users.userFullName": sortDirection,
                     "creationDate": "asc"
                 })
+                .project({ users: 0 })
                 .skip((page - 1) * TODOS_CONSTANTS.TODOS_PER_PAGE)
                 .limit(TODOS_CONSTANTS.TODOS_PER_PAGE)
                 .exec();
