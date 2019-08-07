@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const requireLogin = require("../middlewares/requireLogin");
+const helpers = require("../helpers/functions");
 const TODOS_CONSTANTS = require("../constants/todos");
 
 const Todo = mongoose.model("todos");
@@ -9,12 +10,8 @@ module.exports = (app) => {
         "/todos",
         requireLogin,
         async (req, res) => {
-            let { page, sortField, sortDirection } = req.query;
-            sortField = sortField || "creationDate";
-
-            if (!["userFullName", "creationDate", "isCompleted"].includes(sortField)) {
-                res.status(422).send({ code: 422, text: "Incorrect sorting criteria" });
-            }
+            const { page } = req.query;
+            const {sortField, sortOrder} = helpers.setDefaultValuesForIncorrectSortParamOrOrder(req.query.sortField, req.query.sortOrder);
 
             const totalTodosAmount = await Todo
                 .find(req.user.isAdmin ? {} : { _user: req.user.id })
@@ -25,7 +22,7 @@ module.exports = (app) => {
                 let todos = await Todo
                     .find(req.user.isAdmin ? {} : { _user: req.user.id }, { _user: 0 })
                     .sort({
-                        [sortField]: sortDirection
+                        [sortField]: sortOrder
                     })
                     .skip((page - 1) * TODOS_CONSTANTS.TODOS_PER_PAGE)
                     .limit(TODOS_CONSTANTS.TODOS_PER_PAGE);
@@ -50,7 +47,7 @@ module.exports = (app) => {
                     { $project: { _id: 0, _user: 0 } }
                 ])
                 .sort({
-                    "users.userFullName": sortDirection,
+                    "users.userFullName": sortOrder,
                     "creationDate": "asc"
                 })
                 .project({ users: 0 })

@@ -12,7 +12,7 @@ import { INITIAL_TODOS_PAGE } from "../../../../constants/todosPagination";
 class TodoList extends React.Component {
     componentDidMount() {
         dispatch(
-            getTodos(INITIAL_TODOS_PAGE, "", "asc")
+            getTodos(INITIAL_TODOS_PAGE)
         );
     }
 
