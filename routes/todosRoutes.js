@@ -23,7 +23,7 @@ module.exports = (app) => {
             if (sortField !== "userFullName") {
 
                 let todos = await Todo
-                    .find(req.user.isAdmin ? {} : { _user: req.user.id })
+                    .find(req.user.isAdmin ? {} : { _user: req.user.id }, { _user: 0 })
                     .sort({
                         [sortField]: sortDirection
                     })
