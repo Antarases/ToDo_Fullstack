@@ -13,6 +13,7 @@ mongoose.connect(keys.mongoURI, {useNewUrlParser: true})
 mongoose.connection.on('error', err => {
     console.log("Sequent connect attempt failed: ", err);
 });
+
 const app = express();
 
 app.use(bodyParser.json({limit: '5120kb'}));

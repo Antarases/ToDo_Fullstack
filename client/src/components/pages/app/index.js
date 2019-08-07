@@ -1,16 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { dispatch } from "../../../store/configureStore";
 
 import TodosPage from "../todos-page/index";
 import LoginPage from "../login-page/index";
 
 import "./todo-app.component.css";
 
-import { identifyCurrentUser, apiQWE } from "../../../actions/AppActions";
+import { identifyCurrentUser } from "../../../actions/AppActions";
 
 class App extends React.Component{
     componentDidMount() {
-        this.props.identifyCurrentUser();
+        dispatch(
+            identifyCurrentUser()
+        );
     }
 
     render() {
@@ -40,15 +43,4 @@ const mapStateToProps = (state) => {
     }
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        identifyCurrentUser: () => {
-            dispatch(identifyCurrentUser());
-        }
-    }
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(App);
+export default connect(mapStateToProps)(App);

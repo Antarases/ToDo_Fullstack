@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from "react-redux";
+import { dispatch } from "../../../../store/configureStore";
 import { Grid, Row, Col, FormControl, Button } from "react-bootstrap";
 import { addTodo } from "../../../../actions/TodoActions";
 
@@ -33,9 +33,8 @@ class AddTodo extends React.Component {
                           onSubmit={(e) => {
                               e.preventDefault();
 
-                              this.props.addTodo(
-                                  this.state.text,
-                                  this.image.files[0]
+                              dispatch(
+                                  addTodo( this.state.text, this.image.files[0] )
                               );
 
                               this.image.value = null;
@@ -111,14 +110,4 @@ class AddTodo extends React.Component {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        addTodo: (text, image) => {
-            dispatch(
-                addTodo(text, image)
-            );
-        }
-    };
-};
-
-export default connect(null, mapDispatchToProps)(AddTodo);
+export default AddTodo;

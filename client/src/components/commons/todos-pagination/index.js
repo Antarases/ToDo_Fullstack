@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { dispatch } from "../../../store/configureStore";
 
 import { getTodos } from "../../../actions/TodoActions";
 import { setCurrentTodosPage } from "../../../actions/TodosPaginationActions";
@@ -13,9 +14,7 @@ const TodosPagination = ({
     currentTodosPage,
     totalTodoPagesAmount,
     sortField,
-    sortDirection,
-    setCurrentTodosPage,
-    getTodos
+    sortDirection
 }) => (
     <Grid
         id="pagination"
@@ -36,7 +35,9 @@ const TodosPagination = ({
             onClick={async () => {
                 const nextPage = currentTodosPage - 1;
 
-                await getTodos(nextPage, sortField, sortDirection);
+                await dispatch(
+                    getTodos(nextPage, sortField, sortDirection)
+                );
                 setCurrentTodosPage(nextPage);
             }}
         >
@@ -53,7 +54,9 @@ const TodosPagination = ({
             onClick={async () => {
                 const nextPage = currentTodosPage + 1;
 
-                await getTodos(nextPage, sortField, sortDirection);
+                await dispatch(
+                    getTodos(nextPage, sortField, sortDirection)
+                );
                 setCurrentTodosPage(nextPage);
             }}
         >
@@ -71,21 +74,7 @@ const mapStateToProps = (state) => {
     }
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        setCurrentTodosPage: (pageNumber) => dispatch(
-            setCurrentTodosPage(pageNumber)
-        ),
-        getTodos: (page, sortField, sortDirection) => dispatch(
-            getTodos(page, sortField, sortDirection)
-        )
-    };
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(TodosPagination);
+export default connect(mapStateToProps)(TodosPagination);
 
 TodosPagination.propTypes = {
     currentTodosPage: PropTypes.number,

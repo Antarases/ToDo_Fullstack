@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { dispatch } from "../../../../store/configureStore"
 import PropTypes from "prop-types";
 
 import Todo from "../todo";
@@ -10,7 +11,9 @@ import { INITIAL_TODOS_PAGE } from "../../../../constants/todosPagination";
 
 class TodoList extends React.Component {
     componentDidMount() {
-        this.props.getTodos(INITIAL_TODOS_PAGE, "", "asc");
+        dispatch(
+            getTodos(INITIAL_TODOS_PAGE, "", "asc")
+        );
     }
 
     render() {
@@ -39,15 +42,8 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getTodos: (page, sortField, sortDirection) => { dispatch(getTodos(page, sortField, sortDirection)); }
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
+export default connect(mapStateToProps)(TodoList);
 
 TodoList.propTypes = {
-    todos: PropTypes.object,
-    getTodos: PropTypes.func
+    todos: PropTypes.object
 };

@@ -8,7 +8,6 @@ import { TODOS_PER_PAGE, SET_TOTAL_TODO_PAGES_AMOUNT } from "../constants/todosP
 import { EDIT_TODO, SET_EDITABLE_TODO_ID } from "../constants/todos";
 
 export const getTodos = (page, sortField, sortDirection) => async (dispatch) => {
-    console.log("getTodos", page, sortField, sortDirection);
     const res = await axios.get(`/todos/?page=${page}&sortField=${sortField}&sortDirection=${sortDirection }`);
 
     const { todos, totalTodosAmount } = res.data;
