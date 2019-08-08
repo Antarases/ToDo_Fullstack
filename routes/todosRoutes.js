@@ -99,16 +99,12 @@ module.exports = (app) => {
                         isCompleted
                     },
                     {
-                        new: true
+                        new: true,   //return the modified document rather than the original
+                        select: { _user: 0 }
                     }
                 );
 
-                res.send({
-                    _id: updatedTodo._id,
-                    _user: updatedTodo._user,
-                    text: updatedTodo.text,
-                    image: updatedTodo.image
-                });
+                res.send(updatedTodo);
             } catch (error) {
                 res.status(422).send(error);
             }
