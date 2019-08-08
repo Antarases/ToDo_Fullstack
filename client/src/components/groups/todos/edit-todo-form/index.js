@@ -12,26 +12,33 @@ import "./edit-todo-form.css";
 class EditTodoForm extends React.Component{
     state = {
         text: "",
+        image: null,
         isCompleted: false
     };
 
-    componentDidMount() {
-        const { text, isCompleted } = this.props.editableTodo;
+    async componentDidMount() {
+        const { text, image, isCompleted } = this.props.editableTodo;
+        //add try/catch
+        const fetchedImage = await fetch(image);
+        const imageFile = await fetchedImage.blob();
 
-        this.setState({ text, isCompleted });
+        this.setState({ text, image: imageFile, isCompleted });
     }
 
-    componentDidUpdate(prevProps) {
+    async componentDidUpdate(prevProps) {
         if (this.props.editableTodo.id && prevProps.editableTodo && (this.props.editableTodo.id !== prevProps.editableTodo.id)) {
-            const { text, isCompleted } = this.props.editableTodo;
+            const { text, image, isCompleted } = this.props.editableTodo;
+            //add try/catch
+            const fetchedImage = await fetch(image);
+            const imageFile = await fetchedImage.blob();
 
-            this.setState({ text, isCompleted });
+            this.setState({ text, image: imageFile, isCompleted });
         }
     }
 
     render(){
         let { editableTodoId } = this.props;
-        const { text, isCompleted } = this.state;
+        const { text, image, isCompleted } = this.state;
 
         return (
             <Grid
@@ -82,7 +89,7 @@ class EditTodoForm extends React.Component{
                             inputRef={node => this.image = node}
                             onChange={(e) => {
                                 {/*imageValidation(this.image, this.imageValidationNode);*/}
-                                {/*this.setState({image: e.target.value});*/}
+                                this.setState({image: e.target.files[0]});
                             }}
                         />
                     </Col>
@@ -117,7 +124,7 @@ class EditTodoForm extends React.Component{
                                 editableTodoId,
                                 text,
                                 isCompleted,
-                                this.image.files[0]
+                                image
                             ));
 
                             setEditableTodoId(null);
