@@ -28,7 +28,7 @@ class AddTodo extends React.Component {
     render(){
         return (
             <React.Fragment>
-                <Container componentClass="section" id="add-todo">
+                <Container as="section" id="add-todo">
                     <form action=""
                           onSubmit={(e) => {
                               e.preventDefault();
@@ -44,8 +44,7 @@ class AddTodo extends React.Component {
                         <Row>
                             <Col
                                 className="title"
-                                lg={4} md={6} sm={6} xs={12}
-                                lgOffset={4} mdOffset={3} smOffset={3}
+                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 6, offset: 3}} xs={12}
                             >
                                 Add Todo
                             </Col>
@@ -53,17 +52,15 @@ class AddTodo extends React.Component {
 
                         <Row>
                             <Col
-                                className="text"
-                                componentClass="label"
-                                lg={4} md={6} sm={6} xs={12}
-                                lgOffset={4} mdOffset={3} smOffset={3}
+                                className="formFieldsContainer"
+                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                             >
-                                <span>Text:</span>
+                                <label htmlFor="text" className="label">Text:</label>
                                 <FormControl
+                                    id="text"
                                     type="text"
                                     required
                                     placeholder="Enter text"
-                                    bsSize="small"
                                     value={this.state.text}
                                     onChange={(e) => this.setState({text: e.target.value})}
                                 />
@@ -72,17 +69,16 @@ class AddTodo extends React.Component {
 
                         <Row>
                             <Col
-                                className="text"
-                                componentClass="label"
-                                lg={4} md={6} sm={6} xs={12}
-                                lgOffset={4} mdOffset={3} smOffset={3}
+                                className="formFieldsContainer"
+                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                             >
-                                <span>Image:</span>
+                                <label htmlFor="file" className="label">Image:</label>
                                 <FormControl
+                                    id="file"
                                     type="file"
                                     accept="image/*"
                                     required
-                                    inputRef={node => this.image = node}
+                                    ref={node => this.image = node}
                                     onChange={(e) => {
                                         {/*imageValidation(this.image, this.imageValidationNode);*/}
                                         {/*this.setState({image: e.target.value});*/}
@@ -91,18 +87,19 @@ class AddTodo extends React.Component {
                             </Col>
                         </Row>
 
-                        <Col
-                            className="submitButtonContainer"
-                            lg={4} md={6} sm={6} xs={12}
-                            lgOffset={4} mdOffset={3} smOffset={3}
-                        >
-                            <Button
-                                type="submit"
-                                variant="primary"
+                        <Row>
+                            <Col
+                                className="submitButtonContainer"
+                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                             >
-                                Submit
-                            </Button>
-                        </Col>
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                >
+                                    Submit
+                                </Button>
+                            </Col>
+                        </Row>
                     </form>
                 </Container>
             </React.Fragment>

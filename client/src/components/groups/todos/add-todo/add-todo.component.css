@@ -1,5 +1,5 @@
 #add-todo{
-    margin-top: 22px;
+    margin-top: 30px;
     margin-bottom: 30px;
 }
 
@@ -10,28 +10,28 @@
 #add-todo .title{
     font-weight: bold;
     font-size: 22px;
-    margin-bottom: 2px;
+    text-align: center;
+}
+
+#add-todo .formFieldsContainer {
+    margin-top: 8px;
+}
+
+#add-todo .label {
+    margin-bottom: 1px;
 }
 
 #add-todo .submitButtonContainer{
     text-align: right;
-    padding-right: 8px;
+    margin-top: 20px;
 }
 
 #add-todo .previewButton{
     margin-right: 12px;
 }
 
-@media (max-width: 768px){
-    #add-todo .submitButtonContainer{
-        padding-right: 0;
-    }
-
+@media (max-width: 576px){
     #add-todo .btn.btn-primary{
-        /*margin-top: 10px;*/
-        padding-top: 6px;
-        padding-bottom: 6px;
-        padding-right: 13px;
         font-size: 18px;
         line-height: 1.3333333;
         border-radius: 6px;
