@@ -1,0 +1,40 @@
+#sorting-bar {
+    margin-bottom: 12px;
+}
+
+#sorting-bar .sortingBarTitle {
+    font-weight: bold;
+    font-size: 17px;
+}
+
+#sorting-bar .sortingBarOptions {
+    display: inline-block;
+    padding: 0;
+}
+
+#sorting-bar .sortingBarOption {
+    display: inline-block;
+    padding: 0 0 0 16px;
+    color: #007bff;
+    font-size: 16px;
+    font-weight: bold;
+    word-spacing: -1px;
+    cursor: pointer;
+}
+
+#sorting-bar .sortingBarOption:first-child {
+    padding-left: 10px;
+}
+
+#sorting-bar .sortingBarOption:hover {
+    color: #0056b3;
+}
+
+@media (max-width: 575px){
+    #sorting-bar {
+        margin-bottom: 18px;
+    }
+    #sorting-bar .sortingBarOption, #sorting-bar .sortingBarOption:first-child {
+        padding: 5px 0 0;
+    }
+}

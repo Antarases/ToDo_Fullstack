@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { dispatch } from "../../../../store/configureStore";
+import { Container, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 import { getTodos } from "../../../../actions/TodoActions";
@@ -27,21 +28,38 @@ class TodosSortingBar extends React.Component {
         const { isUserAdmin } = this.props;
 
         return (
-            <section id="sorting-bar" >
-                Sort by:
+            <Container as="section" id="sorting-bar">
+                    <span className="sortingBarTitle">Sort by:</span>
 
-                { isUserAdmin && <div onClick={() => this.setTodosSortParamsAndGetSortedTodos("userFullName")} >
-                    User Name
-                </div> }
+                    <Col
+                        className="sortingBarOptions"
+                        sm="auto" xs="12"
+                    >
+                        { isUserAdmin && <Col
+                            className="sortingBarOption"
+                            sm="auto" xs="12"
+                            onClick={() => this.setTodosSortParamsAndGetSortedTodos("userFullName")}
+                        >
+                            User Name
+                        </Col> }
 
-                <div onClick={() => this.setTodosSortParamsAndGetSortedTodos("creationDate")} >
-                    Date
-                </div>
+                        <Col
+                            className="sortingBarOption"
+                            sm="auto" xs="12"
+                            onClick={() => this.setTodosSortParamsAndGetSortedTodos("creationDate")}
+                        >
+                            Date
+                        </Col>
 
-                <div onClick={() => this.setTodosSortParamsAndGetSortedTodos("isCompleted")} >
-                    Status
-                </div>
-            </section>
+                        <Col
+                            className="sortingBarOption"
+                            sm="auto" xs="12"
+                            onClick={() => this.setTodosSortParamsAndGetSortedTodos("isCompleted")}
+                        >
+                            Status
+                        </Col>
+                    </Col>
+            </Container>
         );
     }
 }
