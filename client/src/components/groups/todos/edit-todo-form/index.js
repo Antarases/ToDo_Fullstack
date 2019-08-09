@@ -52,15 +52,11 @@ class EditTodoForm extends React.Component{
         const { text, image, isCompleted, isTodoFetchingFailed } = this.state;
 
         return (
-            <Container
-                as="section"
-                id="edit-todo-form"
-            >
+            <Container as="section" id="edit-todo-form">
                 <Row>
                     <Col
                         className="title"
-                        lg={4} md={6} sm={6} xs={12}
-                        lgOffset={4} mdOffset={3} smOffset={3}
+                        lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 6, offset: 3}} xs={12}
                     >
                         Edit Todo
                     </Col>
@@ -70,17 +66,15 @@ class EditTodoForm extends React.Component{
                     ? <React.Fragment>
                         <Row>
                             <Col
-                                className="text"
-                                as="label"
-                                lg={4} md={6} sm={6} xs={12}
-                                lgOffset={4} mdOffset={3} smOffset={3}
+                                className="formFieldsContainer"
+                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                             >
-                                <span>Text:</span>
+                                <label htmlFor="text" className="label">Text:</label>
                                 <FormControl
+                                    id="text"
                                     type="text"
                                     required
                                     placeholder="Enter text"
-                                    bsSize="small"
                                     value={text}
                                     onChange={(e) => this.setState({text: e.target.value})}
                                 />
@@ -89,17 +83,16 @@ class EditTodoForm extends React.Component{
 
                         <Row>
                             <Col
-                                className="text"
-                                as="label"
-                                lg={4} md={6} sm={6} xs={12}
-                                lgOffset={4} mdOffset={3} smOffset={3}
+                                className="formFieldsContainer"
+                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                             >
-                                <span>Image:</span>
+                                <label htmlFor="file" className="label">Image:</label>
                                 <FormControl
+                                    id="file"
                                     type="file"
                                     accept="image/*"
                                     required
-                                    inputRef={node => this.image = node}
+                                    ref={node => this.image = node}
                                     onChange={(e) => {
                                         {/*imageValidation(this.image, this.imageValidationNode);*/}
                                         this.setState({image: e.target.files[0]});
@@ -110,15 +103,14 @@ class EditTodoForm extends React.Component{
 
                         <Row>
                             <Col
-                                className="todoCompletionStatus"
-                                as="label"
-                                lg={4} md={6} sm={6} xs={12}
-                                lgOffset={4} mdOffset={3} smOffset={3}
+                                className="formFieldsContainer todoCompletionStatus"
+                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                             >
-                                <span>Completed: </span>
+                                <label htmlFor="isCompleted" className="label">Completed: </label>
                                 <FormControl
+                                    className="checkbox"
+                                    id="isCompleted"
                                     type="checkbox"
-                                    bsSize="small"
                                     checked={isCompleted}
                                     onChange={(e) => this.setState({isCompleted: e.target.checked})}
                                 />
@@ -128,8 +120,7 @@ class EditTodoForm extends React.Component{
 
                         <Col
                             className="submitButtonContainer"
-                            lg={4} md={6} sm={6} xs={12}
-                            lgOffset={4} mdOffset={3} smOffset={3}
+                            lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                         >
                             <Button
                                 onClick={async () => {
@@ -151,7 +142,6 @@ class EditTodoForm extends React.Component{
                     : <Row>
                         <Col
                             className="errorMessage"
-                            as="div"
                             lg={4} md={6} sm={6} xs={12}
                             lgOffset={4} mdOffset={3} smOffset={3}
                         >
