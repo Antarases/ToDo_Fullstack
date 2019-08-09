@@ -6,7 +6,7 @@ import { dispatch } from "../../../store/configureStore";
 import { getTodos } from "../../../actions/TodoActions";
 import { setCurrentTodosPage } from "../../../actions/TodosPaginationActions";
 
-import { Grid, Button } from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
 
 import "./pagination.css";
 
@@ -16,9 +16,9 @@ const TodosPagination = ({
     sortField,
     sortDirection
 }) => (
-    <Grid
+    <Container
         id="pagination"
-        componentClass="section"
+        as="section"
     >
 
         <span>
@@ -62,7 +62,7 @@ const TodosPagination = ({
         >
             &gt;
         </Button>
-    </Grid>
+    </Container>
 );
 
 const mapStateToProps = (state) => {

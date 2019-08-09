@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { dispatch } from "../../../../store/configureStore";
 import PropTypes from "prop-types";
 
-import { Grid, Row, Col, FormControl, Button } from "react-bootstrap";
+import { Container, Row, Col, FormControl, Button } from "react-bootstrap";
 
 import { editTodo, setEditableTodoId } from "../../../../actions/TodoActions";
 
@@ -52,8 +52,8 @@ class EditTodoForm extends React.Component{
         const { text, image, isCompleted, isTodoFetchingFailed } = this.state;
 
         return (
-            <Grid
-                componentClass="section"
+            <Container
+                as="section"
                 id="edit-todo-form"
             >
                 <Row>
@@ -71,7 +71,7 @@ class EditTodoForm extends React.Component{
                         <Row>
                             <Col
                                 className="text"
-                                componentClass="label"
+                                as="label"
                                 lg={4} md={6} sm={6} xs={12}
                                 lgOffset={4} mdOffset={3} smOffset={3}
                             >
@@ -90,7 +90,7 @@ class EditTodoForm extends React.Component{
                         <Row>
                             <Col
                                 className="text"
-                                componentClass="label"
+                                as="label"
                                 lg={4} md={6} sm={6} xs={12}
                                 lgOffset={4} mdOffset={3} smOffset={3}
                             >
@@ -111,7 +111,7 @@ class EditTodoForm extends React.Component{
                         <Row>
                             <Col
                                 className="todoCompletionStatus"
-                                componentClass="label"
+                                as="label"
                                 lg={4} md={6} sm={6} xs={12}
                                 lgOffset={4} mdOffset={3} smOffset={3}
                             >
@@ -142,7 +142,7 @@ class EditTodoForm extends React.Component{
 
                                     setEditableTodoId(null);
                                 }}
-                                bsStyle="primary"
+                                variant="primary"
                             >
                                 Apply
                             </Button>
@@ -151,7 +151,7 @@ class EditTodoForm extends React.Component{
                     : <Row>
                         <Col
                             className="errorMessage"
-                            componentClass="div"
+                            as="div"
                             lg={4} md={6} sm={6} xs={12}
                             lgOffset={4} mdOffset={3} smOffset={3}
                         >
@@ -159,7 +159,7 @@ class EditTodoForm extends React.Component{
                         </Col>
                     </Row>
                 }
-            </Grid>
+            </Container>
         );
     }
 }

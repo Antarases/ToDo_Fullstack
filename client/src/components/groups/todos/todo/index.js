@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { Grid, Col, Button } from "react-bootstrap";
+import { Container, Col, Button } from "react-bootstrap";
 
 import { smoothScrollUp } from "../../../../helpers/Functions";
 import { setEditableTodoId } from "../../../../actions/TodoActions";
@@ -28,9 +28,9 @@ let Todo = ({
     }
 
     return (
-        <Grid
+        <Container
             className="todo"
-            componentClass="section"
+            as="section"
         >
             <span className="user-info">
                 <img src={image} alt="" className="todoImage" />
@@ -68,7 +68,7 @@ let Todo = ({
             >
                 {text}
             </Col>
-        </Grid>
+        </Container>
     );
 };
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { dispatch } from "../../../../store/configureStore";
-import { Grid, Row, Col, FormControl, Button } from "react-bootstrap";
+import { Container, Row, Col, FormControl, Button } from "react-bootstrap";
 import { addTodo } from "../../../../actions/TodoActions";
 
 import './add-todo.component.css';
@@ -28,7 +28,7 @@ class AddTodo extends React.Component {
     render(){
         return (
             <React.Fragment>
-                <Grid componentClass="section" id="add-todo">
+                <Container componentClass="section" id="add-todo">
                     <form action=""
                           onSubmit={(e) => {
                               e.preventDefault();
@@ -98,13 +98,13 @@ class AddTodo extends React.Component {
                         >
                             <Button
                                 type="submit"
-                                bsStyle="primary"
+                                variant="primary"
                             >
                                 Submit
                             </Button>
                         </Col>
                     </form>
-                </Grid>
+                </Container>
             </React.Fragment>
         )
     }
