@@ -21,17 +21,22 @@ const TodosPagination = ({
         as="section"
     >
 
-        <span>
-            Page {currentTodosPage} of {totalTodoPagesAmount}
+        <span className="paginationText">
+            {`Page `}
+            <span className="bold">{currentTodosPage}</span>
+            {` of `}
+            <span className="bold">{totalTodoPagesAmount}</span>
         </span>
 
         <Button
-            className="prev"
-            style={{
-                display: currentTodosPage === 1 ?
-                    'none' :
-                    'inline-block'
-            }}
+            className="button prev"
+            variant={
+                currentTodosPage === 1
+                    ? "secondary"
+                    : "primary"
+            }
+            size="sm"
+            disabled={currentTodosPage === 1}
             onClick={async () => {
                 const nextPage = currentTodosPage - 1;
 
@@ -41,16 +46,18 @@ const TodosPagination = ({
                 setCurrentTodosPage(nextPage);
             }}
         >
-            &lt;
+            <i class="fas fa-angle-right fa-lg arrow-icon"></i>
         </Button>
 
         <Button
-            className="next"
-            style={{
-                display: currentTodosPage === totalTodoPagesAmount ?
-                    'none' :
-                    'inline-block'
-            }}
+            className="button next"
+            variant={
+                currentTodosPage === totalTodoPagesAmount
+                    ? "secondary"
+                    : "primary"
+            }
+            size="sm"
+            disabled={currentTodosPage === totalTodoPagesAmount}
             onClick={async () => {
                 const nextPage = currentTodosPage + 1;
 
@@ -60,7 +67,7 @@ const TodosPagination = ({
                 setCurrentTodosPage(nextPage);
             }}
         >
-            &gt;
+            <i class="fas fa-angle-right fa-lg arrow-icon"></i>
         </Button>
     </Container>
 );
