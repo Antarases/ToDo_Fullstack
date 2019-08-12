@@ -11,86 +11,58 @@ import './todo.component.css';
 
 let Todo = ({
     id,
-    username,
-    email,
     text,
-    status,
+    isCompleted,
     image,
     isAdmin,
-    isPreview,
     editableTodoId
 }) => {
-    let completed;
-    if(status === 0){
-        completed = false;
-    } else if(status === 10){
-        completed = true;
-    }
-
     return (
-        <Container
-            className="todo"
-            as="section"
-        >
-            <span className="user-info">
+        <Container as="section" className="todo">
+            <div className="user-info">
                 <img src={image} alt="" className="todoImage" />
 
                 {/*<div className="user-name">*/}
                     {/*{username}*/}
                 {/*</div>*/}
 
-                {/*<div className="email">*/}
-                    {/*{email}*/}
-                {/*</div>*/}
-                {/*<div className="readiness">*/}
-                    {/*Status: {completed ? 'completed' : 'not completed' }*/}
-                {/*</div>*/}
+                <div className="status">
+                    <span className="text">Status:</span>
+                    <i className={"fas fa-check icon " + (isCompleted ? "completed" : "incompleted")}></i>
+                </div>
 
-                <Col lg={12} md={12} sm={12} xs={12}>
-                    <Button
-                        onClick={() => {
-                            (editableTodoId !== id) && setEditableTodoId(id);
-                            smoothScrollUp();
-                        }}
-                        className="glyphicon glyphicon-edit"
-                        id="edit-todo-button"
-                    >
-                        <span className="text">
-                            Edit
-                        </span>
-                    </Button>
-                </Col>
-            </span>
+                <Button
+                    onClick={() => {
+                        (editableTodoId !== id) && setEditableTodoId(id);
+                        smoothScrollUp();
+                    }}
+                    className="ediTodoButton"
+                >
+                    <i className="fas fa-edit"></i>
+                    <span className="text">
+                        Edit
+                    </span>
+                </Button>
+            </div>
 
-            <Col
-                className="text"
-                lg={8} md={7} sm={6} xs={12}
-            >
+            <div className="desctiption">
                 {text}
-            </Col>
+            </div>
         </Container>
     );
 };
 
-Todo.propTypes = {
-    username: PropTypes.string,
-    email: PropTypes.string,
-    text: PropTypes.string,
-    status: PropTypes.number,
-    image: PropTypes.string
-    // isAdmin: PropTypes.bool,
-    // isPreview: PropTypes.bool
-};
-
 const mapStateToProps = (state) => {
     return {
-        // isAdmin: state.signIn.isAdmin
         editableTodoId: state.todos.editableTodoId
     };
 };
 
-Todo = connect(
-    mapStateToProps
-)(Todo);
+Todo.propTypes = {
+    text: PropTypes.string,
+    isCompleted: PropTypes.bool,
+    image: PropTypes.string,
+    isAdmin: PropTypes.bool
+};
 
-export default Todo;
+export default connect(mapStateToProps)(Todo);

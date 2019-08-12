@@ -9,6 +9,8 @@ import { getTodos } from "../../../../actions/TodoActions";
 
 import { INITIAL_TODOS_PAGE } from "../../../../constants/todosPagination";
 
+import "./todo-list.css";
+
 class TodoList extends React.Component {
     componentDidMount() {
         dispatch(
@@ -20,7 +22,7 @@ class TodoList extends React.Component {
         const { todos } = this.props;
 
         return (
-            <div id="todo-list">
+            <div className="todoList">
                 {
                     Object.values(todos).map(todo => (
                         <Todo
@@ -28,6 +30,7 @@ class TodoList extends React.Component {
                             id={todo.id}
                             text={todo.text}
                             image={todo.image}
+                            isCompleted={todo.isCompleted}
                         />
                     ))
                 }
