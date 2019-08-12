@@ -7,8 +7,8 @@ import { ADD_TODO, SET_TODOS } from "../reducers/todos";
 import { TODOS_PER_PAGE, SET_TOTAL_TODO_PAGES_AMOUNT } from "../constants/todosPagination";
 import { EDIT_TODO, SET_EDITABLE_TODO_ID } from "../constants/todos";
 
-export const getTodos = (page, sortField, sortDirection) => async (dispatch) => {
-    const res = await axios.get(`/todos/?page=${page}&sortField=${sortField}&sortDirection=${sortDirection }`);
+export const getTodos = (page, sortField, sortOrder) => async (dispatch) => {
+    const res = await axios.get(`/todos/?page=${page}&sortField=${sortField}&sortOrder=${sortOrder }`);
 
     const { todos, totalTodosAmount } = res.data;
     const totalTodoPagesAmount = Math.ceil(totalTodosAmount / TODOS_PER_PAGE);

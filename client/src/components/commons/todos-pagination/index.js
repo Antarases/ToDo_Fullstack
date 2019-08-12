@@ -14,7 +14,7 @@ const TodosPagination = ({
     currentTodosPage,
     totalTodoPagesAmount,
     sortField,
-    sortDirection
+    sortOrder
 }) => (
     <Container
         id="pagination"
@@ -41,7 +41,7 @@ const TodosPagination = ({
                 const nextPage = currentTodosPage - 1;
 
                 await dispatch(
-                    getTodos(nextPage, sortField, sortDirection)
+                    getTodos(nextPage, sortField, sortOrder)
                 );
                 setCurrentTodosPage(nextPage);
             }}
@@ -62,7 +62,7 @@ const TodosPagination = ({
                 const nextPage = currentTodosPage + 1;
 
                 await dispatch(
-                    getTodos(nextPage, sortField, sortDirection)
+                    getTodos(nextPage, sortField, sortOrder)
                 );
                 setCurrentTodosPage(nextPage);
             }}
@@ -77,7 +77,7 @@ const mapStateToProps = (state) => {
         currentTodosPage: state.todosPagination.currentTodosPage,
         totalTodoPagesAmount: state.todosPagination.totalTodoPagesAmount,
         sortField: state.todosSortParams.sortField,
-        sortDirection: state.todosSortParams.sortDirection
+        sortOrder: state.todosSortParams.sortOrder
     }
 };
 
@@ -87,5 +87,5 @@ TodosPagination.propTypes = {
     currentTodosPage: PropTypes.number,
     totalTodoPagesAmount: PropTypes.number,
     sortField: PropTypes.string,
-    sortDirection: PropTypes.string
+    sortOrder: PropTypes.string
 };

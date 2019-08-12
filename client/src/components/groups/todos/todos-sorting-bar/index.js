@@ -11,17 +11,17 @@ import "./sorting-bar.css";
 
 class TodosSortingBar extends React.Component {
     setTodosSortParamsAndGetSortedTodos = async (sortField) => {
-        let { currentTodosPage, sortField: currentSortField, sortDirection } = this.props;
+        let { currentTodosPage, sortField: currentSortField, sortOrder } = this.props;
 
         if(sortField === currentSortField){
-            sortDirection = (sortDirection === "asc") ? "desc" : "asc";    //reversing sort direction
+            sortOrder = (sortOrder === "asc") ? "desc" : "asc";    //reversing sort direction
         }
         else {
-            sortDirection = "asc";
+            sortOrder = "asc";
         }
 
-        setTodosSortParams(sortField, sortDirection);
-        dispatch(getTodos(currentTodosPage, sortField, sortDirection));
+        setTodosSortParams(sortField, sortOrder);
+        dispatch(getTodos(currentTodosPage, sortField, sortOrder));
     };
 
     render() {
@@ -68,7 +68,7 @@ const mapStateToProps = (state) => {
     return {
         currentTodosPage: state.todosPagination.currentTodosPage,
         sortField: state.todosSortParams.sortField,
-        sortDirection: state.todosSortParams.sortDirection,
+        sortOrder: state.todosSortParams.sortOrder,
         isUserAdmin: state.app.currentUserStatus.isAdmin
     };
 };
@@ -78,6 +78,6 @@ export default connect(mapStateToProps)(TodosSortingBar);
 TodosSortingBar.propTypes = {
     currentTodosPage: PropTypes.number,
     sortField: PropTypes.string,
-    sortDirection: PropTypes.string,
+    sortOrder: PropTypes.string,
     isAdmin: PropTypes.string
 };
