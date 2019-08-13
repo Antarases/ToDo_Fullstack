@@ -6,20 +6,35 @@
     border-bottom: 1px solid black;
 }
 
-.todo .user-info {
+.todo .userInfo {
     display: inline-block;
     flex: 0 0 auto;
     width: 320px;
 }
 
-.todo .user-info .todoImage {
+.todo .userInfo .todoImage {
     width: 320px;
     height: 240px;
     object-fit: contain;
 }
 
+.todo .userInfo .authorFullName {
+    margin: 14px 20px 0;
+}
+
+.authorFullName .text {
+    display: inline-block;
+    margin-top: 1px;
+    font-weight: bold;
+    vertical-align: top;
+}
+
+.todo .userInfo .authorFullName .fullName {
+    margin-left: 5px;
+}
+
 .status {
-    margin: 10px 20px 0;
+    margin: 0 20px;
 }
 
 .status .text {
@@ -59,11 +74,11 @@
 
 
 @media (max-width: 767px){
-    .todo .user-info{
+    .todo .userInfo{
         width: 220px;
     }
 
-    .todo .user-info .todoImage {
+    .todo .userInfo .todoImage {
         width: 220px;
     }
 
@@ -77,7 +92,7 @@
         flex-direction: column;
     }
 
-    .todo .user-info {
+    .todo .userInfo {
         margin: 0 auto 22px;
     }
 

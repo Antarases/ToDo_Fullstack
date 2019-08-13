@@ -31,6 +31,7 @@ class TodoList extends React.Component {
                             text={todo.text}
                             image={todo.image}
                             isCompleted={todo.isCompleted}
+                            authorFullName={todo.authorFullName}
                         />
                     ))
                 }

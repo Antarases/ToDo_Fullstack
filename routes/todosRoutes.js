@@ -13,50 +13,45 @@ module.exports = (app) => {
             const { page } = req.query;
             const {sortField, sortOrder} = helpers.setDefaultValuesForIncorrectSortParamOrOrder(req.query.sortField, req.query.sortOrder);
 
+            if ((sortField === "userFullName") && !req.user.isAdmin) {
+                res.status(403).send({ code: 403, text: `You are not allowed to sort by "userFullName"` });
+            }
+
             const totalTodosAmount = await Todo
                 .find(req.user.isAdmin ? {} : { _user: req.user.id })
                 .countDocuments();
 
-            if (sortField !== "userFullName") {
+            let todos = await Todo.aggregate([
+                { $match: req.user.isAdmin ? {} : { _user: mongoose.Types.ObjectId(req.user.id) } },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "_user",
+                        foreignField: "_id",
+                        as: "author"
+                    }
+                },
+                { $unwind: "$author" },
+                { $addFields: { id: "$_id", authorFullName: "$author.userFullName" } },
+                { $project: { _id: 0, _user: 0 } }
+            ])
+            .sort(
+                (sortField === "userFullName")
+                    ? {
+                        "author.userFullName": sortOrder,
+                        "creationDate": "asc"
+                    }
+                    : {
+                        [sortField]: sortOrder,
+                        "creationDate": "asc"
+                    }
+            )
+            .project({ author: 0 })
+            .skip((page - 1) * TODOS_CONSTANTS.TODOS_PER_PAGE)
+            .limit(TODOS_CONSTANTS.TODOS_PER_PAGE)
+            .exec();
 
-                let todos = await Todo
-                    .find(req.user.isAdmin ? {} : { _user: req.user.id }, { _user: 0 })
-                    .sort({
-                        [sortField]: sortOrder
-                    })
-                    .skip((page - 1) * TODOS_CONSTANTS.TODOS_PER_PAGE)
-                    .limit(TODOS_CONSTANTS.TODOS_PER_PAGE);
-
-                res.send({todos, totalTodosAmount});
-            } else {
-                if (!req.user.isAdmin) {
-                    res.status(403).send({ code: 403, text: `You are not allowed to sort by "userFullName"` });
-                }
-
-                let todos = await Todo.aggregate([
-                    {
-                        $lookup: {
-                            from: "users",
-                            localField: "_user",
-                            foreignField: "_id",
-                            as: "users"
-                        }
-                    },
-                    { $unwind: "$users" },
-                    { $addFields: { id: "$_id" } },
-                    { $project: { _id: 0, _user: 0 } }
-                ])
-                .sort({
-                    "users.userFullName": sortOrder,
-                    "creationDate": "asc"
-                })
-                .project({ users: 0 })
-                .skip((page - 1) * TODOS_CONSTANTS.TODOS_PER_PAGE)
-                .limit(TODOS_CONSTANTS.TODOS_PER_PAGE)
-                .exec();
-
-                res.send({todos, totalTodosAmount});
-            }
+            res.send({todos, totalTodosAmount});
         }
     );
 

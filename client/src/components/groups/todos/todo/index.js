@@ -14,17 +14,19 @@ let Todo = ({
     text,
     isCompleted,
     image,
+    authorFullName,
     isAdmin,
     editableTodoId
 }) => {
     return (
         <Container as="section" className="todo">
-            <div className="user-info">
+            <div className="userInfo">
                 <img src={image} alt="" className="todoImage" />
 
-                {/*<div className="user-name">*/}
-                    {/*{username}*/}
-                {/*</div>*/}
+                { isAdmin && <div className="authorFullName">
+                    <span className="text">Author:</span>
+                    <span className="fullName">{authorFullName}</span>
+                </div> }
 
                 <div className="status">
                     <span className="text">Status:</span>
@@ -54,7 +56,8 @@ let Todo = ({
 
 const mapStateToProps = (state) => {
     return {
-        editableTodoId: state.todos.editableTodoId
+        editableTodoId: state.todos.editableTodoId,
+        isAdmin: state.app.currentUserStatus.isAdmin
     };
 };
 
@@ -62,6 +65,7 @@ Todo.propTypes = {
     text: PropTypes.string,
     isCompleted: PropTypes.bool,
     image: PropTypes.string,
+    authorFullName: PropTypes.string,
     isAdmin: PropTypes.bool
 };
 
