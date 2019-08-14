@@ -69,7 +69,10 @@ module.exports = (app) => {
             });
 
             try {
-                const savedTodo = await todo.save();
+                let savedTodo = await todo.save();
+                savedTodo = savedTodo.toObject();
+                savedTodo.authorFullName = req.user.userFullName;
+                delete savedTodo._user;
 
                 res.send(savedTodo);
             } catch(error) {
