@@ -74,7 +74,11 @@ module.exports = (app) => {
                 savedTodo.authorFullName = req.user.userFullName;
                 delete savedTodo._user;
 
-                res.send(savedTodo);
+                const totalTodosAmount = await Todo
+                    .find(req.user.isAdmin ? {} : { _user: req.user.id })
+                    .countDocuments();
+
+                res.send({todo: savedTodo, totalTodosAmount});
             } catch(error) {
                 res.status(422).send(error);
             }

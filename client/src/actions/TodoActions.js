@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { dispatch } from "../store/configureStore";
+import { dispatch, getCurrentState } from "../store/configureStore";
 import { getCompressedBase64Image } from "../helpers/Functions";
 
 import { ADD_TODO, SET_TODOS } from "../reducers/todos";
@@ -21,7 +21,13 @@ export const addTodo = (text, image) => async (dispatch) => {
     const compressedImageBase64 =  await getCompressedBase64Image(image);
     const res = await axios.post("/todos/add_todo", { text, image: compressedImageBase64 });
 
-    dispatch({ type: ADD_TODO, todo: res.data });
+    const { todo, totalTodosAmount } = res.data;
+    const totalTodoPagesAmount = Math.ceil(totalTodosAmount / TODOS_PER_PAGE);
+
+    if (Object.keys(getCurrentState().todos.todos).length < TODOS_PER_PAGE) {
+        dispatch({ type: ADD_TODO, todo });
+    }
+    dispatch({ type: SET_TOTAL_TODO_PAGES_AMOUNT, totalTodoPagesAmount });
 };
 
 export const editTodo = (todoId, text, isCompleted, image) => async () => {
