@@ -31,8 +31,8 @@ export default function todos(state = initialState, action ) {
                 ...state,
                 todos: {
                     ...state.todos,
-                    [todo._id]: {
-                        id: todo._id,
+                    [todo.id]: {
+                        id: todo.id,
                         userId: todo._user,
                         text: todo.text,
                         image: todo.image
@@ -48,8 +48,8 @@ export default function todos(state = initialState, action ) {
                 ...state,
                 todos: {
                     ...state.todos,
-                    [updatedTodo._id]: {
-                        ...state.todos[updatedTodo._id],
+                    [updatedTodo.id]: {
+                        ...state.todos[updatedTodo.id],
                         text: updatedTodo.text,
                         image: updatedTodo.image
                     }

@@ -4,6 +4,7 @@ const helpers = require("../helpers/functions");
 const TODOS_CONSTANTS = require("../constants/todos");
 
 const Todo = mongoose.model("todos");
+const User = mongoose.model("users");
 
 module.exports = (app) => {
     app.get(
@@ -84,9 +85,8 @@ module.exports = (app) => {
             const { id } = req.params;
             const { text, image, isCompleted } = req.body;
 
-
             try {
-                const updatedTodo = await Todo.findByIdAndUpdate(
+                await Todo.findByIdAndUpdate(
                     id,
                     {
                         text,
@@ -95,11 +95,16 @@ module.exports = (app) => {
                     },
                     {
                         new: true,   //return the modified document rather than the original
-                        select: { _user: 0 }
                     }
-                );
+                )
+                .populate({ path: "_user", select: "userFullName", model: User })
+                .exec((err, updatedTodo) => {
+                    updatedTodo = updatedTodo.toObject();
+                    updatedTodo.authorFullName = updatedTodo._user.userFullName;
+                    delete updatedTodo._user;
 
-                res.send(updatedTodo);
+                    res.send({...updatedTodo});
+                });
             } catch (error) {
                 res.status(422).send(error);
             }
