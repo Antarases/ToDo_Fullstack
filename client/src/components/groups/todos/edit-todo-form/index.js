@@ -128,6 +128,16 @@ class EditTodoForm extends React.Component{
                             lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                         >
                             <Button
+                                className="cancelButton"
+                                onClick={() => {
+                                    setEditableTodoId(null);
+                                }}
+                                variant="primary"
+                            >
+                                Cancel
+                            </Button>
+
+                            <Button
                                 onClick={async () => {
                                     await dispatch(editTodo(
                                         editableTodoId,
