@@ -1,0 +1,10 @@
+.heroText {
+    margin-top: 46px;
+    text-align: center;
+}
+
+@media (max-width: 575px){
+    .heroText {
+        margin-top: 34px;
+    }
+}

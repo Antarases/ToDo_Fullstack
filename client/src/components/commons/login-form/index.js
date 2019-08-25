@@ -16,9 +16,9 @@ class LoginForm extends React.Component{
                     <a href="/auth/google">Login with Google</a>
                 </Col> }
 
-                <Col>
+                { isUserLoggedIn && <Col>
                     <a href="/api/logout">Logout</a>
-                </Col>
+                </Col> }
             </Container>
         );
     }
