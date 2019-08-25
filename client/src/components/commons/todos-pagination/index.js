@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { dispatch } from "../../../store/configureStore";
 
-import { getTodos } from "../../../actions/TodoActions";
+import { getTodos, setEditableTodoId } from "../../../actions/TodoActions";
 import { setCurrentTodosPage } from "../../../actions/TodosPaginationActions";
 
 import { Container, Button } from "react-bootstrap";
@@ -39,6 +39,7 @@ const TodosPagination = ({
             size="sm"
             disabled={currentTodosPage === 1}
             onClick={async () => {
+                setEditableTodoId(null);
                 const nextPage = currentTodosPage - 1;
 
                 await dispatch(
@@ -60,6 +61,7 @@ const TodosPagination = ({
             size="sm"
             disabled={currentTodosPage === totalTodoPagesAmount}
             onClick={async () => {
+                setEditableTodoId(null);
                 const nextPage = currentTodosPage + 1;
 
                 await dispatch(
