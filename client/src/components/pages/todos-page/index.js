@@ -9,6 +9,8 @@ import TodosSortingBar from "../../groups/todos/todos-sorting-bar";
 import TodosPagination from "../../commons/todos-pagination";
 import TodoList from "../../groups/todos/todo-list";
 
+import "./todos-page.css";
+
 class TodosPage extends React.Component{
     render() {
         const { isTodos, editableTodoId } = this.props;
@@ -24,7 +26,7 @@ class TodosPage extends React.Component{
                 { isTodos && <TodosSortingBar /> }
                 { isTodos && <TodosPagination /> }
                 <TodoList />
-                { isTodos && <TodosPagination /> }
+                { isTodos && <TodosPagination className="bottomTodoPagination" /> }
             </div>
         );
     }

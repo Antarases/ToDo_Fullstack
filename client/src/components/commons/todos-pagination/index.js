@@ -14,11 +14,12 @@ const TodosPagination = ({
     currentTodosPage,
     totalTodoPagesAmount,
     sortField,
-    sortOrder
+    sortOrder,
+    className
 }) => (
     <Container
-        id="pagination"
         as="section"
+        className={"pagination " + className}
     >
 
         <span className="paginationText">
@@ -87,5 +88,6 @@ TodosPagination.propTypes = {
     currentTodosPage: PropTypes.number,
     totalTodoPagesAmount: PropTypes.number,
     sortField: PropTypes.string,
-    sortOrder: PropTypes.string
+    sortOrder: PropTypes.string,
+    className: PropTypes.string
 };
