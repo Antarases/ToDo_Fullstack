@@ -21,8 +21,11 @@ class EditTodoForm extends React.Component{
         const { text, image, isCompleted } = this.props.editableTodo;
 
         try {
-            const fetchedImage = await fetch(image);
-            const imageFile = await fetchedImage.blob();
+            let imageFile = null;
+            if (image) {
+                const fetchedImage = await fetch(image);
+                 imageFile = await fetchedImage.blob();
+            }
 
             this.setState({ text, image: imageFile, isCompleted });
         } catch (err) {
@@ -36,8 +39,11 @@ class EditTodoForm extends React.Component{
             const { text, image, isCompleted } = this.props.editableTodo;
 
             try {
-                const fetchedImage = await fetch(image);
-                const imageFile = await fetchedImage.blob();
+                let imageFile = null;
+                if (image) {
+                    const fetchedImage = await fetch(image);
+                    imageFile = await fetchedImage.blob();
+                }
 
                 this.setState({text, image: imageFile, isCompleted, isTodoFetchingFailed: false});
             } catch (err) {
@@ -91,7 +97,6 @@ class EditTodoForm extends React.Component{
                                     id="file"
                                     type="file"
                                     accept="image/*"
-                                    required
                                     ref={node => this.image = node}
                                     onChange={(e) => {
                                         {/*imageValidation(this.image, this.imageValidationNode);*/}

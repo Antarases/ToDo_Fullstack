@@ -18,7 +18,10 @@ export const getTodos = (page, sortField, sortOrder) => async (dispatch) => {
 };
 
 export const addTodo = (text, image) => async (dispatch) => {
-    const compressedImageBase64 =  await getCompressedBase64Image(image);
+    console.log("image", image, !!image);
+    const compressedImageBase64 = !!image
+        ? await getCompressedBase64Image(image)
+        : null;
     const res = await axios.post("/todos/add_todo", { text, image: compressedImageBase64 });
 
     const { todo, totalTodosAmount } = res.data;
@@ -32,7 +35,9 @@ export const addTodo = (text, image) => async (dispatch) => {
 
 export const editTodo = (todoId, text, isCompleted, image) => async () => {
     try {
-        const compressedImageBase64 =  await getCompressedBase64Image(image);
+        const compressedImageBase64 = !!image
+            ? await getCompressedBase64Image(image)
+            : null;
 
         const res = await axios.put(`/todos/edit_todo/${todoId}`, { text, isCompleted, image: compressedImageBase64});
 

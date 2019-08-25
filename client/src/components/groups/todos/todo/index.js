@@ -21,7 +21,11 @@ let Todo = ({
     return (
         <Container as="section" className="todo">
             <div className="userInfo">
-                <img src={image} alt="" className="todoImage" />
+                <img
+                    src={image || "https://c-lj.gnst.jp/public/img/common/noimage.jpg?20190112050043"}
+                    alt=""
+                    className="todoImage"
+                />
 
                 { isAdmin && <div className="authorFullName">
                     <span className="text">Author:</span>

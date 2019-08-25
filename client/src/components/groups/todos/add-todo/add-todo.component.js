@@ -77,7 +77,6 @@ class AddTodo extends React.Component {
                                     id="file"
                                     type="file"
                                     accept="image/*"
-                                    required
                                     ref={node => this.image = node}
                                     onChange={(e) => {
                                         {/*imageValidation(this.image, this.imageValidationNode);*/}
