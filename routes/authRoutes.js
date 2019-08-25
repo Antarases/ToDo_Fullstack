@@ -1,6 +1,5 @@
 const passport = require("passport");
 const mongoose = require("mongoose");
-const Todo = mongoose.model("todos");
 
 module.exports = (app) => {
     app.get(
@@ -13,11 +12,6 @@ module.exports = (app) => {
     app.get(
         "/auth/google/callback",
         passport.authenticate("google"),
-        (req, res, next) => {
-            console.log("/auth/google/callback", req);
-
-            next();
-        },
         (req, res) => {
             res.redirect("/dashboard");
         }
