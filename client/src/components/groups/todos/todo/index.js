@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faEdit }  from "@fortawesome/free-solid-svg-icons";
 import classnames from "classnames";
 
 import { Container, Button } from "react-bootstrap";
@@ -35,10 +37,11 @@ let Todo = ({
 
                 <div className={styles.status}>
                     <span className={styles.text}>Status:</span>
-                    <i className={classnames(
-                        styles.icon,
-                        {[styles.completed]: isCompleted, [styles.incompleted]: !isCompleted},
-                        "fas fa-check"
+                    <FontAwesomeIcon
+                        icon={faCheck}
+                        className={classnames(
+                            styles.icon,
+                            {[styles.completed]: isCompleted, [styles.incompleted]: !isCompleted}
                         )}
                     />
                 </div>
@@ -50,7 +53,7 @@ let Todo = ({
                     }}
                     className={styles.ediTodoButton}
                 >
-                    <i className="fas fa-edit"/>
+                    <FontAwesomeIcon icon={faEdit} />
                     <span className={styles.text}>
                         Edit
                     </span>

@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { dispatch } from "../../../store/configureStore";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAngleRight }  from '@fortawesome/free-solid-svg-icons'
 import classnames from "classnames";
 
 import { getTodos, setEditableTodoId } from "../../../actions/TodoActions";
@@ -22,7 +24,6 @@ const TodosPagination = ({
         as="section"
         className={classnames(styles.pagination, className)}
     >
-
         <span className={styles.paginationText}>
             {`Page `}
             <span className={styles.bold}>{currentTodosPage}</span>
@@ -49,7 +50,7 @@ const TodosPagination = ({
                 setCurrentTodosPage(nextPage);
             }}
         >
-            <i className={classnames(styles.arrowIcon, "fas fa-angle-right fa-lg")}></i>
+            <FontAwesomeIcon icon={faAngleRight} className={styles.arrowIcon} size="lg" rotation={180} />
         </Button>
 
         <Button
@@ -71,7 +72,7 @@ const TodosPagination = ({
                 setCurrentTodosPage(nextPage);
             }}
         >
-            <i className={classnames(styles.arrowIcon, "fas fa-angle-right fa-lg")}></i>
+            <FontAwesomeIcon icon={faAngleRight} className={styles.arrowIcon} size="lg" />
         </Button>
     </Container>
 );

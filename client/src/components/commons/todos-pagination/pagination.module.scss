@@ -18,18 +18,18 @@
 
         &.prev {
             margin-left: 10px;
-            transform: rotate(180deg);
-            vertical-align: top;
+
+            .arrowIcon {
+                margin-right: 3px;
+            }
         }
 
         &.next {
             margin-left: 5px;
-            vertical-align: top;
         }
 
         .arrowIcon {
-            margin-top: 3px;
-            letter-spacing: 1px;
+            width: 10px;
             vertical-align: top;
         }
     }
