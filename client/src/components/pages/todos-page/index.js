@@ -9,14 +9,14 @@ import TodosSortingBar from "../../groups/todos/todos-sorting-bar";
 import TodosPagination from "../../commons/todos-pagination";
 import TodoList from "../../groups/todos/todo-list";
 
-import "./todos-page.css";
+import styles from "./todosPage.module.scss";
 
 class TodosPage extends React.Component{
     render() {
         const { isTodos, editableTodoId } = this.props;
 
         return (
-            <div id="todo-app">
+            <React.Fragment>
                 <LoginForm />
 
                 { editableTodoId && <EditTodoForm /> }
@@ -26,8 +26,8 @@ class TodosPage extends React.Component{
                 { isTodos && <TodosSortingBar /> }
                 { isTodos && <TodosPagination /> }
                 <TodoList />
-                { isTodos && <TodosPagination className="bottomTodoPagination" /> }
-            </div>
+                { isTodos && <TodosPagination className={styles.bottomTodoPagination} /> }
+            </React.Fragment>
         );
     }
 }

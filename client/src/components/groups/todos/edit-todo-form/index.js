@@ -2,12 +2,13 @@ import React from "react";
 import { connect } from "react-redux";
 import { dispatch } from "../../../../store/configureStore";
 import PropTypes from "prop-types";
+import classnames from "classnames";
 
 import { Container, Row, Col, FormControl, Button } from "react-bootstrap";
 
 import { editTodo, setEditableTodoId } from "../../../../actions/TodoActions";
 
-import "./edit-todo-form.css";
+import styles from "./edit-todo-form.module.scss";
 
 class EditTodoForm extends React.Component{
     state = {
@@ -58,10 +59,10 @@ class EditTodoForm extends React.Component{
         const { text, image, isCompleted, isTodoFetchingFailed } = this.state;
 
         return (
-            <Container as="section" id="edit-todo-form">
+            <Container as="section" className={styles.editTodoForm}>
                 <Row>
                     <Col
-                        className="title"
+                        className={styles.title}
                         lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 6, offset: 3}} xs={12}
                     >
                         Edit Todo
@@ -72,10 +73,10 @@ class EditTodoForm extends React.Component{
                     ? <React.Fragment>
                         <Row>
                             <Col
-                                className="formFieldsContainer"
+                                className={styles.formFieldsContainer}
                                 lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                             >
-                                <label htmlFor="text" className="label">Text:</label>
+                                <label htmlFor="text" className={styles.label}>Text:</label>
                                 <FormControl
                                     id="text"
                                     type="text"
@@ -89,10 +90,10 @@ class EditTodoForm extends React.Component{
 
                         <Row>
                             <Col
-                                className="formFieldsContainer"
+                                className={styles.formFieldsContainer}
                                 lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                             >
-                                <label htmlFor="file" className="label">Image:</label>
+                                <label htmlFor="file" className={styles.label}>Image:</label>
                                 <FormControl
                                     id="file"
                                     type="file"
@@ -108,12 +109,12 @@ class EditTodoForm extends React.Component{
 
                         <Row>
                             <Col
-                                className="formFieldsContainer todoCompletionStatus"
+                                className={classnames(styles.formFieldsContainer, styles.todoCompletionStatus)}
                                 lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                             >
-                                <label htmlFor="isCompleted" className="label">Completed: </label>
+                                <label htmlFor="isCompleted" className={styles.label}>Completed: </label>
                                 <FormControl
-                                    className="checkbox"
+                                    className={styles.checkbox}
                                     id="isCompleted"
                                     type="checkbox"
                                     checked={isCompleted}
@@ -124,11 +125,11 @@ class EditTodoForm extends React.Component{
 
 
                         <Col
-                            className="submitButtonContainer"
+                            className={styles.buttonsContainer}
                             lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                         >
                             <Button
-                                className="cancelButton"
+                                className={styles.cancelButton}
                                 onClick={() => {
                                     setEditableTodoId(null);
                                 }}

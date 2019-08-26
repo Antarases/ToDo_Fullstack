@@ -1,13 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import classnames from "classnames";
 
-import { Container, Col, Button } from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
 
 import { smoothScrollUp } from "../../../../helpers/Functions";
 import { setEditableTodoId } from "../../../../actions/TodoActions";
 
-import './todo.component.css';
+import styles from "./todo.module.scss";
 
 let Todo = ({
     id,
@@ -19,22 +20,27 @@ let Todo = ({
     editableTodoId
 }) => {
     return (
-        <Container as="section" className="todo">
-            <div className="userInfo">
+        <Container as="section" className={styles.todo}>
+            <div className={styles.userInfo}>
                 <img
                     src={image || "https://c-lj.gnst.jp/public/img/common/noimage.jpg?20190112050043"}
                     alt=""
-                    className="todoImage"
+                    className={styles.todoImage}
                 />
 
-                { isAdmin && <div className="authorFullName">
-                    <span className="text">Author:</span>
-                    <span className="fullName">{authorFullName}</span>
+                { isAdmin && <div className={styles.authorFullName}>
+                    <span className={styles.text}>Author:</span>
+                    <span className={styles.fullName}>{authorFullName}</span>
                 </div> }
 
-                <div className="status">
-                    <span className="text">Status:</span>
-                    <i className={"fas fa-check icon " + (isCompleted ? "completed" : "incompleted")}></i>
+                <div className={styles.status}>
+                    <span className={styles.text}>Status:</span>
+                    <i className={classnames(
+                        styles.icon,
+                        {[styles.completed]: isCompleted, [styles.incompleted]: !isCompleted},
+                        "fas fa-check"
+                        )}
+                    />
                 </div>
 
                 <Button
@@ -42,16 +48,16 @@ let Todo = ({
                         (editableTodoId !== id) && setEditableTodoId(id);
                         smoothScrollUp();
                     }}
-                    className="ediTodoButton"
+                    className={styles.ediTodoButton}
                 >
-                    <i className="fas fa-edit"></i>
-                    <span className="text">
+                    <i className="fas fa-edit"/>
+                    <span className={styles.text}>
                         Edit
                     </span>
                 </Button>
             </div>
 
-            <div className="desctiption">
+            <div className={styles.desctiption}>
                 {text}
             </div>
         </Container>

@@ -1,0 +1,44 @@
+.sortingBar {
+    margin-bottom: 12px;
+
+    .sortingBarTitle {
+        font-weight: bold;
+        font-size: 17px;
+    }
+
+    .sortingBarOptions {
+        display: inline-block;
+        padding: 0;
+
+        .sortingBarOption {
+            display: inline-block;
+            margin-left: 16px;
+            padding: 0;
+            color: #007bff;
+            font-size: 16px;
+            font-weight: bold;
+            word-spacing: -1px;
+            cursor: pointer;
+
+            &:first-child {
+                margin-left: 10px;
+            }
+
+            &:hover {
+                color: #0056b3;
+            }
+        }
+    }
+}
+
+@media (max-width: 575px){
+    .sortingBar {
+        margin-bottom: 18px;
+
+        .sortingBarOptions {
+            .sortingBarOption, .sortingBarOption:first-child {
+                margin: 5px 0 0;
+            }
+        }
+    }
+}

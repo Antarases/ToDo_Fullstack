@@ -1,0 +1,104 @@
+.todo {
+    display: flex;
+    flex-direction: row;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid black;
+
+    .userInfo {
+        display: inline-block;
+        flex: 0 0 auto;
+        width: 320px;
+
+        .todoImage {
+            width: 320px;
+            height: 240px;
+            object-fit: contain;
+        }
+
+        .authorFullName {
+            margin: 14px 20px 0;
+
+            .text {
+                display: inline-block;
+                margin-top: 1px;
+                font-weight: bold;
+                vertical-align: top;
+            }
+
+            .fullName {
+                margin-left: 5px;
+            }
+        }
+
+        .status {
+            margin: 0 20px;
+
+            .text {
+                display: inline-block;
+                margin-top: 1px;
+                font-weight: bold;
+                vertical-align: top;
+            }
+
+            .icon {
+                margin-left: 7px;
+                font-size: 24px;
+                vertical-align: top;
+
+                &.completed {
+                    color: #0ce000;
+                }
+
+                &.incompleted {
+                    color: #f10a32;
+                }
+            }
+        }
+
+        .ediTodoButton {
+            margin-top: 12px;
+            margin-left: 20px;
+
+            .text {
+                margin-left: 7px;
+            }
+        }
+    }
+
+    .desctiption {
+        flex: 1 1 auto;
+        padding: 0 30px;
+    }
+}
+
+
+@media (max-width: 767px){
+    .todo {
+        .userInfo{
+            width: 220px;
+
+            .todoImage {
+                width: 220px;
+            }
+        }
+
+        .desctiption {
+            padding: 0 30px 0 40px;
+        }
+    }
+}
+
+@media (max-width: 575px){
+    .todo {
+        flex-direction: column;
+
+        .userInfo {
+            margin: 0 auto 22px;
+        }
+
+        .desctiption{
+            padding: 0 30px;
+        }
+    }
+}

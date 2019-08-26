@@ -9,7 +9,7 @@ import { getTodos } from "../../../../actions/TodoActions";
 
 import { INITIAL_TODOS_PAGE } from "../../../../constants/todosPagination";
 
-import "./todo-list.css";
+import styles from "./todo-list.module.scss";
 
 class TodoList extends React.Component {
     componentDidMount() {
@@ -22,7 +22,7 @@ class TodoList extends React.Component {
         const { todos } = this.props;
 
         return (
-            <div className="todoList">
+            <div className={styles.todoList}>
                 {
                     Object.values(todos).map(todo => (
                         <Todo

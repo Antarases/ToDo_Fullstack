@@ -1,0 +1,35 @@
+.addTodo{
+    margin-top: 30px;
+    margin-bottom: 40px;
+
+    & > form{
+        overflow: hidden;
+    }
+
+    .title{
+        font-weight: bold;
+        font-size: 22px;
+        text-align: center;
+    }
+
+    .formFieldsContainer {
+        margin-top: 8px;
+
+        .label {
+            margin-bottom: 1px;
+        }
+    }
+
+    .submitButtonContainer{
+        text-align: right;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 576px){
+    .submitButtonContainer .submitButton {
+        font-size: 18px;
+        line-height: 1.3333333;
+        border-radius: 6px;
+    }
+}

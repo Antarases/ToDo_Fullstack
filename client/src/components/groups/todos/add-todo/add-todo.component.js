@@ -3,7 +3,7 @@ import { dispatch } from "../../../../store/configureStore";
 import { Container, Row, Col, FormControl, Button } from "react-bootstrap";
 import { addTodo } from "../../../../actions/TodoActions";
 
-import './add-todo.component.css';
+import styles from './add-todo.module.scss';
 
 export function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ class AddTodo extends React.Component {
     render(){
         return (
             <React.Fragment>
-                <Container as="section" id="add-todo">
+                <Container as="section" className={styles.addTodo}>
                     <form action=""
                           onSubmit={(e) => {
                               e.preventDefault();
@@ -43,7 +43,7 @@ class AddTodo extends React.Component {
                     >
                         <Row>
                             <Col
-                                className="title"
+                                className={styles.title}
                                 lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 6, offset: 3}} xs={12}
                             >
                                 Add Todo
@@ -52,10 +52,10 @@ class AddTodo extends React.Component {
 
                         <Row>
                             <Col
-                                className="formFieldsContainer"
+                                className={styles.formFieldsContainer}
                                 lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                             >
-                                <label htmlFor="text" className="label">Text:</label>
+                                <label htmlFor="text" className={styles.label}>Text:</label>
                                 <FormControl
                                     id="text"
                                     type="text"
@@ -69,10 +69,10 @@ class AddTodo extends React.Component {
 
                         <Row>
                             <Col
-                                className="formFieldsContainer"
+                                className={styles.formFieldsContainer}
                                 lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                             >
-                                <label htmlFor="file" className="label">Image:</label>
+                                <label htmlFor="file" className={styles.label}>Image:</label>
                                 <FormControl
                                     id="file"
                                     type="file"
@@ -88,12 +88,13 @@ class AddTodo extends React.Component {
 
                         <Row>
                             <Col
-                                className="submitButtonContainer"
+                                className={styles.submitButtonContainer}
                                 lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
                             >
                                 <Button
                                     type="submit"
                                     variant="primary"
+                                    className={styles.submitButton}
                                 >
                                     Submit
                                 </Button>

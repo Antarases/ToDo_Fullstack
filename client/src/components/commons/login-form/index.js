@@ -4,14 +4,14 @@ import PropTypes  from "prop-types";
 
 import { Container, Col } from "react-bootstrap";
 
-import "./login-form.component.css";
+import styles from "./login-form.module.scss";
 
 class LoginForm extends React.Component{
     render(){
         const { isUserLoggedIn } = this.props;
 
         return (
-            <Container  as="section" id="login-form">
+            <Container  as="section" className={styles.loginForm}>
                 { !isUserLoggedIn && <Col>
                     <a href="/auth/google">Login with Google</a>
                 </Col> }

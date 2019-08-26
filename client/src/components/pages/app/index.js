@@ -5,7 +5,7 @@ import { dispatch } from "../../../store/configureStore";
 import TodosPage from "../todos-page/index";
 import LoginPage from "../login-page/index";
 
-import "./todo-app.component.css";
+import styles from "./todoApp.module.scss";
 
 import { identifyCurrentUser } from "../../../actions/AppActions";
 
@@ -29,7 +29,7 @@ class App extends React.Component{
         }
 
         return (
-            <div id="todo-app">
+            <div className={styles.todoApp}>
                 { renderedContent }
             </div>
         );

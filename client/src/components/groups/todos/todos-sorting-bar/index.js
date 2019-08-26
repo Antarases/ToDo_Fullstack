@@ -1,13 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { dispatch } from "../../../../store/configureStore";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 import { getTodos } from "../../../../actions/TodoActions";
 import { setTodosSortParams } from "../../../../actions/TodosSortActions";
 
-import "./sorting-bar.css";
+import styles from "./sorting-bar.module.scss";
 
 class TodosSortingBar extends React.Component {
     setTodosSortParamsAndGetSortedTodos = async (sortField) => {
@@ -28,15 +28,15 @@ class TodosSortingBar extends React.Component {
         const { isUserAdmin } = this.props;
 
         return (
-            <Container as="section" id="sorting-bar">
-                    <span className="sortingBarTitle">Sort by:</span>
+            <Container as="section" className={styles.sortingBar}>
+                    <span className={styles.sortingBarTitle}>Sort by:</span>
 
                     <Col
-                        className="sortingBarOptions"
+                        className={styles.sortingBarOptions}
                         sm="auto" xs="12"
                     >
                         { isUserAdmin && <Col
-                            className="sortingBarOption"
+                            className={styles.sortingBarOption}
                             sm="auto" xs="12"
                             onClick={() => this.setTodosSortParamsAndGetSortedTodos("userFullName")}
                         >
@@ -44,7 +44,7 @@ class TodosSortingBar extends React.Component {
                         </Col> }
 
                         <Col
-                            className="sortingBarOption"
+                            className={styles.sortingBarOption}
                             sm="auto" xs="12"
                             onClick={() => this.setTodosSortParamsAndGetSortedTodos("creationDate")}
                         >
@@ -52,7 +52,7 @@ class TodosSortingBar extends React.Component {
                         </Col>
 
                         <Col
-                            className="sortingBarOption"
+                            className={styles.sortingBarOption}
                             sm="auto" xs="12"
                             onClick={() => this.setTodosSortParamsAndGetSortedTodos("isCompleted")}
                         >

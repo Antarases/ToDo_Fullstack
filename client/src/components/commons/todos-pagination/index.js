@@ -2,13 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { dispatch } from "../../../store/configureStore";
+import classnames from "classnames";
 
 import { getTodos, setEditableTodoId } from "../../../actions/TodoActions";
 import { setCurrentTodosPage } from "../../../actions/TodosPaginationActions";
 
 import { Container, Button } from "react-bootstrap";
 
-import "./pagination.css";
+import styles from "./pagination.module.scss";
 
 const TodosPagination = ({
     currentTodosPage,
@@ -19,18 +20,18 @@ const TodosPagination = ({
 }) => (
     <Container
         as="section"
-        className={"pagination " + className}
+        className={classnames(styles.pagination, className)}
     >
 
-        <span className="paginationText">
+        <span className={styles.paginationText}>
             {`Page `}
-            <span className="bold">{currentTodosPage}</span>
+            <span className={styles.bold}>{currentTodosPage}</span>
             {` of `}
-            <span className="bold">{totalTodoPagesAmount}</span>
+            <span className={styles.bold}>{totalTodoPagesAmount}</span>
         </span>
 
         <Button
-            className="button prev"
+            className={classnames(styles.button, styles.prev)}
             variant={
                 currentTodosPage === 1
                     ? "secondary"
@@ -48,11 +49,11 @@ const TodosPagination = ({
                 setCurrentTodosPage(nextPage);
             }}
         >
-            <i class="fas fa-angle-right fa-lg arrow-icon"></i>
+            <i className={classnames(styles.arrowIcon, "fas fa-angle-right fa-lg")}></i>
         </Button>
 
         <Button
-            className="button next"
+            className={classnames(styles.button, styles.next)}
             variant={
                 currentTodosPage === totalTodoPagesAmount
                     ? "secondary"
@@ -70,7 +71,7 @@ const TodosPagination = ({
                 setCurrentTodosPage(nextPage);
             }}
         >
-            <i class="fas fa-angle-right fa-lg arrow-icon"></i>
+            <i className={classnames(styles.arrowIcon, "fas fa-angle-right fa-lg")}></i>
         </Button>
     </Container>
 );
