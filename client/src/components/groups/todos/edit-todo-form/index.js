@@ -140,12 +140,12 @@ class EditTodoForm extends React.Component{
 
                             <Button
                                 onClick={async () => {
-                                    await dispatch(editTodo(
+                                    await editTodo(
                                         editableTodoId,
                                         text,
                                         isCompleted,
                                         image
-                                    ));
+                                    );
 
                                     setEditableTodoId(null);
                                 }}

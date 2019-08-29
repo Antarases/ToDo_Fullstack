@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { dispatch } from "../../../store/configureStore";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleRight }  from '@fortawesome/free-solid-svg-icons'
 import classnames from "classnames";
@@ -44,9 +43,7 @@ const TodosPagination = ({
                 setEditableTodoId(null);
                 const nextPage = currentTodosPage - 1;
 
-                await dispatch(
-                    getTodos(nextPage, sortField, sortOrder)
-                );
+                await getTodos(nextPage, sortField, sortOrder);
                 setCurrentTodosPage(nextPage);
             }}
         >
@@ -66,9 +63,7 @@ const TodosPagination = ({
                 setEditableTodoId(null);
                 const nextPage = currentTodosPage + 1;
 
-                await dispatch(
-                    getTodos(nextPage, sortField, sortOrder)
-                );
+                await getTodos(nextPage, sortField, sortOrder);
                 setCurrentTodosPage(nextPage);
             }}
         >

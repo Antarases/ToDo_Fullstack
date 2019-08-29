@@ -11,9 +11,7 @@ import { identifyCurrentUser } from "../../../actions/AppActions";
 
 class App extends React.Component{
     componentDidMount() {
-        dispatch(
-            identifyCurrentUser()
-        );
+        identifyCurrentUser();
     }
 
     render() {

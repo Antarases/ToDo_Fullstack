@@ -7,7 +7,7 @@ import { ADD_TODO, SET_TODOS } from "../reducers/todos";
 import { TODOS_PER_PAGE, SET_TOTAL_TODO_PAGES_AMOUNT } from "../constants/todosPagination";
 import { EDIT_TODO, SET_EDITABLE_TODO_ID } from "../constants/todos";
 
-export const getTodos = (page, sortField, sortOrder) => async (dispatch) => {
+export const getTodos = async (page, sortField, sortOrder) => {
     const res = await axios.get(`/todos/?page=${page}&sortField=${sortField}&sortOrder=${sortOrder }`);
 
     const { todos, totalTodosAmount } = res.data;
@@ -17,8 +17,7 @@ export const getTodos = (page, sortField, sortOrder) => async (dispatch) => {
     dispatch({ type: SET_TOTAL_TODO_PAGES_AMOUNT, totalTodoPagesAmount });
 };
 
-export const addTodo = (text, image) => async (dispatch) => {
-    console.log("image", image, !!image);
+export const addTodo = async (text, image) => {
     const compressedImageBase64 = !!image
         ? await getCompressedBase64Image(image)
         : null;
@@ -33,7 +32,7 @@ export const addTodo = (text, image) => async (dispatch) => {
     dispatch({ type: SET_TOTAL_TODO_PAGES_AMOUNT, totalTodoPagesAmount });
 };
 
-export const editTodo = (todoId, text, isCompleted, image) => async () => {
+export const editTodo = async (todoId, text, isCompleted, image) => {
     try {
         const compressedImageBase64 = !!image
             ? await getCompressedBase64Image(image)

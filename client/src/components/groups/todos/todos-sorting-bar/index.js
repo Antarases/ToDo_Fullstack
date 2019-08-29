@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { dispatch } from "../../../../store/configureStore";
 import { Container, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 
@@ -10,7 +9,7 @@ import { setTodosSortParams } from "../../../../actions/TodosSortActions";
 import styles from "./sorting-bar.module.scss";
 
 class TodosSortingBar extends React.Component {
-    setTodosSortParamsAndGetSortedTodos = async (sortField) => {
+    setTodosSortParamsAndGetSortedTodos = (sortField) => {
         let { currentTodosPage, sortField: currentSortField, sortOrder } = this.props;
 
         if(sortField === currentSortField){
@@ -21,7 +20,7 @@ class TodosSortingBar extends React.Component {
         }
 
         setTodosSortParams(sortField, sortOrder);
-        dispatch(getTodos(currentTodosPage, sortField, sortOrder));
+        getTodos(currentTodosPage, sortField, sortOrder);
     };
 
     render() {

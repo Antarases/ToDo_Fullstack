@@ -33,9 +33,7 @@ class AddTodo extends React.Component {
                           onSubmit={(e) => {
                               e.preventDefault();
 
-                              dispatch(
-                                  addTodo( this.state.text, this.image.files[0] )
-                              );
+                              addTodo(this.state.text, this.image.files[0]);
 
                               this.image.value = null;
                               this.setState({ text: "" });

@@ -13,9 +13,7 @@ import styles from "./todo-list.module.scss";
 
 class TodoList extends React.Component {
     componentDidMount() {
-        dispatch(
-            getTodos(INITIAL_TODOS_PAGE)
-        );
+        getTodos(INITIAL_TODOS_PAGE);
     }
 
     render() {
