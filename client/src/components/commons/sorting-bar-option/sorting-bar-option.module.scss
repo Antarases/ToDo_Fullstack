@@ -1,0 +1,24 @@
+.sortingBarOption {
+  display: inline-block;
+  margin-left: 16px;
+  padding: 0;
+  color: #007bff;
+  font-size: 16px;
+  font-weight: bold;
+  word-spacing: -1px;
+  cursor: pointer;
+
+  &:first-child {
+    margin-left: 10px;
+  }
+
+  &:hover {
+    color: #0056b3;
+  }
+}
+
+@media (max-width: 575px){
+    .sortingBarOption, .sortingBarOption:first-child {
+      margin: 5px 0 0;
+    }
+}
