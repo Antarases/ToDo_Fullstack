@@ -1,8 +1,8 @@
 import { SET_TODOS_SORT_PARAMS } from "../constants/todosSortParams";
 
-const initialState = {
-    sortField: null,
-    sortOrder: null
+export const initialState = {
+    sortField: "creationDate",
+    sortOrder: "asc"
 };
 
 export default function todosSortParams(state = initialState, action) {

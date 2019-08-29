@@ -8,12 +8,13 @@ import Todo from "../todo";
 import { getTodos } from "../../../../actions/TodoActions";
 
 import { INITIAL_TODOS_PAGE } from "../../../../constants/todosPagination";
+import { initialState as sortParamsInitialState } from "../../../../reducers/todosSortParams";
 
 import styles from "./todo-list.module.scss";
 
 class TodoList extends React.Component {
     componentDidMount() {
-        getTodos(INITIAL_TODOS_PAGE);
+        getTodos(INITIAL_TODOS_PAGE, sortParamsInitialState.sortField, sortParamsInitialState.sortOrder);
     }
 
     render() {

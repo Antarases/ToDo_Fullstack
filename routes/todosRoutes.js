@@ -44,7 +44,7 @@ module.exports = (app) => {
                     }
                     : {
                         [sortField]: sortOrder,
-                        "creationDate": "asc"
+                        "creationDate": (sortField === "creationDate") ? sortOrder : "asc"
                     }
             )
             .project({ author: 0 })
