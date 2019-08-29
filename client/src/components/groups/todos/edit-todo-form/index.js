@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { dispatch } from "../../../../store/configureStore";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 

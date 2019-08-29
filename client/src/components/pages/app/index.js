@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { dispatch } from "../../../store/configureStore";
 
 import TodosPage from "../todos-page/index";
 import LoginPage from "../login-page/index";
