@@ -11,13 +11,14 @@
         width: 320px;
 
         .todoImage {
+            margin-bottom: 14px;
             width: 320px;
             height: 240px;
             object-fit: contain;
         }
 
         .authorFullName {
-            margin: 14px 20px 0;
+            margin: 0 20px;
 
             .text {
                 display: inline-block;
