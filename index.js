@@ -15,6 +15,7 @@ mongoose.connection.on('error', err => {
 });
 
 const app = express();
+const httpServer = require("http").createServer(app);
 
 app.use(bodyParser.json({limit: '5120kb'}));
 app.use(
@@ -27,7 +28,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require("./routes/authRoutes")(app);
-require("./routes/todosRoutes")(app);
+
+require("./websockets/todosSocket")(httpServer);
 
 if (process.env.NODE_ENV === "production") {
     // Express will serve up production assets, like our main.js, or main.css files
@@ -41,4 +43,4 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT);
+httpServer.listen(PORT);

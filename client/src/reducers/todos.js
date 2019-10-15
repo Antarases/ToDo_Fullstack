@@ -2,6 +2,7 @@ import { EDIT_TODO, SET_EDITABLE_TODO_ID } from "../constants/todos";
 
 const initialState = {
     todos: {},
+    totalTodosAmount: null,
     editableTodoId: null
 };
 
@@ -11,7 +12,7 @@ export const SET_TODOS = "SET_TODOS";
 export default function todos(state = initialState, action ) {
     switch (action.type) {
         case SET_TODOS: {
-            const { todos } = action;
+            const { todos, totalTodosAmount } = action;
 
             const newTodos = {};
             for (let todo of todos) {
@@ -20,7 +21,8 @@ export default function todos(state = initialState, action ) {
 
             return {
                 ...state,
-                todos: newTodos
+                todos: newTodos,
+                totalTodosAmount
             };
         }
 
@@ -37,7 +39,8 @@ export default function todos(state = initialState, action ) {
                         text: todo.text,
                         image: todo.image
                     }
-                }
+                },
+                totalTodosAmount: state.totalTodosAmount + 1
             };
         }
 
@@ -51,7 +54,8 @@ export default function todos(state = initialState, action ) {
                     [updatedTodo.id]: {
                         ...state.todos[updatedTodo.id],
                         text: updatedTodo.text,
-                        image: updatedTodo.image
+                        image: updatedTodo.image,
+                        isCompleted: updatedTodo.isCompleted
                     }
                 }
             }
@@ -63,6 +67,13 @@ export default function todos(state = initialState, action ) {
             return {
                 ...state,
                 editableTodoId: id
+            };
+        }
+
+        case "INCREASE_TOTAL_TODOS_AMOUNT": {
+            return {
+                ...state,
+                totalTodosAmount: state.totalTodosAmount + 1
             };
         }
 

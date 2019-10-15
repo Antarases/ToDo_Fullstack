@@ -5,7 +5,9 @@ import classnames from "classnames";
 
 import { Container, Row, Col, FormControl, Button } from "react-bootstrap";
 
-import { editTodo, setEditableTodoId } from "../../../../actions/TodoActions";
+import { setEditableTodoId } from "../../../../actions/TodoActions";
+
+import { editTodo } from "../../../../websockets/TodoSocket";
 
 import styles from "./edit-todo-form.module.scss";
 
@@ -142,8 +144,8 @@ class EditTodoForm extends React.Component{
                                     await editTodo(
                                         editableTodoId,
                                         text,
-                                        isCompleted,
-                                        image
+                                        image,
+                                        isCompleted
                                     );
 
                                     setEditableTodoId(null);

@@ -5,8 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleRight }  from '@fortawesome/free-solid-svg-icons'
 import classnames from "classnames";
 
-import { getTodos, setEditableTodoId } from "../../../actions/TodoActions";
-import { setCurrentTodosPage } from "../../../actions/TodosPaginationActions";
+import { setEditableTodoId } from "../../../actions/TodoActions";
+
+import { getTodos } from "../../../websockets/TodoSocket";
 
 import { Container, Button } from "react-bootstrap";
 
@@ -39,12 +40,11 @@ const TodosPagination = ({
             }
             size="sm"
             disabled={currentTodosPage === 1}
-            onClick={async () => {
+            onClick={() => {
                 setEditableTodoId(null);
                 const nextPage = currentTodosPage - 1;
 
-                await getTodos(nextPage, sortField, sortOrder);
-                setCurrentTodosPage(nextPage);
+                getTodos(nextPage, sortField, sortOrder, nextPage);
             }}
         >
             <FontAwesomeIcon icon={faAngleRight} className={styles.arrowIcon} size="lg" rotation={180} />
@@ -59,12 +59,11 @@ const TodosPagination = ({
             }
             size="sm"
             disabled={currentTodosPage === totalTodoPagesAmount}
-            onClick={async () => {
+            onClick={() => {
                 setEditableTodoId(null);
                 const nextPage = currentTodosPage + 1;
 
-                await getTodos(nextPage, sortField, sortOrder);
-                setCurrentTodosPage(nextPage);
+                getTodos(nextPage, sortField, sortOrder, nextPage);
             }}
         >
             <FontAwesomeIcon icon={faAngleRight} className={styles.arrowIcon} size="lg" />

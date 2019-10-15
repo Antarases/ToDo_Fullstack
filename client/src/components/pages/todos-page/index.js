@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+
+import { setTodoSocketConnectionAndHandlers, closeTodoSocketConnection } from "../../../websockets/TodoSocket";
 
 import LoginForm from "../../commons/login-form";
 import EditTodoForm from "../../groups/todos/edit-todo-form"
@@ -11,26 +13,28 @@ import TodoList from "../../groups/todos/todo-list";
 
 import styles from "./todosPage.module.scss";
 
-class TodosPage extends React.Component{
-    render() {
-        const { isTodos, editableTodoId } = this.props;
+const TodosPage = ({ isTodos, editableTodoId }) => {
+    useEffect(() => {
+        setTodoSocketConnectionAndHandlers();
 
-        return (
-            <React.Fragment>
-                <LoginForm />
+        return closeTodoSocketConnection;
+    }, []);
 
-                { editableTodoId && <EditTodoForm /> }
+    return (
+        <React.Fragment>
+            <LoginForm />
 
-                <AddTodo />
+            { editableTodoId && <EditTodoForm /> }
 
-                { isTodos && <TodosSortingBar /> }
-                { isTodos && <TodosPagination /> }
-                <TodoList />
-                { isTodos && <TodosPagination className={styles.bottomTodoPagination} /> }
-            </React.Fragment>
-        );
-    }
-}
+            <AddTodo />
+
+            { isTodos && <TodosSortingBar /> }
+            { isTodos && <TodosPagination /> }
+            <TodoList />
+            { isTodos && <TodosPagination className={styles.bottomTodoPagination} /> }
+        </React.Fragment>
+    );
+};
 
 const mapStateToProps = (state) => {
     return {

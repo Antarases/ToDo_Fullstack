@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col, FormControl, Button } from "react-bootstrap";
-import { addTodo } from "../../../../actions/TodoActions";
+import { addTodo } from "../../../../websockets/TodoSocket";
 
 import styles from './add-todo.module.scss';
 

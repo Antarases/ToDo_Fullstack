@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 
-import { getTodos } from "../../../actions/TodoActions";
+import { getTodos } from "../../../websockets/TodoSocket";
 import { setTodosSortParams } from "../../../actions/TodosSortActions";
 
 import styles from "./sorting-bar-option.module.scss";

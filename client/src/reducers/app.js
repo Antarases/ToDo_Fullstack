@@ -3,7 +3,8 @@ const initialState = {
         isLoggedIn: false,
         isAdmin: false
     },
-    isUserLoginStatusDetermining: true
+    isUserLoginStatusDetermining: true,
+    userData: {}
 };
 
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
@@ -20,7 +21,8 @@ export default function app(state = initialState, action ) {
                     ...state.currentUserStatus,
                     isLoggedIn: !!user,
                     isAdmin: (user && user.isAdmin)
-                }
+                },
+                userData: user
             };
         }
         case SET_USER_LOGIN_STATUS_DETERMINING: {
