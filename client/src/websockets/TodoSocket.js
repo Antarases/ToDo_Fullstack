@@ -13,7 +13,7 @@ import { initialState as sortParamsInitialState } from "../reducers/todosSortPar
 let TodoSocket;
 
 export const setTodoSocketConnectionAndHandlers = () => {
-    TodoSocket = io("/", {
+    TodoSocket = io("/todos", {
         path: "/todos",
         query: {
             userId: getCurrentState().app.userData.id,
