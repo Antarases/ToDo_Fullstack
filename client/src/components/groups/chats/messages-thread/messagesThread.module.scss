@@ -1,0 +1,69 @@
+.chatThreadContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 0 auto;
+
+  .trackVertical {
+    right: 8px;
+    width: 9px !important;
+  }
+
+  .messageContainerWrapper {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    cursor: pointer;
+
+    .messageContainer {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      max-width: 560px;
+      margin: 8px 25px 8px 31px;
+      font-family: Tahoma, sans-serif;
+
+      .avatar {
+        display: inline-block;
+        flex: 0 0 auto;
+        width: 42px;
+        height: 42px;
+        margin-right: 15px;
+        border-radius: 50%;
+      }
+
+      .userNameAndMessageContainer {
+        display: block;
+        flex: 1 1 auto;
+        overflow: hidden;
+
+        .userName {
+          margin: 1px 0 4px;
+          color: #3a6d99;
+          font-size: 12px;
+          font-weight: bold;
+        }
+
+        .message {
+          font-size: 13px;
+          color: #000;
+        }
+      }
+
+      .messageDate {
+        flex: 0 0 auto;
+        margin-left: 14px;
+        font-size: 11px;
+        color: #adadad;
+      }
+    }
+  }
+
+  .noMessagesText {
+    padding: 42px 20px;
+    text-align: center;
+    font-family: Tahoma, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+  }
+}

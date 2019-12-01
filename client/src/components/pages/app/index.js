@@ -1,8 +1,11 @@
 import React from 'react';
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
 
-import TodosPage from "../todos-page/index";
+import Menu from "../../commons/menu";
 import LoginPage from "../login-page/index";
+import TodosPage from "../todos-page/index";
+import ChatsPage from "../chats-page/index";
 
 import styles from "./todoApp.module.scss";
 
@@ -16,18 +19,36 @@ class App extends React.Component{
     render() {
         const { isUserLoggedIn, isUserLoginStatusDetermining } = this.props;
 
-        let renderedContent = null;
-        if (isUserLoginStatusDetermining) {
-            renderedContent = <div>Loading...</div>;
-        } else if (isUserLoggedIn) {
-            renderedContent = <TodosPage />;
-        } else if (!isUserLoggedIn) {
-            renderedContent = <LoginPage />;
-        }
-
         return (
             <div className={styles.todoApp}>
-                { renderedContent }
+                <BrowserRouter>
+                    {
+                        isUserLoginStatusDetermining
+                            ? (
+                                <div>Loading...</div>
+                            )
+                            : (
+                                isUserLoggedIn
+                                ? (
+                                    <React.Fragment>
+                                        <Menu />
+
+                                        <div className={styles.pageWrapper}>
+                                            <Switch>
+                                                <Route exact path="/" component={TodosPage} />
+                                                <Route exact path="/messages" component={ChatsPage} />
+
+                                                <Redirect to="/" />
+                                            </Switch>
+                                        </div>
+                                    </React.Fragment>
+                                )
+                                : (
+                                    <LoginPage />
+                                )
+                            )
+                    }
+                </BrowserRouter>
             </div>
         );
     }

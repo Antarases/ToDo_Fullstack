@@ -5,9 +5,9 @@ const helpers = require("../helpers/functions");
 const TODOS_CONSTANTS = require("../constants/todos");
 
 module.exports = (httpServer) => {
-    const TodoSocket = require("socket.io")(httpServer, { path: "/todos" });
+    const TodoSocket = require("socket.io")(httpServer, { path: "/todos_ws" });
 
-    TodoSocket.of("/todos").on("connect", async function(socket){
+    TodoSocket.of("/todos_ws").on("connect", async function(socket){
         const { userId, isAdmin, initialPage: page, sortField, sortOrder } = socket.handshake.query;
         await emitGetTodos(socket, userId, (isAdmin === "true"), page, sortField, sortOrder);
 
@@ -33,9 +33,9 @@ module.exports = (httpServer) => {
                 savedTodo.authorFullName = socket.handshake.query.userFullName;
                 delete savedTodo._user;
 
-                TodoSocket.of("todos").emit("add_todo", { todo: savedTodo, code: 200 });
+                TodoSocket.of("todos_ws").emit("add_todo", { todo: savedTodo, code: 200 });
             } catch(error) {
-                TodoSocket.of("todos").emit("add_todo", {code: 422, text: "An error occured during adding todo"});
+                socket.emit("add_todo", {code: 422, text: "An error occured during adding todo"});
             }
         });
 
@@ -60,10 +60,10 @@ module.exports = (httpServer) => {
                         updatedTodo.authorFullName = updatedTodo._user.userFullName;
                         delete updatedTodo._user;
 
-                        TodoSocket.of("todos").emit("edit_todo", {todo: {...updatedTodo}, code: 200});
+                        TodoSocket.of("todos_ws").emit("edit_todo", {todo: {...updatedTodo}, code: 200});
                     });
             } catch (error) {
-                TodoSocket.of("todos").emit("edit_todo", {code: 422, text: "An error occured during editing todo"});
+                socket.emit("edit_todo", {code: 422, text: "An error occured during editing todo"});
             }
         });
     });

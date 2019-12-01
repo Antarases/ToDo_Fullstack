@@ -4,11 +4,12 @@ const cookieSession = require("cookie-session");
 const passport = require("passport");
 const bodyParser = require("body-parser");
 const keys = require("./config/keys");
-require("./models/User");
+require("./models/UserAndChat");
 require("./models/Todo");
+require("./models/Message");
 require("./services/passport");
 
-mongoose.connect(keys.mongoURI, {useNewUrlParser: true})
+mongoose.connect(keys.mongoURI, {useNewUrlParser: true, useFindAndModify: false})
     .catch(error => console.log("First connect attempt failed: ", error));
 mongoose.connection.on('error', err => {
     console.log("Sequent connect attempt failed: ", err);
@@ -28,8 +29,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require("./routes/authRoutes")(app);
+require("./routes/appRoutes")(app);
 
 require("./websockets/todosSocket")(httpServer);
+require("./websockets/chatsSocket")(httpServer);
 
 if (process.env.NODE_ENV === "production") {
     // Express will serve up production assets, like our main.js, or main.css files

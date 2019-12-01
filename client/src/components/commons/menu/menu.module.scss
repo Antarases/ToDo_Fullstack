@@ -1,0 +1,27 @@
+.menuWrapper {
+  flex: 0 0 auto;
+
+  .menuContainer {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    padding: 0 22px;
+    background: #477394;
+
+    .link {
+      margin-right: 18px;
+      color: #fff;
+      font-family: Tahoma, sans-serif;
+      font-size: 16px;
+      font-weight: bold;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &.selectedLink {
+        text-decoration: underline;
+      }
+    }
+  }
+}

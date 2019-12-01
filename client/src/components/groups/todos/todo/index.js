@@ -10,6 +10,8 @@ import { Container, Button } from "react-bootstrap";
 import { smoothScrollUp } from "../../../../helpers/Functions";
 import { setEditableTodoId } from "../../../../actions/TodoActions";
 
+import { NOIMAGE_IMAGE_URL } from "../../../../constants/app";
+
 import styles from "./todo.module.scss";
 
 let Todo = ({
@@ -25,8 +27,7 @@ let Todo = ({
         <Container as="section" className={styles.todo}>
             <div className={styles.userInfo}>
                 <img
-                    src={image || "https://c-lj.gnst.jp/public/img/common/noimage.jpg?20190112050043"}
-                    alt=""
+                    src={image || NOIMAGE_IMAGE_URL}
                     className={styles.todoImage}
                 />
 

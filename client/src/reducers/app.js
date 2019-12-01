@@ -25,12 +25,14 @@ export default function app(state = initialState, action ) {
                 userData: user
             };
         }
+
         case SET_USER_LOGIN_STATUS_DETERMINING: {
             return {
                 ...state,
                 isUserLoginStatusDetermining: action.isUserLoginStatusDetermining
             };
         }
+
         default:
             return state;
     }

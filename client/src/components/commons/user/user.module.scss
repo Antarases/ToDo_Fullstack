@@ -1,0 +1,30 @@
+.userContainer {
+  padding: 8px 16px;
+  font-family: Tahoma, sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:hover {
+    background: #f2f6fa;
+  }
+
+  &.selected {
+    color: #fff;
+    background: #6490b1;
+  }
+
+  .avatar {
+    display: inline-block;
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    margin-right: 15px;
+    border-radius: 50%;
+    background-color: gray;
+  }
+
+  .userName {
+    display: inline-block;
+    font-weight: bold;
+  }
+}

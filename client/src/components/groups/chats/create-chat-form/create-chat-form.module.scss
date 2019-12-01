@@ -1,0 +1,78 @@
+.createChatForm {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  background: #fff;
+  font-family: Tahoma, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 18px 22px 13px 26px;
+    background: #5580a3;
+    color: #fff;
+
+    .closeModalButton {
+      color: #dde8f1;
+      cursor: pointer;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+
+  .chatNameInput {
+    position: relative;
+    width: 100%;
+    padding: 12px 40px 12px 42px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    outline: none;
+    box-shadow: 0 1px 1px rgba(0,0,0,.15);
+    z-index: 1000;
+
+    &::-webkit-input-placeholder {
+      color: #9aa2ab;
+      font-family: sans-serif;
+    }
+    &:-ms-input-placeholder {
+      color: #9aa2ab;
+      font-family: sans-serif;
+    }
+    &::-moz-placeholder {
+      color: #9aa2ab;
+      font-family: sans-serif;
+    }
+    &::placeholder {
+      color: #9aa2ab;
+      font-family: sans-serif;
+    }
+  }
+
+  .footer {
+    padding: 15px 27px;
+    text-align: right;
+
+    .button {
+      display: inline-block;
+      padding: 6px 10px;
+      color: #4680b3;
+      cursor: pointer;
+      text-transform: uppercase;
+
+      &:hover {
+        background: #f2f6fa;
+      }
+
+      &.disabled {
+        background-color: transparent;
+        opacity: 0.65;
+        cursor: default;
+      }
+    }
+  }
+}

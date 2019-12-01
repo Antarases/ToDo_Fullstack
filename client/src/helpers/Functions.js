@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
         return response.json();
@@ -55,3 +57,20 @@ export function smoothScrollUp() {
         setTimeout(smoothScrollUp, 10);
     }
 }
+
+
+export const getFormattedDate = (date) => {
+    let momentDate = moment(date);
+
+    return momentDate.isValid()
+        ? (momentDate.format("M/D/YYYY"))
+        : date;
+};
+
+export const getFormattedTime = (date) => {
+    let momentDate = moment(date);
+
+    return momentDate.isValid()
+        ? (momentDate.format("h:mm:ss A"))
+        : date;
+};

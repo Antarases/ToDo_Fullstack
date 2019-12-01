@@ -1,0 +1,24 @@
+.chatsPage {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .chatsSection {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    overflow: hidden;
+
+    .chatListAndMessagesContainer {
+      display: flex;
+      flex-direction: row;
+      flex: 1 1 auto;
+
+      .messagesContainer {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+.trackVertical {
+  top: 10px;
+  bottom: 0;
+  right: 4px;
+  width: 5px !important;
+  border-radius: 2px;
+  background-color: rgba(216, 223, 225, 0.45);
+}
+
+.thumbVertical {
+  border-radius: 2px;
+  background-color: rgba(137, 160, 179, 0.5);
+}
+
+.contentContainer {
+  height: 100%;
+  padding-top: 10px;
+
+  &.paddingRight {
+    padding-right: 6px;
+  }
+}
+
+.view {
+  margin-bottom: 0 !important;
+  overflow-x: hidden !important;
+}
+
+.hidden {
+  display: none;
+}

@@ -21,7 +21,7 @@ const TodosPage = ({ isTodos, editableTodoId }) => {
     }, []);
 
     return (
-        <React.Fragment>
+        <section className={styles.todosPageContainer}>
             <LoginForm />
 
             { editableTodoId && <EditTodoForm /> }
@@ -32,7 +32,7 @@ const TodosPage = ({ isTodos, editableTodoId }) => {
             { isTodos && <TodosPagination /> }
             <TodoList />
             { isTodos && <TodosPagination className={styles.bottomTodoPagination} /> }
-        </React.Fragment>
+        </section>
     );
 };
 

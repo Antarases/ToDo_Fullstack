@@ -1,0 +1,112 @@
+.chatsMenuContainer {
+  position: relative;
+  width: 31%;
+
+  .menuButtonContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-right: 20px;
+    padding-left: 22px;
+    background: #5682a3;
+    z-index: 5;
+    cursor: pointer;
+
+    &.open, &:hover {
+      background: #497799;
+    }
+
+    .hamburgerMenuButton {
+      display: inline-block;
+      width: 18px;
+      height: 14px;
+      margin-right: 40px;
+
+      .iconBar {
+        background: #fff;
+        display: block;
+        height: 2px;
+        margin: 0;
+        transition: transform 0.1s ease-in;
+        transform-origin: 50% 50%;
+
+        &:nth-child(2) {
+          margin-bottom: 4px;
+          margin-top: 4px;
+        }
+      }
+
+      &.open .iconBar {
+        &:nth-child(1) {
+          transform: translate3d(0, 6px, 0) rotate(45deg);
+        }
+
+        &:nth-child(2) {
+          opacity: 0;
+        }
+
+        &:nth-child(3) {
+          transform: translate3d(0, -6px, 0) rotate(-45deg);
+        }
+      }
+    }
+
+    &:hover .hamburgerMenuButton:not(.open) .iconBar {
+      &:nth-child(1) {
+        transform: translateY(-1px);
+      }
+
+      &:nth-child(3) {
+        transform: translateY(1px);
+      }
+    }
+  }
+
+  .menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 100%;
+    padding: 9px 0 7px;
+    background-color: #fff;
+    border: 1px solid rgba(15, 60, 96, 0.2);
+    border-left-color: #b5c3d0;
+    border-right-color: #b5c3d0;
+    box-shadow: 0px 1px 3px 0px rgba(60, 75, 87, 0.27);
+    z-index: 4;
+    animation: rollIn 0.1s ease-in;
+
+    &.open {
+      display: block;
+    }
+
+    .menuItem {
+      padding: 11px 19px 10px 21px;
+      font-family: Tahoma, sans-serif;
+      font-size: 12px;
+      color: #42749b;
+      line-height: 21px;
+      cursor: pointer;
+
+      &:hover {
+        background: #f2f6fa;
+      }
+
+      .icon {
+        display: inline-block;
+        width: 20px;
+        height: 14px;
+        margin-top: 3px;
+        margin-right: 38px;
+        vertical-align: top;
+        background: url("../../../../../icons/General.png") no-repeat;
+
+        &.createChat {
+          background-position: -10px -111px;
+        }
+      }
+    }
+  }
+}
