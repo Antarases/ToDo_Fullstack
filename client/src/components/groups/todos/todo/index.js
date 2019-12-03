@@ -29,6 +29,7 @@ let Todo = ({
                 <img
                     src={image || NOIMAGE_IMAGE_URL}
                     className={styles.todoImage}
+                    alt=""
                 />
 
                 { isAdmin && <div className={styles.authorFullName}>
