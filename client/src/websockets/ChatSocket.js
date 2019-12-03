@@ -10,7 +10,8 @@ export const setChatSocketConnectionAndHandlers = () => {
         query: {
             userId: getCurrentState().app.userData.id,
             userFullName: getCurrentState().app.userData.userFullName
-        }
+        },
+        forceNew: true
     });
 
     ChatSocket.on("get_chat_list", (data) => {

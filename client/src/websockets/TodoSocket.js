@@ -22,7 +22,8 @@ export const setTodoSocketConnectionAndHandlers = () => {
             initialPage: INITIAL_TODOS_PAGE,
             sortField: sortParamsInitialState.sortField,
             sortOrder: sortParamsInitialState.sortOrder
-        }
+        },
+        forceNew: true
     });
 
     TodoSocket.on("get_todos", (data) => {
