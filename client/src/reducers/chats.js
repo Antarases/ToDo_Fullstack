@@ -3,6 +3,8 @@ const initialState = {
     selectedChatId: null,
     userList: {},
     totalUsersAmount: null,
+    timeOfEndingLoadingFullUserList: null,
+    isUserListLoading: false,
     isCreateChatModalOpen: false
 };
 
@@ -85,6 +87,20 @@ export default function chats(state = initialState, action) {
                     ...users
                 },
                 totalUsersAmount
+            };
+        }
+
+        case "CHATS__SET_IS_USER_LIST_LOADING": {
+            return {
+                ...state,
+                isUserListLoading: action.isLoading
+            };
+        }
+
+        case "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_USER_LIST": {
+            return {
+                ...state,
+                timeOfEndingLoadingFullUserList: action.time
             };
         }
 

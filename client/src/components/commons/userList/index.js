@@ -6,12 +6,12 @@ import ScrolledContainer from "../../commons/scrolled-container";
 
 import styles from "./userList.module.scss";
 
-const UserList = ({ userList, selectedUserIds = [], onClick }) => {
+const UserList = ({ userList, selectedUserIds = [], onClick, getMoreItems }) => {
     return (
         <section className={styles.userListContainer}>
             {
                 (userList && !!Object.keys(userList).length)
-                    ? <ScrolledContainer>
+                    ? <ScrolledContainer getMoreItems={getMoreItems}>
                         {
                             Object.values(userList).map(user => (
                                 (user && !!Object.keys(user).length)
@@ -35,6 +35,7 @@ export default UserList;
 UserList.propTypes = {
     userList: PropTypes.object,
     selectedUserIds: PropTypes.array,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    getMoreItems: PropTypes.func
 };
 

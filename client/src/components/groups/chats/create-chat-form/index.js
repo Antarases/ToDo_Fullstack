@@ -63,6 +63,7 @@ const CreateChatForm = ({ userList }) => {
                 userList={userList}
                 selectedUserIds={selectedUserIds}
                 onClick={handleUserSelection}
+                getMoreItems={getUserList}
             />
 
             <footer className={styles.footer}>

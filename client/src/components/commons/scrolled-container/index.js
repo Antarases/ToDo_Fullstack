@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { Scrollbars as Scrollbar } from "react-custom-scrollbars";
 import classnames from "classnames";
 
+import { COEFICIENT_OF_SCROLLING_FOR_GETTING_MORE_ITEMS } from "../../../constants/chats"
+
 import styles from "./scrolled-container.module.scss";
 
 class ScrolledContainer extends React.Component {
@@ -10,8 +12,14 @@ class ScrolledContainer extends React.Component {
         isScrollbarHidden: !this.props.alwaysShowScrollbar
     };
 
+    onScroll(e, getMoreItems) {
+        if ((e.target.clientHeight + e.target.scrollTop) > (e.target.scrollHeight * COEFICIENT_OF_SCROLLING_FOR_GETTING_MORE_ITEMS)) {
+            getMoreItems();
+        }
+    };
+
     render() {
-        const { children, maxHeight, alwaysShowScrollbar, trackVerticalClassName, thumbVerticalClassName, innerRef, ...restProps } = this.props;
+        const { children, maxHeight, alwaysShowScrollbar, getMoreItems, trackVerticalClassName, thumbVerticalClassName, innerRef, ...restProps } = this.props;
         const { isScrollbarHidden } = this.state;
 
         return (
@@ -24,6 +32,7 @@ class ScrolledContainer extends React.Component {
                 autoHeightMax={maxHeight}
                 onMouseEnter={(e) => { !alwaysShowScrollbar && this.setState({ isScrollbarHidden: false }); }}
                 onMouseLeave={(e) => { !alwaysShowScrollbar && this.setState({ isScrollbarHidden: true }); }}
+                onScroll={(e) => { getMoreItems && this.onScroll(e, getMoreItems) }}
                 {...restProps}
                 ref={innerRef}
             >
@@ -46,6 +55,7 @@ ScrolledContainer.propTypes = {
     children: PropTypes.node,
     maxHeight: PropTypes.number,
     alwaysShowScrollbar: PropTypes.bool,
+    getMoreItems: PropTypes.func,
     trackVerticalClassName: PropTypes.string,
     thumbVerticalClassName: PropTypes.string
 };

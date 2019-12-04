@@ -9,11 +9,15 @@ module.exports = (app) => {
         "/api/user_list",
         requireLogin,
         async (req, res) => {
-            const { skip = 0, limit = 50 } = req.body;
-
             try {
+                let { skip, limit } = req.query;
+
                 const userList = await User
-                    .find({}, null, { skip, limit })
+                    .find(
+                        {},
+                        null,
+                        { skip: +skip, limit: +limit }
+                    )
                     .exec();
 
                 const totalUsersAmount = await User
