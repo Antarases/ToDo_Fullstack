@@ -1,28 +1,54 @@
 import axios from "axios";
 import { dispatch, getCurrentState } from "../store/configureStore";
 
-import { FETCHED_USERS_LIMIT, USER_LIST_FETCH_THROTTLING_TIME } from "../constants/chats";
+import { FETCHED_CHATS_LIMIT, FETCHED_USERS_LIMIT } from "../constants/chats";
+import { LISTS_FETCH_THROTTLING_TIME } from "../constants/app";
+
+const isNewListRequestsAllowed = (isListLoading, timeOfEndingLoadingFullList) => {
+    return !isListLoading
+        && (!timeOfEndingLoadingFullList || (Date.now() >= (timeOfEndingLoadingFullList + LISTS_FETCH_THROTTLING_TIME)));
+};
 
 export const getChatList = async () => {
     try {
-        const res  = await axios.get("/chats/get_chat_list");
-        const { chats } = res.data;
+        const { isChatListLoading, chats, timeOfEndingLoadingFullChatList } = getCurrentState().chats;
+        const currentChatsAmount = Object.keys(chats).length;
 
-        const newChats = {};
-        chats.forEach(chat => {
-            const newChatMembers = {};
-            chat._members.forEach(member => {
-                newChatMembers[member.id] = member;
-            });
+        if (
+            isNewListRequestsAllowed(isChatListLoading, timeOfEndingLoadingFullChatList)
+        ) {
+            setIsChatListLoading(true);
 
-            newChats[chat.id] = chat;
-            newChats[chat.id]._members = newChatMembers;
-        });
+            const users = await axios.get(`/chats/get_chat_list/?skip=${currentChatsAmount}&limit=${FETCHED_CHATS_LIMIT}`);
+            const { chats, totalChatsAmount } = users.data;
 
-        dispatch({ type: "CHATS__SET_CHAT_LIST", chats: newChats });
+            if (chats && Object.keys(chats).length) {
+                const newChats = {};
+                chats.forEach(chat => {
+                    const newChatMembers = {};
+                    chat._members.forEach(member => {
+                        newChatMembers[member.id] = member;
+                    });
+
+                    newChats[chat.id] = chat;
+                    newChats[chat.id]._members = newChatMembers;
+                });
+
+                dispatch({ type: "CHATS__ADD_CHATS_TO_CHAT_LIST", chats: newChats, totalChatsAmount });
+            }
+
+            if ((currentChatsAmount + chats.length) === totalChatsAmount) {
+                dispatch({ type: "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST", time: Date.now() });
+            }
+            setIsChatListLoading(false);
+        }
     } catch (error) {
         console.error("An error occured during getting chat list.", error);
     }
+};
+
+export const setIsChatListLoading = (isLoading) => {
+    dispatch({ type: "CHATS__SET_IS_CHAT_LIST_LOADING", isLoading });
 };
 
 export const selectChatAndGetMessages = async (chatId) => {
@@ -44,32 +70,31 @@ export const selectChatAndGetMessages = async (chatId) => {
 };
 
 export const getUserList = async () => {
-    const { isUserListLoading, userList, timeOfEndingLoadingFullUserList } = getCurrentState().chats;
-    const currentUsersAmount = Object.keys(userList).length;
+    try {
+        const { isUserListLoading, userList, timeOfEndingLoadingFullUserList } = getCurrentState().chats;
+        const currentUsersAmount = Object.keys(userList).length;
 
-    const isNewRequestsAllowed = () => {
-        return !isUserListLoading
-            && (!timeOfEndingLoadingFullUserList || (Date.now() >= (timeOfEndingLoadingFullUserList + USER_LIST_FETCH_THROTTLING_TIME)));
-    };
+        if (
+            isNewListRequestsAllowed(isUserListLoading, timeOfEndingLoadingFullUserList)
+        ) {
+            setIsUserListLoading(true);
 
-    if (
-        isNewRequestsAllowed()
-    ) {
-        setIsUserListLoading(true);
+            const users = await axios.get(`/api/user_list/?skip=${currentUsersAmount}&limit=${FETCHED_USERS_LIMIT}`);
+            const { userList, totalUsersAmount } = users.data;
 
-        const users = await axios.get(`/api/user_list/?skip=${currentUsersAmount}&limit=${FETCHED_USERS_LIMIT}`);
-        const { userList, totalUsersAmount } = users.data;
+            const newUsers = {};
+            userList.forEach(user => {
+                newUsers[user.id] = user;
+            });
 
-        const newUsers = {};
-        userList.forEach(user => {
-            newUsers[user.id] = user;
-        });
-
-        dispatch({ type: "CHATS__ADD_USERS_TO_USER_LIST", users: newUsers, totalUsersAmount });
-        if ((currentUsersAmount + userList.length) === totalUsersAmount) {
-            dispatch({ type: "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_USER_LIST", time: Date.now() });
+            dispatch({ type: "CHATS__ADD_USERS_TO_USER_LIST", users: newUsers, totalUsersAmount });
+            if ((currentUsersAmount + userList.length) === totalUsersAmount) {
+                dispatch({ type: "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_USER_LIST", time: Date.now() });
+            }
+            setIsUserListLoading(false);
         }
-        setIsUserListLoading(false);
+    } catch (error) {
+        console.error("An error occured during getting user list.", error);
     }
 };
 

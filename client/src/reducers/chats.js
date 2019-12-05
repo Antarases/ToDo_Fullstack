@@ -1,6 +1,9 @@
 const initialState = {
     chats: {},
     selectedChatId: null,
+    totalChatsAmount: null,
+    timeOfEndingLoadingFullChatList: null,
+    isChatListLoading: false,
     userList: {},
     totalUsersAmount: null,
     timeOfEndingLoadingFullUserList: null,
@@ -14,6 +17,19 @@ export default function chats(state = initialState, action) {
             return {
                 ...state,
                 chats: action.chats
+            };
+        }
+
+        case "CHATS__ADD_CHATS_TO_CHAT_LIST": {
+            const { chats, totalChatsAmount } = action;
+
+            return {
+                ...state,
+                chats: {
+                    ...state.chats,
+                    ...chats
+                },
+                totalChatsAmount
             };
         }
 
@@ -97,10 +113,24 @@ export default function chats(state = initialState, action) {
             };
         }
 
+        case "CHATS__SET_IS_CHAT_LIST_LOADING": {
+            return {
+                ...state,
+                isChatListLoading: action.isLoading
+            };
+        }
+
         case "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_USER_LIST": {
             return {
                 ...state,
                 timeOfEndingLoadingFullUserList: action.time
+            };
+        }
+
+        case "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST": {
+            return {
+                ...state,
+                timeOfEndingLoadingFullChatList: action.time
             };
         }
 

@@ -30,6 +30,7 @@ class ChatList extends React.Component {
                             className={styles.scrolledContainer}
                             trackVerticalClassName={styles.trackVertical}
                             thumbVerticalClassName={styles.thumbVertical}
+                            getMoreItems={getChatList}
                         >
                             {
                                 Object.values(chats).map(chat => (

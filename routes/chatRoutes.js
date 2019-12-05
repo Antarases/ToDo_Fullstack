@@ -11,17 +11,27 @@ module.exports = (app) => {
         requireLogin,
         async (req, res) => {
             try {
+                let { skip, limit } = req.query;
                 const userId = req.user.id;
 
                 const chatsQueryResult = await User
-                    .findById(userId, "_chats")
+                    .findById(
+                        userId,
+                        "_chats",
+                        { skip: +skip, limit: +limit }
+                    )
                     .populate({ path: "_chats", model: Chat,
                         options: { sort: { updatingDate: "desc"} },
                         populate: { path: "_members", model: User }
                     });
-                const chats = chatsQueryResult._chats;
+                const chats =  chatsQueryResult
+                    ? chatsQueryResult._chats
+                    : [];
 
-                res.send({ chats, code: 200 });
+                const user = await User.findById(userId);
+                let totalChatsAmount = user._chats.length;
+
+                res.send({ chats, totalChatsAmount, code: 200 });
             } catch (error) {
                 console.log(error);
                 res.status(422).send({ code: 422, text: "An error occured during getting chat list", error: error.message });

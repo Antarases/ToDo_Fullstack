@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Scrollbars as Scrollbar } from "react-custom-scrollbars";
 import classnames from "classnames";
 
-import { COEFICIENT_OF_SCROLLING_FOR_GETTING_MORE_ITEMS } from "../../../constants/chats"
+import { COEFICIENT_OF_SCROLLING_FOR_GETTING_MORE_ITEMS } from "../../../constants/app"
 
 import styles from "./scrolled-container.module.scss";
 
