@@ -30,6 +30,7 @@ app.use(passport.session());
 
 require("./routes/authRoutes")(app);
 require("./routes/appRoutes")(app);
+require("./routes/chatRoutes")(app);
 
 require("./websockets/todosSocket")(httpServer);
 require("./websockets/chatsSocket")(httpServer);

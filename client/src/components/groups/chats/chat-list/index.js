@@ -6,7 +6,7 @@ import moment from "moment";
 
 import ScrolledContainer from "../../../commons/scrolled-container";
 
-import { getChatList, selectChatAndGetMessages } from "../../../../websockets/ChatSocket";
+import { getChatList, selectChatAndGetMessages } from "../../../../actions/ChatActions";
 
 import { getFormattedDate } from "../../../../helpers/Functions";
 

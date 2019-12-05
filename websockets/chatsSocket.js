@@ -17,43 +17,6 @@ module.exports = (httpServer) => {
 
         socket.join(currentSocketChatIds);
 
-        socket.on("get_chat_list", async () => {
-            try {
-                const chatsQueryResult = await User
-                    .findById(socket.handshake.query.userId, "_chats")
-                    .populate({ path: "_chats", model: Chat,
-                        options: { sort: { updatingDate: "desc"} },
-                        populate: { path: "_members", model: User }
-                    });
-                const chats = chatsQueryResult._chats;
-
-                socket.emit("get_chat_list", { chats, code: 200 });
-            } catch (error) {
-                console.log(error);
-                socket.emit("send_message", { code: 422, text: "An error occured during getting chat list" });
-            }
-        });
-
-        socket.on("get_chat_messages", async (data) => {
-            const { chatId } = data;
-
-            try {
-                const messages = await Message
-                    .find(
-                        { _chat: chatId },
-                        null,
-                        {
-                            sort: { creationDate: "asc"},
-                            populate: { path: "_user", model: User }
-                        }
-                    );
-
-                socket.emit("get_chat_messages", { messages, chatId, code: 200 });
-            } catch (error) {
-                socket.emit("get_chat_messages", { code: 422, text: `An error occured during getting chat messages. Chat id: ${chatId}` });
-            }
-        });
-
         socket.on("send_message", async (data) => {
             const { chatId, text } = data;
 
