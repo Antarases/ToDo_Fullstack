@@ -5,9 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleRight }  from '@fortawesome/free-solid-svg-icons'
 import classnames from "classnames";
 
-import { setEditableTodoId } from "../../../actions/TodoActions";
-
-import { getTodos } from "../../../websockets/TodoSocket";
+import { getTodos, setEditableTodoId } from "../../../actions/TodoActions";
 
 import { Container, Button } from "react-bootstrap";
 

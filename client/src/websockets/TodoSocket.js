@@ -3,8 +3,6 @@ import { dispatch, getCurrentState } from "../store/configureStore";
 
 import { getCompressedBase64Image } from "../helpers/Functions";
 
-import { setCurrentTodosPage } from "../actions/TodosPaginationActions";
-
 import { TODOS_PER_PAGE } from "../constants/todosPagination";
 import { INITIAL_TODOS_PAGE } from "../constants/todosPagination";
 import { initialState as sortParamsInitialState } from "../reducers/todosSortParams";
@@ -24,23 +22,6 @@ export const setTodoSocketConnectionAndHandlers = () => {
             sortOrder: sortParamsInitialState.sortOrder
         },
         forceNew: true
-    });
-
-    TodoSocket.on("get_todos", (data) => {
-        if ((data.code >= 200) && (data.code < 300)) {
-            const { todos, totalTodosAmount, nextPage } = data;
-            const totalTodoPagesAmount = Math.ceil(totalTodosAmount / TODOS_PER_PAGE);
-
-            dispatch({ type: "SET_TODOS", todos, totalTodosAmount });
-            dispatch({ type: "SET_TOTAL_TODO_PAGES_AMOUNT", totalTodoPagesAmount });
-
-            if (typeof nextPage === "number") {
-                setCurrentTodosPage(nextPage);
-            }
-        } else {
-            console.error(new Error(`Code: ${data.code}. Text: ${data.text}.`));
-        }
-
     });
 
     TodoSocket.on("add_todo", (data) => {
@@ -79,10 +60,6 @@ export const closeTodoSocketConnection = () => {
     } catch (error) {
         console.error(error);   // for case when TodoSocket hasn't been initialized yet
     }
-};
-
-export const getTodos = async (page, sortField, sortOrder, nextPage) => {
-    TodoSocket.emit("get_todos", { page, sortField, sortOrder, nextPage });
 };
 
 export const addTodo = async (text, image) => {
