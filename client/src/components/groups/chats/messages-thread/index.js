@@ -11,6 +11,19 @@ import { NOIMAGE_IMAGE_URL } from "../../../../constants/app";
 import styles from "./messagesThread.module.scss";
 
 class MessagesThread extends React.Component {
+    componentDidMount() {
+        const { innerRef } = this.props;
+        if (innerRef && innerRef.current) {
+            innerRef.current.scrollToBottom();
+        }
+    }
+    componentDidUpdate(prevProps) {
+        const { messages, innerRef } = this.props;
+        if ((innerRef && innerRef.current) && (!prevProps.messages && messages)) {
+            innerRef.current.scrollToBottom();
+        }
+    }
+
     render() {
         const { messages, innerRef } = this.props;
 

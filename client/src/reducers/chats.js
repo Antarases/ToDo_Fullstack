@@ -93,6 +93,23 @@ export default function chats(state = initialState, action) {
             };
         }
 
+        case "CHATS__CLEAR_CURRENT_CHAT_MESSAGES": {
+            const { selectedChatId } = state;
+
+            if (selectedChatId) {
+                return {
+                    ...state,
+                    chats: {
+                        ...state.chats,
+                        [selectedChatId]: {
+                            ...state.chats[selectedChatId],
+                            messages: null
+                        }
+                    }
+                };
+            }
+        }
+
         case "CHATS__ADD_USERS_TO_USER_LIST": {
             const { users, totalUsersAmount } = action;
 

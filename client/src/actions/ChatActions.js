@@ -53,6 +53,7 @@ export const setIsChatListLoading = (isLoading) => {
 
 export const selectChatAndGetMessages = async (chatId) => {
     try {
+        dispatch({ type: "CHATS__CLEAR_CURRENT_CHAT_MESSAGES" });
         dispatch({ type: "CHATS__SET_SELECTED_CHAT", chatId });
 
         const res = await axios.get(`/chats/get_chat_messages/?chatId=${chatId}`);

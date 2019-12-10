@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Container } from "react-bootstrap";
@@ -22,9 +22,11 @@ const ChatsPage = ({ selectedChatId, selectedChat, isCreateChatModalOpen }) => {
         return closeChatSocketConnection;
     }, []);
 
-    const scrolledMessagesThreadContainerRef = React.createRef();
+    const scrolledMessagesThreadContainerRef = useRef(null);
+
     const onMessageInputChange = () => {
-        scrolledMessagesThreadContainerRef.current.forceUpdate();
+        scrolledMessagesThreadContainerRef.current
+            && scrolledMessagesThreadContainerRef.current.forceUpdate();
     };
 
     return (
