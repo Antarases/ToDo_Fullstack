@@ -39,7 +39,7 @@ const ChatsPage = ({ selectedChatId, selectedChat, isCreateChatModalOpen }) => {
 
                     { selectedChatId &&
                         <section className={styles.messagesContainer}>
-                            <MessagesThread messages={selectedChat.messages} ref={scrolledMessagesThreadContainerRef} />
+                            <MessagesThread messages={selectedChat.messages} selectedChatId={selectedChatId} ref={scrolledMessagesThreadContainerRef} />
 
                             <SendMessageForm onChange={onMessageInputChange} />
                         </section>

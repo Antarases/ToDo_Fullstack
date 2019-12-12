@@ -4,6 +4,9 @@ const initialState = {
     totalChatsAmount: null,
     timeOfEndingLoadingFullChatList: null,
     isChatListLoading: false,
+    totalCurrentChatMessagesAmount: null,
+    timeOfEndingLoadingFullCurrentChatMessageList: null,
+    isMessageListLoading: false,
     userList: {},
     totalUsersAmount: null,
     timeOfEndingLoadingFullUserList: null,
@@ -45,13 +48,6 @@ export default function chats(state = initialState, action) {
             };
         }
 
-        case "CHATS__TOGGLE_CREATE_CHAT_MODAL": {
-            return {
-                ...state,
-                isCreateChatModalOpen: !state.isCreateChatModalOpen
-            };
-        }
-
         case "CHATS__SET_SELECTED_CHAT": {
             return {
                 ...state,
@@ -59,8 +55,8 @@ export default function chats(state = initialState, action) {
             };
         }
 
-        case "CHATS__SET_CHAT_MESSAGES": {
-            const { messages, chatId } = action;
+        case "CHATS__ADD_MESSAGES_TO_MESSAGE_LIST": {
+            const { chatId, messages, totalCurrentChatMessagesAmount } = action;
 
             return {
                 ...state,
@@ -68,9 +64,13 @@ export default function chats(state = initialState, action) {
                     ...state.chats,
                     [chatId]: {
                         ...state.chats[chatId],
-                        messages
+                        messages: {
+                            ...messages,
+                            ...state.chats[chatId].messages
+                        }
                     }
-                }
+                },
+                totalCurrentChatMessagesAmount: totalCurrentChatMessagesAmount || state.totalCurrentChatMessagesAmount
             };
         }
 
@@ -96,9 +96,9 @@ export default function chats(state = initialState, action) {
         case "CHATS__CLEAR_CURRENT_CHAT_MESSAGES": {
             const { selectedChatId } = state;
 
-            if (selectedChatId) {
-                return {
-                    ...state,
+            return selectedChatId
+                ? {
+                ...state,
                     chats: {
                         ...state.chats,
                         [selectedChatId]: {
@@ -106,8 +106,15 @@ export default function chats(state = initialState, action) {
                             messages: null
                         }
                     }
-                };
-            }
+                }
+                : state;
+        }
+
+        case "CHATS__TOGGLE_CREATE_CHAT_MODAL": {
+            return {
+                ...state,
+                isCreateChatModalOpen: !state.isCreateChatModalOpen
+            };
         }
 
         case "CHATS__ADD_USERS_TO_USER_LIST": {
@@ -123,13 +130,6 @@ export default function chats(state = initialState, action) {
             };
         }
 
-        case "CHATS__SET_IS_USER_LIST_LOADING": {
-            return {
-                ...state,
-                isUserListLoading: action.isLoading
-            };
-        }
-
         case "CHATS__SET_IS_CHAT_LIST_LOADING": {
             return {
                 ...state,
@@ -137,10 +137,17 @@ export default function chats(state = initialState, action) {
             };
         }
 
-        case "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_USER_LIST": {
+        case "CHATS__SET_IS_MESSAGE_LIST_LOADING": {
             return {
                 ...state,
-                timeOfEndingLoadingFullUserList: action.time
+                isMessageListLoading: action.isLoading
+            };
+        }
+
+        case "CHATS__SET_IS_USER_LIST_LOADING": {
+            return {
+                ...state,
+                isUserListLoading: action.isLoading
             };
         }
 
@@ -148,6 +155,27 @@ export default function chats(state = initialState, action) {
             return {
                 ...state,
                 timeOfEndingLoadingFullChatList: action.time
+            };
+        }
+
+        case "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST": {
+            return {
+                ...state,
+                timeOfEndingLoadingFullCurrentChatMessageList: action.time
+            };
+        }
+
+        case "CHATS__RESET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST": {
+            return {
+                ...state,
+                timeOfEndingLoadingFullCurrentChatMessageList: initialState.timeOfEndingLoadingFullCurrentChatMessageList
+            };
+        }
+
+        case "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_USER_LIST": {
+            return {
+                ...state,
+                timeOfEndingLoadingFullUserList: action.time
             };
         }
 

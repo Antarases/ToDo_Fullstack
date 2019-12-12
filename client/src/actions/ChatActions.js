@@ -1,7 +1,7 @@
 import axios from "axios";
 import { dispatch, getCurrentState } from "../store/configureStore";
 
-import { FETCHED_CHATS_LIMIT, FETCHED_USERS_LIMIT } from "../constants/chats";
+import { FETCHED_CHATS_LIMIT, FETCHED_MESSAGES_LIMIT, FETCHED_USERS_LIMIT } from "../constants/chats";
 import { LISTS_FETCH_THROTTLING_TIME } from "../constants/app";
 
 const isNewListRequestsAllowed = (isListLoading, timeOfEndingLoadingFullList) => {
@@ -51,23 +51,48 @@ export const setIsChatListLoading = (isLoading) => {
     dispatch({ type: "CHATS__SET_IS_CHAT_LIST_LOADING", isLoading });
 };
 
-export const selectChatAndGetMessages = async (chatId) => {
+export const setSelectedChat = (chatId) => {
+    dispatch({ type: "CHATS__CLEAR_CURRENT_CHAT_MESSAGES" });
+    dispatch({ type: "CHATS__RESET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST" });
+    dispatch({ type: "CHATS__SET_SELECTED_CHAT", chatId });
+};
+
+export const getChatMessages = async (chatId) => {
     try {
-        dispatch({ type: "CHATS__CLEAR_CURRENT_CHAT_MESSAGES" });
-        dispatch({ type: "CHATS__SET_SELECTED_CHAT", chatId });
+        const { chats, isMessageListLoading, timeOfEndingLoadingFullCurrentChatMessageList } = getCurrentState().chats;
+        const selectedChatMessages = chats[chatId].messages;
+        const currentMessagesAmount = selectedChatMessages ? Object.keys(selectedChatMessages).length : 0;
 
-        const res = await axios.get(`/chats/get_chat_messages/?chatId=${chatId}`);
-        const { messages } = res.data;
+        if (
+            isNewListRequestsAllowed(isMessageListLoading, timeOfEndingLoadingFullCurrentChatMessageList)
+        ) {
+            setIsMessageListLoading(true);
 
-        const newMessages = {};
-        messages.forEach(message => {
-            newMessages[message.id] = message;
-        });
+            const res = await axios.get(`/chats/get_chat_messages/?chatId=${chatId}&skip=${currentMessagesAmount}&limit=${FETCHED_MESSAGES_LIMIT}`);
+            const { messages, totalMessagesAmount } = res.data;
+            const fetchedMessagesAmount = messages ? Object.keys(messages).length : 0;
 
-        dispatch({ type: "CHATS__SET_CHAT_MESSAGES", messages: newMessages, chatId });
+            if (fetchedMessagesAmount) {
+                const newMessages = {};
+                messages.forEach(message => {
+                    newMessages[message.id] = message;
+                });
+
+                dispatch({ type: "CHATS__ADD_MESSAGES_TO_MESSAGE_LIST", chatId, messages: newMessages, totalCurrentChatMessagesAmount: totalMessagesAmount });
+            }
+
+            if ((currentMessagesAmount + fetchedMessagesAmount) >= totalMessagesAmount) {
+                dispatch({ type: "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST", time: Date.now() });
+            }
+            setIsMessageListLoading(false);
+        }
     } catch (error) {
         console.error("An error occured during getting chat messages.", error);
     }
+};
+
+export const setIsMessageListLoading = (isLoading) => {
+    dispatch({ type: "CHATS__SET_IS_MESSAGE_LIST_LOADING", isLoading });
 };
 
 export const getUserList = async () => {

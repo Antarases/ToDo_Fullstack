@@ -4,6 +4,7 @@ import moment from "moment";
 
 import ScrolledContainer from "../../../commons/scrolled-container";
 
+import { getChatMessages } from "../../../../actions/ChatActions";
 import { getFormattedTime} from "../../../../helpers/Functions";
 
 import { NOIMAGE_IMAGE_URL } from "../../../../constants/app";
@@ -13,25 +14,35 @@ import styles from "./messagesThread.module.scss";
 class MessagesThread extends React.Component {
     componentDidMount() {
         const { innerRef } = this.props;
+
         if (innerRef && innerRef.current) {
             innerRef.current.scrollToBottom();
         }
     }
+
     componentDidUpdate(prevProps) {
         const { messages, innerRef } = this.props;
+
         if ((innerRef && innerRef.current) && (!prevProps.messages && messages)) {
             innerRef.current.scrollToBottom();
         }
     }
 
     render() {
-        const { messages, innerRef } = this.props;
+        const { messages, selectedChatId, innerRef } = this.props;
 
         return (
             <section className={styles.chatThreadContainer}>
                 {
                     (messages && !!Object.keys(messages).length)
-                        ? <ScrolledContainer alwaysShowScrollbar trackVerticalClassName={styles.trackVertical} ref={innerRef}>
+                        ? <ScrolledContainer
+                            alwaysShowScrollbar
+                            trackVerticalClassName={styles.trackVertical}
+                            ref={innerRef}
+                            itemsAmount={messages ? Object.keys(messages).length : 0}
+                            getMoreItems={() => { getChatMessages(selectedChatId); }}
+                            isScrollReversed={true}
+                        >
                             {
                                 Object.values(messages).map(message => (
                                     <section className={styles.messageContainerWrapper} key={message.id}>

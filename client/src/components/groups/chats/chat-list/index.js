@@ -6,7 +6,7 @@ import moment from "moment";
 
 import ScrolledContainer from "../../../commons/scrolled-container";
 
-import { getChatList, selectChatAndGetMessages } from "../../../../actions/ChatActions";
+import { getChatList, setSelectedChat, getChatMessages } from "../../../../actions/ChatActions";
 
 import { getFormattedDate } from "../../../../helpers/Functions";
 
@@ -30,6 +30,7 @@ class ChatList extends React.Component {
                             className={styles.scrolledContainer}
                             trackVerticalClassName={styles.trackVertical}
                             thumbVerticalClassName={styles.thumbVertical}
+                            itemsAmount={chats ? Object.keys(chats).length : 0}
                             getMoreItems={getChatList}
                         >
                             {
@@ -37,7 +38,8 @@ class ChatList extends React.Component {
                                     <section
                                         className={classnames(styles.chat, {[styles.selected]: (chat.id === selectedChatId)})}
                                         onClick={() => {
-                                            selectChatAndGetMessages(chat.id);
+                                            setSelectedChat(chat.id);
+                                            getChatMessages(chat.id);
                                         }}
                                         key={chat.id}
                                     >

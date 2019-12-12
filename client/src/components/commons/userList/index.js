@@ -11,7 +11,10 @@ const UserList = ({ userList, selectedUserIds = [], onClick, getMoreItems }) => 
         <section className={styles.userListContainer}>
             {
                 (userList && !!Object.keys(userList).length)
-                    ? <ScrolledContainer getMoreItems={getMoreItems}>
+                    ? <ScrolledContainer
+                        itemsAmount={userList ? Object.keys(userList).length : 0}
+                        getMoreItems={getMoreItems}
+                    >
                         {
                             Object.values(userList).map(user => (
                                 (user && !!Object.keys(user).length)

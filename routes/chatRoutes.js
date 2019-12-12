@@ -17,11 +17,14 @@ module.exports = (app) => {
                 const chatsQueryResult = await User
                     .findById(
                         userId,
-                        "_chats",
-                        { skip: +skip, limit: +limit }
+                        "_chats"
                     )
                     .populate({ path: "_chats", model: Chat,
-                        options: { sort: { updatingDate: "desc"} },
+                        options: {
+                            sort: { updatingDate: "desc"},
+                            skip: +skip,
+                            limit: +limit
+                        },
                         populate: { path: "_members", model: User }
                     });
                 const chats =  chatsQueryResult
@@ -44,19 +47,38 @@ module.exports = (app) => {
         requireLogin,
         async (req, res) => {
             try {
-                const { chatId } = req.query;
+                let { chatId, skip, limit } = req.query;
+                skip = +skip;
+                limit = +limit;
 
-                const messages = await Message
-                    .find(
-                        { _chat: chatId },
-                        null,
-                        {
-                            sort: { creationDate: "asc"},
-                            populate: { path: "_user", model: User }
-                        }
-                    );
+                const allCurrentChatMessages = await Message.find({ _chat: chatId });
+                const totalMessagesAmount = allCurrentChatMessages.length;
 
-                res.send({ messages, chatId, code: 200 });
+                if (totalMessagesAmount >= (skip + limit)) {
+                    skip = totalMessagesAmount - (skip + limit);
+                } else {
+                    limit = totalMessagesAmount - skip;
+                    skip = 0;
+                }
+
+                let messages;
+                if (limit !== 0) {
+                    messages = await Message
+                        .find(
+                            { _chat: chatId },
+                            null,
+                            {
+                                sort: { creationDate: "asc"},
+                                skip: skip,
+                                limit: limit,
+                                populate: { path: "_user", model: User }
+                            }
+                        );
+                } else {
+                    messages = [];
+                }
+
+                res.send({ chatId, messages, totalMessagesAmount, code: 200 });
             } catch (error) {
                 console.log(error);
                 res.status(422).send({ code: 422, text: "An error occured during getting chat messages", error: error.message });
