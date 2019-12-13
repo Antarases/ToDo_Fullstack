@@ -37,7 +37,7 @@ export const getChatList = async () => {
                 dispatch({ type: "CHATS__ADD_CHATS_TO_CHAT_LIST", chats: newChats, totalChatsAmount });
             }
 
-            if ((currentChatsAmount + chats.length) === totalChatsAmount) {
+            if ((currentChatsAmount + chats.length) >= totalChatsAmount) {
                 dispatch({ type: "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST", time: Date.now() });
             }
             setIsChatListLoading(false);
@@ -114,7 +114,7 @@ export const getUserList = async () => {
             });
 
             dispatch({ type: "CHATS__ADD_USERS_TO_USER_LIST", users: newUsers, totalUsersAmount });
-            if ((currentUsersAmount + userList.length) === totalUsersAmount) {
+            if ((currentUsersAmount + userList.length) >= totalUsersAmount) {
                 dispatch({ type: "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_USER_LIST", time: Date.now() });
             }
             setIsUserListLoading(false);

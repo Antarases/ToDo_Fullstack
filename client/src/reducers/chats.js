@@ -70,7 +70,7 @@ export default function chats(state = initialState, action) {
                         }
                     }
                 },
-                totalCurrentChatMessagesAmount: totalCurrentChatMessagesAmount || state.totalCurrentChatMessagesAmount
+                totalCurrentChatMessagesAmount: totalCurrentChatMessagesAmount
             };
         }
 
