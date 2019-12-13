@@ -48,5 +48,7 @@ export const sendMessage = async (text, chatId) => {
 };
 
 export const createChat = async (chatName, userIds) => {
-    ChatSocket.emit("create_chat", { chatName, userIds });
+    const currentUserId = getCurrentState().app.userData.id;
+
+    ChatSocket.emit("create_chat", { chatName, userIds: [...userIds, currentUserId] });
 };

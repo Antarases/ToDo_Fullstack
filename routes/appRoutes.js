@@ -11,17 +11,18 @@ module.exports = (app) => {
         async (req, res) => {
             try {
                 let { skip, limit } = req.query;
+                const userId = req.user.id;
 
                 const userList = await User
                     .find(
-                        {},
+                        { _id: { $ne: userId } },
                         null,
                         { skip: +skip, limit: +limit }
                     )
                     .exec();
 
                 const totalUsersAmount = await User
-                    .find()
+                    .find({ _id: { $ne: userId } })
                     .countDocuments();
 
                 res.send({ userList, totalUsersAmount });
