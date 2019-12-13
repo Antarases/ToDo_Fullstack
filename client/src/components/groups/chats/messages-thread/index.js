@@ -36,7 +36,6 @@ class MessagesThread extends React.Component {
                 {
                     (messages && !!Object.keys(messages).length)
                         ? <ScrolledContainer
-                            alwaysShowScrollbar
                             trackVerticalClassName={styles.trackVertical}
                             ref={innerRef}
                             itemsAmount={messages ? Object.keys(messages).length : 0}

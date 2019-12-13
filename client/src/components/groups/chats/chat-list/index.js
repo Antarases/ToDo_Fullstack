@@ -26,7 +26,6 @@ class ChatList extends React.Component {
                     (chats && Object.keys(chats).length)
                     ? (
                         <ScrolledContainer
-                            alwaysShowScrollbar
                             className={styles.scrolledContainer}
                             trackVerticalClassName={styles.trackVertical}
                             thumbVerticalClassName={styles.thumbVertical}

@@ -10,7 +10,7 @@ import styles from "./scrolled-container.module.scss";
 
 class ScrolledContainer extends React.Component {
     state = {
-        isScrollbarHidden: !this.props.alwaysShowScrollbar
+        isScrollbarHidden: this.props.hideScrollbarOnMouseOut
     };
     scrollbarRef = React.createRef();
 
@@ -56,7 +56,7 @@ class ScrolledContainer extends React.Component {
     };
 
     render() {
-        const { children, maxHeight, alwaysShowScrollbar, getMoreItems, isScrollReversed, trackVerticalClassName, thumbVerticalClassName, innerRef, ...restProps } = this.props;
+        const { children, maxHeight, hideScrollbarOnMouseOut, getMoreItems, isScrollReversed, trackVerticalClassName, thumbVerticalClassName, innerRef, ...restProps } = this.props;
         const { isScrollbarHidden } = this.state;
 
         return (
@@ -67,8 +67,8 @@ class ScrolledContainer extends React.Component {
                 hideTracksWhenNotNeeded
                 autoHeight={!!maxHeight}
                 autoHeightMax={maxHeight}
-                onMouseEnter={(e) => { !alwaysShowScrollbar && this.setState({ isScrollbarHidden: false }); }}
-                onMouseLeave={(e) => { !alwaysShowScrollbar && this.setState({ isScrollbarHidden: true }); }}
+                onMouseEnter={(e) => { hideScrollbarOnMouseOut && this.setState({ isScrollbarHidden: false }); }}
+                onMouseLeave={(e) => { hideScrollbarOnMouseOut && this.setState({ isScrollbarHidden: true }); }}
                 onScroll={(e) => { getMoreItems && this.conditionallyGetMoreItems(e); }}
                 {...restProps}
                 ref={mergeRefs([this.scrollbarRef, innerRef])}
@@ -91,7 +91,7 @@ export default React.forwardRef((props, ref) => <ScrolledContainer
 ScrolledContainer.propTypes = {
     children: PropTypes.node,
     maxHeight: PropTypes.number,
-    alwaysShowScrollbar: PropTypes.bool,
+    hideScrollbarOnMouseOut: PropTypes.bool,
     itemsAmount: PropTypes.number,
     getMoreItems: PropTypes.func,
     trackVerticalClassName: PropTypes.string,

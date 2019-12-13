@@ -12,6 +12,7 @@ const UserList = ({ userList, selectedUserIds = [], onClick, getMoreItems }) => 
             {
                 (userList && !!Object.keys(userList).length)
                     ? <ScrolledContainer
+                        hideScrollbarOnMouseOut
                         itemsAmount={userList ? Object.keys(userList).length : 0}
                         getMoreItems={getMoreItems}
                     >
