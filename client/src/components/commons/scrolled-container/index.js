@@ -56,7 +56,7 @@ class ScrolledContainer extends React.Component {
     };
 
     render() {
-        const { children, maxHeight, hideScrollbarOnMouseOut, getMoreItems, isScrollReversed, trackVerticalClassName, thumbVerticalClassName, innerRef, ...restProps } = this.props;
+        const { children, maxHeight, hideScrollbarOnMouseOut, getMoreItems, isScrollReversed, itemsAmount, trackVerticalClassName, thumbVerticalClassName, innerRef, ...restProps } = this.props;
         const { isScrollbarHidden } = this.state;
 
         return (
@@ -92,9 +92,14 @@ ScrolledContainer.propTypes = {
     children: PropTypes.node,
     maxHeight: PropTypes.number,
     hideScrollbarOnMouseOut: PropTypes.bool,
-    itemsAmount: PropTypes.number,
     getMoreItems: PropTypes.func,
+    isScrollReversed: PropTypes.bool,
+    itemsAmount: PropTypes.number,
     trackVerticalClassName: PropTypes.string,
-    thumbVerticalClassName: PropTypes.string
+    thumbVerticalClassName: PropTypes.string,
+    innerRef: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.func
+    ])
 };
 

@@ -82,6 +82,8 @@ const datePropValidation = (props, propName, componentName) => {
 
 ChatList.propTypes = {
     chats: PropTypes.shape({
+        id: PropTypes.string,
+        avatar: PropTypes.string,
         name: PropTypes.string,
         lastMessage: PropTypes.string,
         updatingDate: datePropValidation

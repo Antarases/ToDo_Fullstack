@@ -80,11 +80,19 @@ const datePropValidation = (props, propName, componentName) => {
 };
 
 MessagesThread.propTypes = {
-    chats: PropTypes.shape({
-        name: PropTypes.string,
-        lastMessage: PropTypes.string,
-        updatingDate: datePropValidation
+    messages: PropTypes.shape({
+        id: PropTypes.string,
+        text: PropTypes.string,
+        updatingDate: datePropValidation,
+        _user: PropTypes.shape({
+            avatar: PropTypes.string,
+            userFullName: PropTypes.string
+        })
     }),
-    selectedChatId: PropTypes.string
+    selectedChatId: PropTypes.string,
+    innerRef: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.func
+    ])
 };
 
