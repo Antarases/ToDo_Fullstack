@@ -13,23 +13,23 @@ import styles from "./messagesThread.module.scss";
 
 class MessagesThread extends React.Component {
     componentDidMount() {
-        const { innerRef } = this.props;
+        const { passthroughRef } = this.props;
 
-        if (innerRef && innerRef.current) {
-            innerRef.current.scrollToBottom();
+        if (passthroughRef && passthroughRef.current) {
+            passthroughRef.current.scrollToBottom();
         }
     }
 
     componentDidUpdate(prevProps) {
-        const { messages, innerRef } = this.props;
+        const { messages, passthroughRef } = this.props;
 
-        if ((innerRef && innerRef.current) && (!prevProps.messages && messages)) {
-            innerRef.current.scrollToBottom();
+        if ((passthroughRef && passthroughRef.current) && (!prevProps.messages && messages)) {
+            passthroughRef.current.scrollToBottom();
         }
     }
 
     render() {
-        const { messages, selectedChatId, innerRef } = this.props;
+        const { messages, selectedChatId, passthroughRef } = this.props;
 
         return (
             <section className={styles.chatThreadContainer}>
@@ -37,7 +37,7 @@ class MessagesThread extends React.Component {
                     (messages && !!Object.keys(messages).length)
                         ? <ScrolledContainer
                             trackVerticalClassName={styles.trackVertical}
-                            ref={innerRef}
+                            passthroughRef={passthroughRef}
                             itemsAmount={messages ? Object.keys(messages).length : 0}
                             getMoreItems={() => { getChatMessages(selectedChatId); }}
                             isScrollReversed={true}
@@ -69,28 +69,30 @@ class MessagesThread extends React.Component {
     }
 }
 
-export default React.forwardRef((props, ref) => <MessagesThread
-    innerRef={ref} {...props}
+export default React.forwardRef((props, passthroughRef) => <MessagesThread
+    passthroughRef={passthroughRef} {...props}
 />);
 
 const datePropValidation = (props, propName, componentName) => {
-    if (!moment(props[propName], true).isValid()) {
-        return new Error(`Prop '${propName}' of type 'Date' with invalid value supplied to '${componentName}'. Validation failed.`);
+    if (!moment(props[propName], "YYYY-MM-DDTHH:mm:ss.SSSZ", true).isValid()) {
+        return new Error(`Prop '${propName}' of type 'Date' with invalid value supplied to message of '${componentName}' component. Validation failed.`);
     }
 };
 
 MessagesThread.propTypes = {
-    messages: PropTypes.shape({
-        id: PropTypes.string,
-        text: PropTypes.string,
-        updatingDate: datePropValidation,
-        _user: PropTypes.shape({
-            avatar: PropTypes.string,
-            userFullName: PropTypes.string
+    messages: PropTypes.objectOf(
+        PropTypes.shape({
+            id: PropTypes.string,
+            text: PropTypes.string,
+            updatingDate: datePropValidation,
+            _user: PropTypes.shape({
+                avatar: PropTypes.string,
+                userFullName: PropTypes.string
+            })
         })
-    }),
+    ),
     selectedChatId: PropTypes.string,
-    innerRef: PropTypes.oneOfType([
+    passthroughRef: PropTypes.oneOfType([
         PropTypes.object,
         PropTypes.func
     ])

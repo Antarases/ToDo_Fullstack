@@ -56,7 +56,7 @@ class ScrolledContainer extends React.Component {
     };
 
     render() {
-        const { children, maxHeight, hideScrollbarOnMouseOut, getMoreItems, isScrollReversed, itemsAmount, trackVerticalClassName, thumbVerticalClassName, innerRef, ...restProps } = this.props;
+        const { children, maxHeight, hideScrollbarOnMouseOut, getMoreItems, isScrollReversed, itemsAmount, trackVerticalClassName, thumbVerticalClassName, passthroughRef, ...restProps } = this.props;
         const { isScrollbarHidden } = this.state;
 
         return (
@@ -71,7 +71,7 @@ class ScrolledContainer extends React.Component {
                 onMouseLeave={(e) => { hideScrollbarOnMouseOut && this.setState({ isScrollbarHidden: true }); }}
                 onScroll={(e) => { getMoreItems && this.conditionallyGetMoreItems(e); }}
                 {...restProps}
-                ref={mergeRefs([this.scrollbarRef, innerRef])}
+                ref={mergeRefs([this.scrollbarRef, passthroughRef])}
             >
                 <div
                     className={styles.contentContainer}
@@ -84,8 +84,8 @@ class ScrolledContainer extends React.Component {
     }
 }
 
-export default React.forwardRef((props, ref) => <ScrolledContainer
-    innerRef={ref} {...props}
+export default React.forwardRef((props, passthroughRef) => <ScrolledContainer
+    passthroughRef={passthroughRef} {...props}
 />);
 
 ScrolledContainer.propTypes = {
@@ -97,7 +97,7 @@ ScrolledContainer.propTypes = {
     itemsAmount: PropTypes.number,
     trackVerticalClassName: PropTypes.string,
     thumbVerticalClassName: PropTypes.string,
-    innerRef: PropTypes.oneOfType([
+    passthroughRef: PropTypes.oneOfType([
         PropTypes.object,
         PropTypes.func
     ])
