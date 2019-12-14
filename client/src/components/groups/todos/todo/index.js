@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faEdit }  from "@fortawesome/free-solid-svg-icons";
 import classnames from "classnames";
 
-import { Container, Button } from "react-bootstrap";
+import { Container, Button } from "reactstrap";
 
 import { smoothScrollUp } from "../../../../helpers/Functions";
 import { setEditableTodoId } from "../../../../actions/TodoActions";
@@ -24,7 +24,7 @@ let Todo = ({
     editableTodoId
 }) => {
     return (
-        <Container as="section" className={styles.todo}>
+        <Container tag="section" className={styles.todo}>
             <div className={styles.userInfo}>
                 <img
                     src={image || NOIMAGE_IMAGE_URL}
@@ -49,11 +49,12 @@ let Todo = ({
                 </div>
 
                 <Button
+                    className={styles.ediTodoButton}
+                    color="primary"
                     onClick={() => {
                         (editableTodoId !== id) && setEditableTodoId(id);
                         smoothScrollUp();
                     }}
-                    className={styles.ediTodoButton}
                 >
                     <FontAwesomeIcon icon={faEdit} />
                     <span className={styles.text}>

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Container, Col } from "react-bootstrap";
+import { Container, Col } from "reactstrap";
 import PropTypes from "prop-types";
 
 import SortingBarOption from "../../../commons/sorting-bar-option";
@@ -12,7 +12,7 @@ class TodosSortingBar extends React.Component {
         const { isUserAdmin } = this.props;
 
         return (
-            <Container as="section" className={styles.sortingBar}>
+            <Container tag="section" className={styles.sortingBar}>
                     <span className={styles.sortingBarTitle}>Sort by:</span>
 
                     <Col

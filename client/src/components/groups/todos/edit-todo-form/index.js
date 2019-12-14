@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 
-import { Container, Row, Col, FormControl, Button } from "react-bootstrap";
+import { Container, Row, Col, Input, Button } from "reactstrap";
 
 import { setEditableTodoId } from "../../../../actions/TodoActions";
 
@@ -60,11 +60,11 @@ class EditTodoForm extends React.Component{
         const { text, image, isCompleted, isTodoFetchingFailed } = this.state;
 
         return (
-            <Container as="section" className={styles.editTodoForm}>
+            <Container tag="section" className={styles.editTodoForm}>
                 <Row>
                     <Col
                         className={styles.title}
-                        lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 6, offset: 3}} xs={12}
+                        lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 6, offset: 3}} xs={12}
                     >
                         Edit Todo
                     </Col>
@@ -75,10 +75,10 @@ class EditTodoForm extends React.Component{
                         <Row>
                             <Col
                                 className={styles.formFieldsContainer}
-                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
+                                lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 8, offset: 2}} xs={12}
                             >
                                 <label htmlFor="text" className={styles.label}>Text:</label>
-                                <FormControl
+                                <Input
                                     id="text"
                                     type="text"
                                     required
@@ -92,10 +92,10 @@ class EditTodoForm extends React.Component{
                         <Row>
                             <Col
                                 className={styles.formFieldsContainer}
-                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
+                                lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 8, offset: 2}} xs={12}
                             >
                                 <label htmlFor="file" className={styles.label}>Image:</label>
-                                <FormControl
+                                <input
                                     id="file"
                                     type="file"
                                     accept="image/*"
@@ -111,10 +111,10 @@ class EditTodoForm extends React.Component{
                         <Row>
                             <Col
                                 className={classnames(styles.formFieldsContainer, styles.todoCompletionStatus)}
-                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
+                                lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 8, offset: 2}} xs={12}
                             >
                                 <label htmlFor="isCompleted" className={styles.label}>Completed: </label>
-                                <FormControl
+                                <Input
                                     className={styles.checkbox}
                                     id="isCompleted"
                                     type="checkbox"
@@ -127,14 +127,14 @@ class EditTodoForm extends React.Component{
 
                         <Col
                             className={styles.buttonsContainer}
-                            lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
+                            lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 8, offset: 2}} xs={12}
                         >
                             <Button
                                 className={styles.cancelButton}
                                 onClick={() => {
                                     setEditableTodoId(null);
                                 }}
-                                variant="primary"
+                                color="primary"
                             >
                                 Cancel
                             </Button>
@@ -150,7 +150,7 @@ class EditTodoForm extends React.Component{
 
                                     setEditableTodoId(null);
                                 }}
-                                variant="primary"
+                                color="primary"
                             >
                                 Apply
                             </Button>
@@ -159,8 +159,7 @@ class EditTodoForm extends React.Component{
                     : <Row>
                         <Col
                             className="errorMessage"
-                            lg={4} md={6} sm={6} xs={12}
-                            lgOffset={4} mdOffset={3} smOffset={3}
+                            lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 6, offset: 3}} xs={12}
                         >
                             Failed to get TODO for editing.
                         </Col>

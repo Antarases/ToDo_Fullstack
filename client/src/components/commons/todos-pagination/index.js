@@ -7,7 +7,7 @@ import classnames from "classnames";
 
 import { getTodos, setEditableTodoId } from "../../../actions/TodoActions";
 
-import { Container, Button } from "react-bootstrap";
+import { Container, Button } from "reactstrap";
 
 import styles from "./pagination.module.scss";
 
@@ -19,7 +19,7 @@ const TodosPagination = ({
     className
 }) => (
     <Container
-        as="section"
+        tag="section"
         className={classnames(styles.pagination, className)}
     >
         <span className={styles.paginationText}>
@@ -31,7 +31,7 @@ const TodosPagination = ({
 
         <Button
             className={classnames(styles.button, styles.prev)}
-            variant={
+            color={
                 currentTodosPage === 1
                     ? "secondary"
                     : "primary"
@@ -50,7 +50,7 @@ const TodosPagination = ({
 
         <Button
             className={classnames(styles.button, styles.next)}
-            variant={
+            color={
                 currentTodosPage === totalTodoPagesAmount
                     ? "secondary"
                     : "primary"

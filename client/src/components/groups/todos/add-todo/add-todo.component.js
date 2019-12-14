@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, FormControl, Button } from "react-bootstrap";
+import { Container, Row, Col, Input, Button } from "reactstrap";
 import { addTodo } from "../../../../websockets/TodoSocket";
 
 import styles from './add-todo.module.scss';
@@ -27,7 +27,7 @@ class AddTodo extends React.Component {
     render(){
         return (
             <React.Fragment>
-                <Container as="section" className={styles.addTodo}>
+                <Container tag="section" className={styles.addTodo}>
                     <form action=""
                           onSubmit={(e) => {
                               e.preventDefault();
@@ -41,7 +41,7 @@ class AddTodo extends React.Component {
                         <Row>
                             <Col
                                 className={styles.title}
-                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 6, offset: 3}} xs={12}
+                                lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 6, offset: 3}} xs={12}
                             >
                                 Add Todo
                             </Col>
@@ -50,10 +50,10 @@ class AddTodo extends React.Component {
                         <Row>
                             <Col
                                 className={styles.formFieldsContainer}
-                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
+                                lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 8, offset: 2}} xs={12}
                             >
                                 <label htmlFor="text" className={styles.label}>Text:</label>
-                                <FormControl
+                                <Input
                                     id="text"
                                     type="text"
                                     required
@@ -67,10 +67,10 @@ class AddTodo extends React.Component {
                         <Row>
                             <Col
                                 className={styles.formFieldsContainer}
-                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
+                                lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 8, offset: 2}} xs={12}
                             >
                                 <label htmlFor="file" className={styles.label}>Image:</label>
-                                <FormControl
+                                <input
                                     id="file"
                                     type="file"
                                     accept="image/*"
@@ -86,12 +86,12 @@ class AddTodo extends React.Component {
                         <Row>
                             <Col
                                 className={styles.submitButtonContainer}
-                                lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}} sm={{span: 8, offset: 2}} xs={12}
+                                lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 8, offset: 2}} xs={12}
                             >
                                 <Button
-                                    type="submit"
-                                    variant="primary"
                                     className={styles.submitButton}
+                                    type="submit"
+                                    color="primary"
                                 >
                                     Submit
                                 </Button>

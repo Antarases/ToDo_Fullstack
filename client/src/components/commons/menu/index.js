@@ -1,12 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Container } from "react-bootstrap";
+import { Container } from "reactstrap";
 
 import styles from "./menu.module.scss";
 
 const Menu = () => {
     return (
-        <Container as="section" className={styles.menuWrapper}>
+        <Container tag="section" className={styles.menuWrapper}>
             <section className={styles.menuContainer}>
                     <NavLink
                         to="/"

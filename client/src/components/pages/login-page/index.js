@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Container } from "reactstrap";
 
 import LoginForm from "../../commons/login-form";
 
@@ -11,7 +11,7 @@ class LoginPage extends React.Component {
             <React.Fragment>
                 <LoginForm />
 
-                <Container as="section" className={styles.heroText}>
+                <Container tag="section" className={styles.heroText}>
                     <h1>Login to create todos!</h1>
                 </Container>
             </React.Fragment>

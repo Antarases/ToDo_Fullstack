@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes  from "prop-types";
 
-import { Container, Col } from "react-bootstrap";
+import { Container, Col } from "reactstrap";
 
 import styles from "./login-form.module.scss";
 
@@ -11,7 +11,7 @@ class LoginForm extends React.Component{
         const { isUserLoggedIn } = this.props;
 
         return (
-            <Container  as="section" className={styles.loginForm}>
+            <Container  tag="section" className={styles.loginForm}>
                 { !isUserLoggedIn && <Col>
                     <a href="/auth/google">Login with Google</a>
                 </Col> }

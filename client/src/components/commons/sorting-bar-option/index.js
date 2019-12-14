@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Col } from "react-bootstrap";
+import { Col } from "reactstrap";
 import PropTypes from "prop-types";
 
 import { getTodos } from "../../../actions/TodoActions";
