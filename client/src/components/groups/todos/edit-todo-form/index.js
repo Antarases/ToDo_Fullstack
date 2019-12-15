@@ -36,25 +36,6 @@ class EditTodoForm extends React.Component{
         }
     }
 
-    async componentDidUpdate(prevProps) {
-        if (this.props.editableTodo.id && prevProps.editableTodo && (this.props.editableTodo.id !== prevProps.editableTodo.id)) {
-            const { text, image, isCompleted } = this.props.editableTodo;
-
-            try {
-                let imageFile = null;
-                if (image) {
-                    const fetchedImage = await fetch(image);
-                    imageFile = await fetchedImage.blob();
-                }
-
-                this.setState({text, image: imageFile, isCompleted, isTodoFetchingFailed: false});
-            } catch (err) {
-                this.setState({ isTodoFetchingFailed: true });
-                console.log("Failed to fetch TODO image.", err);
-            }
-        }
-    }
-
     render(){
         let { editableTodoId } = this.props;
         const { text, image, isCompleted, isTodoFetchingFailed } = this.state;
@@ -64,7 +45,7 @@ class EditTodoForm extends React.Component{
                 <Row>
                     <Col
                         className={styles.title}
-                        lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 6, offset: 3}} xs={12}
+                        lg={{size: 10, offset: 1}} md={{size: 10, offset: 1}} sm={{size: 10, offset: 1}} xs={12}
                     >
                         Edit Todo
                     </Col>
@@ -75,7 +56,7 @@ class EditTodoForm extends React.Component{
                         <Row>
                             <Col
                                 className={styles.formFieldsContainer}
-                                lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 8, offset: 2}} xs={12}
+                                lg={{size: 10, offset: 1}} md={{size: 10, offset: 1}} sm={{size: 10, offset: 1}} xs={12}
                             >
                                 <label htmlFor="text" className={styles.label}>Text:</label>
                                 <Input
@@ -91,8 +72,8 @@ class EditTodoForm extends React.Component{
 
                         <Row>
                             <Col
-                                className={styles.formFieldsContainer}
-                                lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 8, offset: 2}} xs={12}
+                                className={classnames(styles.formFieldsContainer, styles.fileContainer)}
+                                lg={{size: 10, offset: 1}} md={{size: 10, offset: 1}} sm={{size: 10, offset: 1}} xs={12}
                             >
                                 <label htmlFor="file" className={styles.label}>Image:</label>
                                 <input
@@ -111,7 +92,7 @@ class EditTodoForm extends React.Component{
                         <Row>
                             <Col
                                 className={classnames(styles.formFieldsContainer, styles.todoCompletionStatus)}
-                                lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 8, offset: 2}} xs={12}
+                                lg={{size: 10, offset: 1}} md={{size: 10, offset: 1}} sm={{size: 10, offset: 1}} xs={12}
                             >
                                 <label htmlFor="isCompleted" className={styles.label}>Completed: </label>
                                 <Input
@@ -125,44 +106,59 @@ class EditTodoForm extends React.Component{
                         </Row>
 
 
-                        <Col
-                            className={styles.buttonsContainer}
-                            lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 8, offset: 2}} xs={12}
-                        >
-                            <Button
-                                className={styles.cancelButton}
-                                onClick={() => {
-                                    setEditableTodoId(null);
-                                }}
-                                color="primary"
+                        <Row>
+                            <Col
+                                className={styles.buttonsContainer}
+                                lg={{size: 10, offset: 1}} md={{size: 10, offset: 1}} sm={{size: 10, offset: 1}} xs={12}
                             >
-                                Cancel
-                            </Button>
+                                <Button
+                                    className={styles.cancelButton}
+                                    onClick={() => {
+                                        setEditableTodoId(null);
+                                    }}
+                                    color="primary"
+                                >
+                                    Cancel
+                                </Button>
 
-                            <Button
-                                onClick={async () => {
-                                    await editTodo(
-                                        editableTodoId,
-                                        text,
-                                        image,
-                                        isCompleted
-                                    );
+                                <Button
+                                    onClick={async () => {
+                                        await editTodo(
+                                            editableTodoId,
+                                            text,
+                                            image,
+                                            isCompleted
+                                        );
 
-                                    setEditableTodoId(null);
-                                }}
-                                color="primary"
-                            >
-                                Apply
-                            </Button>
-                        </Col>
+                                        setEditableTodoId(null);
+                                    }}
+                                    color="primary"
+                                >
+                                    Apply
+                                </Button>
+                            </Col>
+                        </Row>
                     </React.Fragment>
                     : <Row>
-                        <Col
-                            className="errorMessage"
-                            lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 6, offset: 3}} xs={12}
-                        >
-                            Failed to get TODO for editing.
-                        </Col>
+                        <section className={styles.errorMessageContainer}>
+                            <div className={styles.errorMessage}>
+                                Failed to get TODO for editing.
+                            </div>
+
+                            <div
+                                className={styles.cancelButtonContainer}
+                            >
+                                <Button
+                                    className={styles.closeButton}
+                                    onClick={() => {
+                                        setEditableTodoId(null);
+                                    }}
+                                    color="primary"
+                                >
+                                    Close
+                                </Button>
+                            </div>
+                        </section>
                     </Row>
                 }
             </Container>

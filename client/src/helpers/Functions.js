@@ -51,13 +51,6 @@ export async function getCompressedBase64Image(file, imageWidth = 320) {
     });
 }
 
-export function smoothScrollUp() {
-    if ((document.body.scrollTop > 0) || (document.documentElement.scrollTop > 0)) {
-        window.scrollBy(0,-50);
-        setTimeout(smoothScrollUp, 10);
-    }
-}
-
 
 export const getFormattedDate = (date) => {
     let momentDate = moment(date);

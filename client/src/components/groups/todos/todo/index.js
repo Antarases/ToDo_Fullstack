@@ -7,7 +7,6 @@ import classnames from "classnames";
 
 import { Container, Button } from "reactstrap";
 
-import { smoothScrollUp } from "../../../../helpers/Functions";
 import { setEditableTodoId } from "../../../../actions/TodoActions";
 
 import { NOIMAGE_IMAGE_URL } from "../../../../constants/app";
@@ -53,7 +52,6 @@ let Todo = ({
                     color="primary"
                     onClick={() => {
                         (editableTodoId !== id) && setEditableTodoId(id);
-                        smoothScrollUp();
                     }}
                 >
                     <FontAwesomeIcon icon={faEdit} />

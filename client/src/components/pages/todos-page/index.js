@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getTodos } from "../../../actions/TodoActions";
+import { getTodos, setEditableTodoId } from "../../../actions/TodoActions";
 
 import { setTodoSocketConnectionAndHandlers, closeTodoSocketConnection } from "../../../websockets/TodoSocket";
 
@@ -12,6 +12,7 @@ import AddTodo from "../../groups/todos/add-todo/add-todo.component";
 import TodosSortingBar from "../../groups/todos/todos-sorting-bar";
 import TodosPagination from "../../commons/todos-pagination";
 import TodoList from "../../groups/todos/todo-list";
+import Modal from "../../commons/modal";
 
 import { INITIAL_TODOS_PAGE } from "../../../constants/todosPagination";
 import { initialState as sortParamsInitialState } from "../../../reducers/todosSortParams";
@@ -40,6 +41,13 @@ const TodosPage = ({ isTodos, editableTodoId }) => {
             { isTodos && <TodosPagination /> }
             <TodoList />
             { isTodos && <TodosPagination className={styles.bottomTodoPagination} /> }
+
+            {
+                !!editableTodoId
+                && <Modal isOpen={true} toggleModal={() => setEditableTodoId(null)} contentClassName={styles.modalContent}>
+                    <EditTodoForm />
+                </Modal>
+            }
         </section>
     );
 };
@@ -54,5 +62,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps)(TodosPage);
 
 TodosPage.propTypes = {
-    isTodos: PropTypes.bool
+    isTodos: PropTypes.bool,
+    editableTodoId: PropTypes.string
 };
