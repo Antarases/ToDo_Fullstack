@@ -69,9 +69,7 @@ class MessagesThread extends React.Component {
     }
 }
 
-export default React.forwardRef((props, passthroughRef) => <MessagesThread
-    passthroughRef={passthroughRef} {...props}
-/>);
+export default MessagesThread;
 
 const datePropValidation = (props, propName, componentName) => {
     if (!moment(props[propName], "YYYY-MM-DDTHH:mm:ss.SSSZ", true).isValid()) {
@@ -92,9 +90,6 @@ MessagesThread.propTypes = {
         })
     ),
     selectedChatId: PropTypes.string,
-    passthroughRef: PropTypes.oneOfType([
-        PropTypes.object,
-        PropTypes.func
-    ])
+    passthroughRef: PropTypes.object
 };
 

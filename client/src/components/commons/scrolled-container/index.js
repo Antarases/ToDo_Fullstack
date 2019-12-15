@@ -73,10 +73,7 @@ class ScrolledContainer extends React.Component {
                 {...restProps}
                 ref={mergeRefs([this.scrollbarRef, passthroughRef])}
             >
-                <div
-                    className={styles.contentContainer}
-
-                >
+                <div className={styles.contentContainer}>
                     { children }
                 </div>
             </Scrollbar>
@@ -84,9 +81,7 @@ class ScrolledContainer extends React.Component {
     }
 }
 
-export default React.forwardRef((props, passthroughRef) => <ScrolledContainer
-    passthroughRef={passthroughRef} {...props}
-/>);
+export default ScrolledContainer;
 
 ScrolledContainer.propTypes = {
     children: PropTypes.node,
@@ -97,9 +92,6 @@ ScrolledContainer.propTypes = {
     itemsAmount: PropTypes.number,
     trackVerticalClassName: PropTypes.string,
     thumbVerticalClassName: PropTypes.string,
-    passthroughRef: PropTypes.oneOfType([
-        PropTypes.object,
-        PropTypes.func
-    ])
+    passthroughRef: PropTypes.object
 };
 
