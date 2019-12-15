@@ -1,4 +1,6 @@
 import React from "react";
+import classnames from "classnames";
+
 import { Container, Row, Col, Input, Button } from "reactstrap";
 import { addTodo } from "../../../../websockets/TodoSocket";
 
@@ -66,7 +68,7 @@ class AddTodo extends React.Component {
 
                         <Row>
                             <Col
-                                className={styles.formFieldsContainer}
+                                className={classnames(styles.formFieldsContainer, styles.fileContainer)}
                                 lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}} sm={{size: 8, offset: 2}} xs={12}
                             >
                                 <label htmlFor="file" className={styles.label}>Image:</label>

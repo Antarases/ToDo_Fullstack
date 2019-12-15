@@ -18,6 +18,12 @@
         .label {
             margin-bottom: 1px;
         }
+
+        &.fileContainer {
+            .label {
+                display: block;
+            }
+        }
     }
 
     .submitButtonContainer{
