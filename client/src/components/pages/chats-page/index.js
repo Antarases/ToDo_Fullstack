@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Container } from "reactstrap";
 
 import ChatsSectionHeader from "../../groups/chats/chats-section-header";
 import ChatList from "../../groups/chats/chat-list";
@@ -30,7 +29,7 @@ const ChatsPage = ({ selectedChatId, selectedChat, isCreateChatModalOpen }) => {
     };
 
     return (
-        <Container tag="section" className={styles.chatsPage}>
+        <section className={styles.chatsPage}>
             <section className={styles.chatsSection}>
                 <ChatsSectionHeader />
 
@@ -51,7 +50,7 @@ const ChatsPage = ({ selectedChatId, selectedChat, isCreateChatModalOpen }) => {
             <Modal isOpen={isCreateChatModalOpen} toggleModal={toggleCreateChatModal}>
                 <CreateChatForm />
             </Modal>
-        </Container>
+        </section>
     );
 };
 

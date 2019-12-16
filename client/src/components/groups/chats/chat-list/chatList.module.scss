@@ -5,6 +5,7 @@
   border-right: 2px solid #E9EBED;
   font-family: Tahoma, sans-serif;
   font-size: 13px;
+  background: #fff;
 
   .scrolledContainer {
     width: calc(100% + 2px) !important;
@@ -63,6 +64,7 @@
 
     .lastMessageDate {
       flex: 0 0 auto;
+      font-size: 11px;
     }
 
   }
@@ -73,5 +75,22 @@
     font-family: Tahoma, sans-serif;
     font-size: 13px;
     font-weight: bold;
+  }
+}
+
+@media (max-width: 599px){
+  .chatsContainer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-right: none;
+    z-index: 900;
+
+    .scrolledContainer .trackVertical {
+      right: 2px;
+    }
   }
 }

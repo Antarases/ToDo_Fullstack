@@ -56,7 +56,7 @@ export const getFormattedDate = (date) => {
     let momentDate = moment(date);
 
     return momentDate.isValid()
-        ? (momentDate.format("M/D/YYYY"))
+        ? (momentDate.format("M/D/YY"))
         : date;
 };
 

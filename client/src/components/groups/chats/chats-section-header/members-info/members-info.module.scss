@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   width: 69%;
-  padding-right: 30px;
+  padding: 0 49px 0 19px;
   font-family: Tahoma, sans-serif;
   font-size: 13px;
   white-space: nowrap;
@@ -22,5 +22,11 @@
     font-weight: normal;
     text-overflow: ellipsis;
     overflow: hidden;
+  }
+}
+
+@media (max-width: 599px){
+  .membersInfoContainer {
+    padding: 0 45px 0 15px;
   }
 }

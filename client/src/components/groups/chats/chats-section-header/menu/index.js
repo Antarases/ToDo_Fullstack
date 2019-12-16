@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import classnames from "classnames";
 
 import { toggleCreateChatModal } from "../../../../../actions/ChatActions";
 
 import styles from "./menu.module.scss";
 
-const Menu = () => {
+const Menu = ({ chatsMenuContainerClassName }) => {
     const CHATS_MENU_CONTAINER_CLASS_NAME = styles.chatsMenuContainer;
 
     useEffect(() => {
@@ -28,7 +29,7 @@ const Menu = () => {
 
     return (
         <section
-            className={CHATS_MENU_CONTAINER_CLASS_NAME}
+            className={classnames(CHATS_MENU_CONTAINER_CLASS_NAME, chatsMenuContainerClassName)}
             onClick={(e) => { e.stopPropagation(); toggleIsMenuOpen(); }}
         >
             <div className={classnames(styles.menuButtonContainer, {[styles.open]: isMenuOpen})}>
@@ -53,3 +54,7 @@ const Menu = () => {
 };
 
 export default Menu;
+
+Menu.propTypes = {
+    chatsMenuContainerClassName: PropTypes.string
+};

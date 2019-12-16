@@ -1,6 +1,12 @@
 .menuWrapper {
   flex: 0 0 auto;
 
+  &.customWidth {
+    max-width: 1010px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
   .menuContainer {
     display: flex;
     align-items: center;

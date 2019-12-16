@@ -1,12 +1,14 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Container } from "reactstrap";
+import { withRouter } from "react-router-dom";
+import classnames from "classnames";
 
 import styles from "./menu.module.scss";
 
-const Menu = () => {
+const Menu = ({ location }) => {
     return (
-        <Container tag="section" className={styles.menuWrapper}>
+        <Container tag="section" className={classnames(styles.menuWrapper, {[styles.customWidth]: (location && (location.pathname !== "/"))})}>
             <section className={styles.menuContainer}>
                     <NavLink
                         to="/"
@@ -30,4 +32,4 @@ const Menu = () => {
     );
 };
 
-export default Menu;
+export default withRouter(Menu);
