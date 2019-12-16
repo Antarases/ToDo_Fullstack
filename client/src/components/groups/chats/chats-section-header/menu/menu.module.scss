@@ -11,7 +11,7 @@
     padding-right: 20px;
     padding-left: 22px;
     background: #5682a3;
-    z-index: 5;
+    z-index: 1010;
     cursor: pointer;
 
     &.open, &:hover {
@@ -109,5 +109,14 @@
         }
       }
     }
+  }
+}
+
+@keyframes rollIn {
+  0% {
+    transform: translateY(-60px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }
