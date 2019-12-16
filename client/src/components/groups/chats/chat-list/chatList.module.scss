@@ -31,6 +31,13 @@
 
     &.selected {
       background-color: #6490b1;
+
+
+      .chatNameAndLastMessageContainer .chatName,
+      .chatNameAndLastMessageContainer .lastMessage,
+      .lastMessageDate {
+        color: #fff;
+      }
     }
 
     .avatar {
@@ -53,18 +60,21 @@
         margin-bottom: 5px;
         font-weight: bold;
         text-overflow: ellipsis;
+        color: #222;
         overflow: hidden;
       }
 
       .lastMessage {
         text-overflow: ellipsis;
         overflow: hidden;
+        color: grey;
       }
     }
 
     .lastMessageDate {
       flex: 0 0 auto;
       font-size: 11px;
+      color: #b3b3b3;
     }
 
   }
