@@ -4,12 +4,15 @@ import { Container } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import classnames from "classnames";
 
+import LoginForm from "../../commons/login-form";
+
 import styles from "./menu.module.scss";
 
 const Menu = ({ location }) => {
     return (
         <Container tag="section" className={classnames(styles.menuWrapper, {[styles.customWidth]: (location && (location.pathname !== "/"))})}>
             <section className={styles.menuContainer}>
+                <section className={styles.navigation}>
                     <NavLink
                         to="/"
                         exact
@@ -27,6 +30,9 @@ const Menu = ({ location }) => {
                     >
                         Messages
                     </NavLink>
+                </section>
+
+                <LoginForm loginFormClassName={styles.loginForm} />
             </section>
         </Container>
     );

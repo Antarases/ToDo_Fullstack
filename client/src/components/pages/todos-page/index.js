@@ -6,7 +6,6 @@ import { getTodos, setEditableTodoId } from "../../../actions/TodoActions";
 
 import { setTodoSocketConnectionAndHandlers, closeTodoSocketConnection } from "../../../websockets/TodoSocket";
 
-import LoginForm from "../../commons/login-form";
 import EditTodoForm from "../../groups/todos/edit-todo-form"
 import AddTodo from "../../groups/todos/add-todo/add-todo.component";
 import TodosSortingBar from "../../groups/todos/todos-sorting-bar";
@@ -31,8 +30,6 @@ const TodosPage = ({ isTodos, editableTodoId }) => {
 
     return (
         <section className={styles.todosPageContainer}>
-            <LoginForm />
-
             { editableTodoId && <EditTodoForm /> }
 
             <AddTodo />
