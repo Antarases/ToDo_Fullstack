@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleRight }  from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleRight }  from "@fortawesome/free-solid-svg-icons";
 import classnames from "classnames";
 
 import { getTodos, setEditableTodoId } from "../../../actions/TodoActions";
