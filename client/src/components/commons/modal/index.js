@@ -14,7 +14,7 @@ const Modal = ({ children, isOpen, toggleModal, className, contentClassName, dis
     });
 
     return (
-        <ReactstrapModal isOpen={isOpen} centered toggle={toggleModal} className={classnames(className, styles.modalDialog)} contentClassName={classnames(contentClassName, styles.content)} backdropClassName={styles.modalBackdrop} modalTransition={{ timeout: 150, exit: !disableFadeEffect }} backdropTransition={{ timeout: 150, exit: !disableFadeEffect }} {...restProps}>
+        <ReactstrapModal isOpen={isOpen} centered toggle={toggleModal} className={classnames(className, styles.modalDialog)} contentClassName={classnames(contentClassName, styles.content)} backdropClassName={styles.modalBackdrop} zIndex="1500" modalTransition={{ timeout: 150, exit: !disableFadeEffect }} backdropTransition={{ timeout: 150, exit: !disableFadeEffect }} {...restProps}>
             <ModalBody className={styles.modalBody}>
                 {childrenWithExtraProps}
             </ModalBody>

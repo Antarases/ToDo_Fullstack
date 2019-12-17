@@ -1,9 +1,27 @@
 .chatsSectionHeader {
   display: flex;
   align-items: stretch;
-  flex: 0 0 auto;
   height: 48px;
   background: #5682a3;
+
+  //Dummy styles to pass unique className to component
+  .menuContainer {
+    box-sizing: border-box;
+
+    .icon {
+      display: inline-block;
+      width: 20px;
+      height: 14px;
+      margin-top: 3px;
+      margin-right: 38px;
+      vertical-align: top;
+      background: url("../../../../icons/General.png") no-repeat;
+
+      &.createChat {
+        background-position: -10px -111px;
+      }
+    }
+  }
 
   .backButtonContainer {
     display: none;
@@ -19,6 +37,12 @@
         opacity: 1;
       }
     }
+  }
+}
+
+@media (max-width: 699px){
+  .chatsSectionHeader .icon {
+    margin-right: 5.44vw;
   }
 }
 
