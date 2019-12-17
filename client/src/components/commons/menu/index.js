@@ -1,15 +1,13 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Container } from "reactstrap";
-import { withRouter } from "react-router-dom";
-import classnames from "classnames";
 
 import LoginForm from "../../commons/login-form";
 import DropdownMenu from "../../commons/dropdown-menu";
 
 import styles from "./menu.module.scss";
 
-const Menu = ({ location }) => {
+const Menu = () => {
     const navLinks = [
         <NavLink
             to="/"
@@ -33,7 +31,7 @@ const Menu = ({ location }) => {
     ];
 
     return (
-        <Container tag="section" className={classnames(styles.menuWrapper, {[styles.customWidth]: (location && (location.pathname !== "/"))})}>
+        <Container tag="section" className={styles.menuWrapper}>
             <section className={styles.menuContainer}>
                 <section className={styles.navigation}>
                     <div className={styles.navLinks}>
@@ -57,4 +55,4 @@ const Menu = ({ location }) => {
     );
 };
 
-export default withRouter(Menu);
+export default Menu;
