@@ -5,7 +5,7 @@ import moment from "moment";
 import ScrolledContainer from "../../../commons/scrolled-container";
 
 import { getChatMessages } from "../../../../actions/ChatActions";
-import { getFormattedTime} from "../../../../helpers/Functions";
+import { getFormattedTime} from "../../../../helpers/functions";
 
 import { NOIMAGE_IMAGE_URL } from "../../../../constants/app";
 

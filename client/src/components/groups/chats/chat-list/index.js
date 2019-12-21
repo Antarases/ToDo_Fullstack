@@ -8,7 +8,7 @@ import ScrolledContainer from "../../../commons/scrolled-container";
 
 import { getChatList, setSelectedChat, getChatMessages } from "../../../../actions/ChatActions";
 
-import { getFormattedDate } from "../../../../helpers/Functions";
+import { getFormattedDate } from "../../../../helpers/functions";
 
 import styles from "./chat-list.module.scss";
 
