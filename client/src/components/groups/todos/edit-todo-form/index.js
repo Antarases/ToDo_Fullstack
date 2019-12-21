@@ -19,6 +19,8 @@ class EditTodoForm extends React.Component{
         isTodoFetchingFailed: false
     };
 
+    imageRef =  React.createRef();
+
     async componentDidMount() {
         const { text, image, isCompleted } = this.props.editableTodo;
 
@@ -80,9 +82,9 @@ class EditTodoForm extends React.Component{
                                     id="file"
                                     type="file"
                                     accept="image/*"
-                                    ref={node => this.image = node}
+                                    ref={this.imageRef}
                                     onChange={(e) => {
-                                        {/*imageValidation(this.image, this.imageValidationNode);*/}
+                                        {/*imageValidation(this.imageRef.current, this.imageValidationNode);*/}
                                         this.setState({image: e.target.files[0]});
                                     }}
                                 />
