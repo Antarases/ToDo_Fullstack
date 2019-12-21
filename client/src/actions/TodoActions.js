@@ -3,7 +3,6 @@ import { dispatch } from "../store/configureStore";
 
 import { setCurrentTodosPage } from "../actions/TodosPaginationActions";
 
-import {  SET_EDITABLE_TODO_ID } from "../constants/todos";
 import { TODOS_PER_PAGE } from "../constants/todosPagination";
 
 export const getTodos = async (page, sortField, sortOrder, nextPage) => {
@@ -25,5 +24,5 @@ export const getTodos = async (page, sortField, sortOrder, nextPage) => {
 };
 
 export const setEditableTodoId = (id) => {
-    dispatch({ type: SET_EDITABLE_TODO_ID, id });
+    dispatch({ type: "SET_EDITABLE_TODO_ID", id });
 };

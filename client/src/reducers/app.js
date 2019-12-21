@@ -7,12 +7,9 @@ const initialState = {
     userData: {}
 };
 
-export const SET_CURRENT_USER = "SET_CURRENT_USER";
-export const SET_USER_LOGIN_STATUS_DETERMINING = "SET_USER_LOGIN_STATUS_DETERMINING";
-
 export default function app(state = initialState, action ) {
     switch (action.type) {
-        case SET_CURRENT_USER: {
+        case "SET_CURRENT_USER": {
             const { user } = action;
 
             return {
@@ -26,7 +23,7 @@ export default function app(state = initialState, action ) {
             };
         }
 
-        case SET_USER_LOGIN_STATUS_DETERMINING: {
+        case "SET_USER_LOGIN_STATUS_DETERMINING": {
             return {
                 ...state,
                 isUserLoginStatusDetermining: action.isUserLoginStatusDetermining

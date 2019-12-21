@@ -1,5 +1,3 @@
-import { SET_CURRENT_TODOS_PAGE, SET_TOTAL_TODO_PAGES_AMOUNT } from "../constants/todosPagination";
-
 const initialState = {
     currentTodosPage: 1,
     totalTodoPagesAmount: null
@@ -7,7 +5,7 @@ const initialState = {
 
 export default function todosPagination(state = initialState, action) {
     switch (action.type) {
-        case SET_CURRENT_TODOS_PAGE: {
+        case "SET_CURRENT_TODOS_PAGE": {
             const { pageNumber } = action;
 
             return {
@@ -16,7 +14,7 @@ export default function todosPagination(state = initialState, action) {
             };
         }
 
-        case SET_TOTAL_TODO_PAGES_AMOUNT: {
+        case "SET_TOTAL_TODO_PAGES_AMOUNT": {
             const { totalTodoPagesAmount } = action;
 
             return {

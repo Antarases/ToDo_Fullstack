@@ -1,5 +1,3 @@
-import { SET_TODOS_SORT_PARAMS } from "../constants/todosSortParams";
-
 export const initialState = {
     sortField: "creationDate",
     sortOrder: "asc"
@@ -7,7 +5,7 @@ export const initialState = {
 
 export default function todosSortParams(state = initialState, action) {
     switch (action.type) {
-        case SET_TODOS_SORT_PARAMS: {
+        case "SET_TODOS_SORT_PARAMS": {
             const { sortField = state.sortField, sortOrder = state.sortOrder } = action;
 
             return {

@@ -1,17 +1,12 @@
-import { EDIT_TODO, SET_EDITABLE_TODO_ID } from "../constants/todos";
-
 const initialState = {
     todos: {},
     totalTodosAmount: null,
     editableTodoId: null
 };
 
-export const ADD_TODO = "ADD_TODO";
-export const SET_TODOS = "SET_TODOS";
-
 export default function todos(state = initialState, action ) {
     switch (action.type) {
-        case SET_TODOS: {
+        case "SET_TODOS": {
             const { todos, totalTodosAmount } = action;
 
             const newTodos = {};
@@ -26,7 +21,7 @@ export default function todos(state = initialState, action ) {
             };
         }
 
-        case ADD_TODO: {
+        case "ADD_TODO": {
             const { todo } = action;
 
             return {
@@ -44,7 +39,7 @@ export default function todos(state = initialState, action ) {
             };
         }
 
-        case EDIT_TODO: {
+        case "EDIT_TODO": {
             const { updatedTodo } = action;
 
             return {
@@ -61,7 +56,7 @@ export default function todos(state = initialState, action ) {
             }
         }
 
-        case SET_EDITABLE_TODO_ID: {
+        case "SET_EDITABLE_TODO_ID": {
             const { id } = action;
 
             return {

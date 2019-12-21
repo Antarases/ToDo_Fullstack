@@ -3,8 +3,7 @@ import { dispatch, getCurrentState } from "../store/configureStore";
 
 import { getCompressedBase64Image } from "../helpers/Functions";
 
-import { TODOS_PER_PAGE } from "../constants/todosPagination";
-import { INITIAL_TODOS_PAGE } from "../constants/todosPagination";
+import { INITIAL_TODOS_PAGE, TODOS_PER_PAGE } from "../constants/todosPagination";
 import { initialState as sortParamsInitialState } from "../reducers/todosSortParams";
 
 
