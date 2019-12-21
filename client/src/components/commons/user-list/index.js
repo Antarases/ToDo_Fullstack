@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import User from "../user";
 import ScrolledContainer from "../../commons/scrolled-container";
 
-import styles from "./userList.module.scss";
+import styles from "./user-list.module.scss";
 
 const UserList = ({ userList, selectedUserIds = [], onClick, getMoreItems }) => {
     return (

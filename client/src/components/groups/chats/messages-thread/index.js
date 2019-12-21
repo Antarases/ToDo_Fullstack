@@ -9,7 +9,7 @@ import { getFormattedTime} from "../../../../helpers/Functions";
 
 import { NOIMAGE_IMAGE_URL } from "../../../../constants/app";
 
-import styles from "./messagesThread.module.scss";
+import styles from "./messages-thread.module.scss";
 
 class MessagesThread extends React.Component {
     componentDidMount() {

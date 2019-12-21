@@ -10,7 +10,7 @@ import { getChatList, setSelectedChat, getChatMessages } from "../../../../actio
 
 import { getFormattedDate } from "../../../../helpers/Functions";
 
-import styles from "./chatList.module.scss";
+import styles from "./chat-list.module.scss";
 
 class ChatList extends React.Component {
     componentDidMount() {

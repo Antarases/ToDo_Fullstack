@@ -3,7 +3,7 @@ import { Container } from "reactstrap";
 
 import LoginForm from "../../commons/login-form";
 
-import styles from "./loginPage.module.scss";
+import styles from "./login-page.module.scss";
 
 class LoginPage extends React.Component {
     render() {

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 import SortingBarOption from "../../../commons/sorting-bar-option";
 
-import styles from "./sorting-bar.module.scss";
+import styles from "./todos-sorting-bar.module.scss";
 
 class TodosSortingBar extends React.Component {
     render() {

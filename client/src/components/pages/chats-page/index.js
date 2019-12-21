@@ -12,7 +12,7 @@ import Modal from "../../commons/modal";
 import { setChatSocketConnectionAndHandlers, closeChatSocketConnection } from "../../../websockets/ChatSocket";
 import { toggleCreateChatModal } from "../../../actions/ChatActions";
 
-import styles from "./chatsPage.module.scss";
+import styles from "./chats-page.module.scss";
 
 const ChatsPage = ({ selectedChatId, selectedChat, isCreateChatModalOpen }) => {
     useEffect(() => {

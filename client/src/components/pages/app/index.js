@@ -7,7 +7,7 @@ import LoginPage from "../login-page/index";
 import TodosPage from "../todos-page/index";
 import ChatsPage from "../chats-page/index";
 
-import styles from "./todoApp.module.scss";
+import styles from "./app.module.scss";
 
 import { identifyCurrentUser } from "../../../actions/AppActions";
 

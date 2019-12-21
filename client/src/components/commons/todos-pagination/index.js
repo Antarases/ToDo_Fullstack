@@ -9,7 +9,7 @@ import { getTodos, setEditableTodoId } from "../../../actions/TodoActions";
 
 import { Container, Button } from "reactstrap";
 
-import styles from "./pagination.module.scss";
+import styles from "./todos-pagination.module.scss";
 
 const TodosPagination = ({
     currentTodosPage,

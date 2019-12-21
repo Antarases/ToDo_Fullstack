@@ -7,7 +7,7 @@ import { getTodos, setEditableTodoId } from "../../../actions/TodoActions";
 import { setTodoSocketConnectionAndHandlers, closeTodoSocketConnection } from "../../../websockets/TodoSocket";
 
 import EditTodoForm from "../../groups/todos/edit-todo-form"
-import AddTodo from "../../groups/todos/add-todo/add-todo.component";
+import AddTodo from "../../groups/todos/add-todo";
 import TodosSortingBar from "../../groups/todos/todos-sorting-bar";
 import TodosPagination from "../../commons/todos-pagination";
 import TodoList from "../../groups/todos/todo-list";
@@ -16,7 +16,7 @@ import Modal from "../../commons/modal";
 import { INITIAL_TODOS_PAGE } from "../../../constants/todosPagination";
 import { initialState as sortParamsInitialState } from "../../../reducers/todosSortParams";
 
-import styles from "./todosPage.module.scss";
+import styles from "./todos-page.module.scss";
 
 const TodosPage = ({ isTodos, editableTodoId }) => {
     useEffect(() => {
