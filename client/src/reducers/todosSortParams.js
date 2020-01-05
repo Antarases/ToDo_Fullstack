@@ -5,7 +5,7 @@ export const initialState = {
 
 export default function todosSortParams(state = initialState, action) {
     switch (action.type) {
-        case "SET_TODOS_SORT_PARAMS": {
+        case "TODOS_SORT_PARAMS__SET_SORT_PARAMS": {
             const { sortField = state.sortField, sortOrder = state.sortOrder } = action;
 
             return {

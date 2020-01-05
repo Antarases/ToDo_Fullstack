@@ -1,5 +1,5 @@
 import { dispatch } from "../store/configureStore";
 
 export const setCurrentTodosPage = (pageNumber) => {
-    dispatch({ type: "SET_CURRENT_TODOS_PAGE", pageNumber });
+    dispatch({ type: "TODOS_PAGINATION__SET_CURRENT_PAGE", pageNumber });
 };

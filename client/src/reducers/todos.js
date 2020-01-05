@@ -7,7 +7,7 @@ const initialState = {
 
 export default function todos(state = initialState, action ) {
     switch (action.type) {
-        case "SET_TODOS": {
+        case "TODOS__SET_TODOS": {
             const { todos, totalTodosAmount } = action;
 
             const newTodos = {};
@@ -22,7 +22,7 @@ export default function todos(state = initialState, action ) {
             };
         }
 
-        case "ADD_TODO": {
+        case "TODOS__ADD_TODO": {
             const { todo } = action;
 
             return {
@@ -40,7 +40,7 @@ export default function todos(state = initialState, action ) {
             };
         }
 
-        case "EDIT_TODO": {
+        case "TODOS__EDIT_TODO": {
             const { updatedTodo } = action;
 
             return {
@@ -57,7 +57,7 @@ export default function todos(state = initialState, action ) {
             }
         }
 
-        case "SET_EDITABLE_TODO_ID": {
+        case "TODOS__SET_EDITABLE_TODO_ID": {
             const { id } = action;
 
             return {
@@ -66,7 +66,7 @@ export default function todos(state = initialState, action ) {
             };
         }
 
-        case "INCREASE_TOTAL_TODOS_AMOUNT": {
+        case "TODOS__INCREASE_TOTAL_TODOS_AMOUNT": {
             return {
                 ...state,
                 totalTodosAmount: state.totalTodosAmount + 1

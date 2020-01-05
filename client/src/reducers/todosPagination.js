@@ -5,7 +5,7 @@ const initialState = {
 
 export default function todosPagination(state = initialState, action) {
     switch (action.type) {
-        case "SET_CURRENT_TODOS_PAGE": {
+        case "TODOS_PAGINATION__SET_CURRENT_PAGE": {
             const { pageNumber } = action;
 
             return {
@@ -14,7 +14,7 @@ export default function todosPagination(state = initialState, action) {
             };
         }
 
-        case "SET_TOTAL_TODO_PAGES_AMOUNT": {
+        case "TODOS_PAGINATION__SET_TOTAL_PAGES_AMOUNT": {
             const { totalTodoPagesAmount } = action;
 
             return {

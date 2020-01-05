@@ -34,10 +34,10 @@ export const setTodoSocketConnectionAndHandlers = () => {
             const todosOnPageAmount = Object.keys(getCurrentState().todos.todos).length;
 
             if (todosOnPageAmount < TODOS_PER_PAGE) {
-                dispatch({ type: "ADD_TODO", todo });
+                dispatch({ type: "TODOS__ADD_TODO", todo });
             } else {
-                dispatch({ type: "SET_TOTAL_TODO_PAGES_AMOUNT", totalTodoPagesAmount: newTotalTodoPagesAmount });
-                dispatch({ type: "INCREASE_TOTAL_TODOS_AMOUNT" });
+                dispatch({ type: "TODOS_PAGINATION__SET_TOTAL_PAGES_AMOUNT", totalTodoPagesAmount: newTotalTodoPagesAmount });
+                dispatch({ type: "TODOS__INCREASE_TOTAL_TODOS_AMOUNT" });
             }
         } else {
             console.error(new Error(`Code: ${code}. Text: ${text}.`));
@@ -57,7 +57,7 @@ export const setTodoSocketConnectionAndHandlers = () => {
         const { todo, code, text} = data;
 
         if ((code >= 200) && (code < 300)) {
-            dispatch({ type: "EDIT_TODO", updatedTodo: todo });
+            dispatch({ type: "TODOS__EDIT_TODO", updatedTodo: todo });
         } else {
             console.error(new Error(`Code: ${code}. Text: ${text}.`));
 

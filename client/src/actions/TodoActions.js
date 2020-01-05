@@ -15,8 +15,8 @@ export const getTodos = async (page, sortField, sortOrder, nextPage) => {
         const { todos, totalTodosAmount } = res.data;
         const totalTodoPagesAmount = Math.ceil(totalTodosAmount / TODOS_PER_PAGE);
 
-        dispatch({ type: "SET_TODOS", todos, totalTodosAmount });
-        dispatch({ type: "SET_TOTAL_TODO_PAGES_AMOUNT", totalTodoPagesAmount });
+        dispatch({ type: "TODOS__SET_TODOS", todos, totalTodosAmount });
+        dispatch({ type: "TODOS_PAGINATION__SET_TOTAL_PAGES_AMOUNT", totalTodoPagesAmount });
 
         if (typeof nextPage === "number") {
             setCurrentTodosPage(nextPage);
@@ -40,5 +40,5 @@ export const getTodos = async (page, sortField, sortOrder, nextPage) => {
 };
 
 export const setEditableTodoId = (id) => {
-    dispatch({ type: "SET_EDITABLE_TODO_ID", id });
+    dispatch({ type: "TODOS__SET_EDITABLE_TODO_ID", id });
 };
