@@ -30,8 +30,6 @@ const TodosPage = ({ isTodos, editableTodoId }) => {
 
     return (
         <section className={styles.todosPageContainer}>
-            { editableTodoId && <EditTodoForm /> }
-
             <AddTodo />
 
             { isTodos && <TodosSortingBar /> }
