@@ -8,6 +8,8 @@ import { TODOS_PER_PAGE } from "../constants/todosPagination";
 
 export const getTodos = async (page, sortField, sortOrder, nextPage) => {
     try {
+        dispatch({ type: "TODOS__SET_IS_TODOS_LOADING", isLoading: true });
+
         const res = await axios.get(`/todos/?page=${page}&sortField=${sortField}&sortOrder=${sortOrder }`);
 
         const { todos, totalTodosAmount } = res.data;
@@ -19,7 +21,11 @@ export const getTodos = async (page, sortField, sortOrder, nextPage) => {
         if (typeof nextPage === "number") {
             setCurrentTodosPage(nextPage);
         }
+
+        dispatch({ type: "TODOS__SET_IS_TODOS_LOADING", isLoading: false });
     } catch (error) {
+        dispatch({ type: "TODOS__SET_IS_TODOS_LOADING", isLoading: false });
+
         console.error("An error occured during getting todos.", error);
 
         showNotificationModal(

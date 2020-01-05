@@ -8,7 +8,7 @@ import styles from "./todo-list.module.scss";
 
 class TodoList extends React.Component {
     render() {
-        const { todos } = this.props;
+        const { todos, isTodosLoading } = this.props;
 
         return (
             <div className={styles.todoList}>
@@ -24,6 +24,12 @@ class TodoList extends React.Component {
                         />
                     ))
                 }
+
+                {
+                    (!isTodosLoading && !Object.keys(todos).length)
+                    && <div className={styles.noTodosText}>You have no todos yet</div>
+                }
+                { isTodosLoading && <div className={styles.isLoading}>Todos are being loaded...</div> }
             </div>
         );
     }
@@ -31,12 +37,14 @@ class TodoList extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        todos: state.todos.todos
+        todos: state.todos.todos,
+        isTodosLoading: state.todos.isTodosLoading
     };
 };
 
 export default connect(mapStateToProps)(TodoList);
 
 TodoList.propTypes = {
-    todos: PropTypes.object
+    todos: PropTypes.object,
+    isTodosLoading: PropTypes.bool
 };

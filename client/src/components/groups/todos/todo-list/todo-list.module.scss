@@ -2,4 +2,13 @@
     & > :first-child {
         border-top: 1px solid black;
     }
+
+    .noTodosText, .isLoading {
+        padding: 20px;
+        text-align: center;
+        font-family: Tahoma, sans-serif;
+        font-size: 15px;
+        font-weight: bold;
+        border-top: none;
+    }
 }

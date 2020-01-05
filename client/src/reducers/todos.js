@@ -1,7 +1,8 @@
 const initialState = {
     todos: {},
     totalTodosAmount: null,
-    editableTodoId: null
+    editableTodoId: null,
+    isTodosLoading: false
 };
 
 export default function todos(state = initialState, action ) {
@@ -69,6 +70,13 @@ export default function todos(state = initialState, action ) {
             return {
                 ...state,
                 totalTodosAmount: state.totalTodosAmount + 1
+            };
+        }
+
+        case "TODOS__SET_IS_TODOS_LOADING": {
+            return {
+                ...state,
+                isTodosLoading: action.isLoading
             };
         }
 
