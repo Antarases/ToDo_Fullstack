@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
+  <g id="Group_41408" data-name="Group 41408" transform="translate(-393 -1090)">
+    <g id="Oval" transform="translate(393 1090)" fill="none" stroke="#1ed760" stroke-width="3">
+      <circle cx="25" cy="25" r="25" stroke="none"/>
+      <circle cx="25" cy="25" r="23.5" fill="none"/>
+    </g>
+    <path id="Personal_Financ" data-name="Personal Financ" d="M10.39,9.109a.485.485,0,0,1-.384-.157l-2.3-2.309L1.6.5A.491.491,0,0,1,1.445.109.491.491,0,0,1,1.6-.277L3.9-2.586a.485.485,0,0,1,.384-.157.485.485,0,0,1,.384.157L9.625,2.422l.764.772.765-.771L22.227-8.734a.485.485,0,0,1,.383-.157.485.485,0,0,1,.384.157l2.3,2.309a.491.491,0,0,1,.156.386.491.491,0,0,1-.156.386L13.07,6.643l-2.3,2.309A.485.485,0,0,1,10.39,9.109Z" transform="translate(404.555 1114.891)" fill="#1ed760"/>
+  </g>
+</svg>

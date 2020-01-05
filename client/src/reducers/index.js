@@ -5,13 +5,15 @@ import todos from "./todos";
 import todosPagination from "./todosPagination";
 import todosSortParams from "./todosSortParams";
 import chats from "./chats";
+import notificationsModal from "./notificationsModal";
 
 const rootReducer = combineReducers({
     app,
     todos,
     todosPagination,
     todosSortParams,
-    chats
+    chats,
+    notificationsModal
 });
 
 export default rootReducer;

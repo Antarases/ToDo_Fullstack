@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
 
 import Menu from "../../commons/menu";
+import NotificationsModal from "../../commons/notificationsModal";
 import LoginPage from "../login-page/index";
 import TodosPage from "../todos-page/index";
 import ChatsPage from "../chats-page/index";
@@ -41,6 +42,8 @@ class App extends React.Component{
                                                 <Redirect to="/" />
                                             </Switch>
                                         </div>
+
+                                        <NotificationsModal/>
                                     </React.Fragment>
                                 )
                                 : (

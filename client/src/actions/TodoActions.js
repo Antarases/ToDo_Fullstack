@@ -2,6 +2,7 @@ import axios from "axios";
 import { dispatch } from "../store/configureStore";
 
 import { setCurrentTodosPage } from "../actions/TodosPaginationActions";
+import { showNotificationModal } from "../actions/NotificationsModalActions";
 
 import { TODOS_PER_PAGE } from "../constants/todosPagination";
 
@@ -20,6 +21,15 @@ export const getTodos = async (page, sortField, sortOrder, nextPage) => {
         }
     } catch (error) {
         console.error("An error occured during getting todos.", error);
+
+        showNotificationModal(
+            null,
+            `An error occured during getting todos.`,
+            [{ text: "OK" }],
+            null,
+            false,
+            true
+        );
     }
 };
 

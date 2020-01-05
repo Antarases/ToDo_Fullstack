@@ -1,6 +1,8 @@
 import io from "socket.io-client";
 import { dispatch, getCurrentState } from "../store/configureStore";
 
+import { showNotificationModal } from "../actions/NotificationsModalActions";
+
 import { getCompressedBase64Image } from "../helpers/functions";
 
 import { INITIAL_TODOS_PAGE, TODOS_PER_PAGE } from "../constants/todosPagination";
@@ -39,6 +41,15 @@ export const setTodoSocketConnectionAndHandlers = () => {
             }
         } else {
             console.error(new Error(`Code: ${code}. Text: ${text}.`));
+
+            showNotificationModal(
+                null,
+                `Error. Code: ${code}. Text: ${text}.`,
+                [{ text: "OK" }],
+                null,
+                false,
+                true
+            );
         }
     });
 
@@ -49,6 +60,15 @@ export const setTodoSocketConnectionAndHandlers = () => {
             dispatch({ type: "EDIT_TODO", updatedTodo: todo });
         } else {
             console.error(new Error(`Code: ${code}. Text: ${text}.`));
+
+            showNotificationModal(
+                null,
+                `Error. Code: ${code}. Text: ${text}.`,
+                [{ text: "OK" }],
+                null,
+                false,
+                true
+            );
         }
     });
 };
@@ -68,6 +88,14 @@ export const addTodo = async (text, image) => {
 
     if (TodoSocket) {
         TodoSocket.emit("add_todo", { text, image: compressedImageBase64 });
+
+        showNotificationModal(
+            null,
+            "Todo has been sent",
+            [{ text: "OK" }],
+            null,
+            true
+        );
     } else {
         const addTodoInterval = setInterval(() => {
             if (TodoSocket) {
@@ -85,6 +113,14 @@ export const editTodo = async (todoId, text, image, isCompleted) => {
 
     if (TodoSocket) {
         TodoSocket.emit("edit_todo", { id: todoId, text, image: compressedImageBase64, isCompleted });
+
+        showNotificationModal(
+            null,
+            "Todo updates has been sent",
+            [{ text: "OK" }],
+            null,
+            true
+        );
     } else {
         const editTodoInterval = setInterval(() => {
             if (TodoSocket) {
