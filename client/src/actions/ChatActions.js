@@ -1,7 +1,7 @@
 import axios from "axios";
 import { dispatch, getCurrentState } from "../store/configureStore";
 
-import { FETCHED_CHATS_LIMIT, FETCHED_MESSAGES_LIMIT, FETCHED_USERS_LIMIT } from "../constants/chats";
+import { FETCHED_CHATS_LIMIT, FETCHED_MESSAGES_LIMIT, FETCHED_USERS_LIMIT, MESSAGE_ID_SUFFIX } from "../constants/chats";
 import { LISTS_FETCH_THROTTLING_TIME } from "../constants/app";
 
 const isNewListRequestsAllowed = (isListLoading, timeOfEndingLoadingFullList) => {
@@ -75,7 +75,7 @@ export const getChatMessages = async (chatId) => {
             if (fetchedMessagesAmount) {
                 const newMessages = {};
                 messages.forEach(message => {
-                    newMessages[message.id] = message;
+                    newMessages[message.id + MESSAGE_ID_SUFFIX] = message;  //MESSAGE_ID_SUFFIX is added to preserve messages order
                 });
 
                 dispatch({ type: "CHATS__ADD_MESSAGES_TO_MESSAGE_LIST", chatId, messages: newMessages, totalCurrentChatMessagesAmount: totalMessagesAmount });
