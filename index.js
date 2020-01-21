@@ -1,13 +1,18 @@
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
 const bodyParser = require("body-parser");
 const keys = require("./config/keys");
-require("./models/UserAndChat");
+
+require("./models/User");
 require("./models/Todo");
+require("./models/Chat");
 require("./models/Message");
+
 require("./services/passport");
+
 
 mongoose.connect(keys.mongoURI, {useNewUrlParser: true, useFindAndModify: false})
     .catch(error => console.log("First connect attempt failed: ", error));
@@ -16,7 +21,6 @@ mongoose.connection.on('error', err => {
 });
 
 const app = express();
-const httpServer = require("http").createServer(app);
 
 app.use(bodyParser.json({limit: '5120kb'}));
 app.use(
@@ -27,6 +31,16 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+}));
+
+const apolloServer = require("./apolloServer");
+apolloServer.applyMiddleware({ app, cors: false });
+const httpServer = require("http").createServer(app);
+apolloServer.installSubscriptionHandlers(httpServer);
 
 require("./routes/authRoutes")(app);
 require("./routes/appRoutes")(app);

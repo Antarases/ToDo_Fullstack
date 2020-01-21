@@ -53,7 +53,7 @@ module.exports = (app) => {
                         .skip((page - 1) * TODOS_CONSTANTS.TODOS_PER_PAGE)
                         .limit(TODOS_CONSTANTS.TODOS_PER_PAGE)
                         .exec();
-;
+
                     res.send({todos, totalTodosAmount, code: 200});
                 }
             } catch (error) {
