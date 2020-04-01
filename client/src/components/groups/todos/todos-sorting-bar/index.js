@@ -1,41 +1,33 @@
 import React from "react";
-import { connect } from "react-redux";
+import { useQuery } from "@apollo/react-hooks";
 import { Container, Col } from "reactstrap";
-import PropTypes from "prop-types";
 
 import SortingBarOption from "../../../commons/sorting-bar-option";
 
+import { GET_CURRENT_USER } from "../../../../constants/graphqlQueries/users";
+
 import styles from "./todos-sorting-bar.module.scss";
 
-class TodosSortingBar extends React.Component {
-    render() {
-        const { isUserAdmin } = this.props;
+const TodosSortingBar = () => {
+    const { data: currentUserData } = useQuery(GET_CURRENT_USER);
 
-        return (
-            <Container tag="section" className={styles.sortingBar}>
-                    <span className={styles.sortingBarTitle}>Sort by:</span>
+    return (
+        <Container tag="section" className={styles.sortingBar}>
+            <span className={styles.sortingBarTitle}>Sort by:</span>
 
-                    <Col
-                        className={styles.sortingBarOptions}
-                        sm="auto" xs="12"
-                    >
-                        { isUserAdmin && <SortingBarOption sortParam="userFullName">User Name</SortingBarOption> }
-                        <SortingBarOption sortParam="creationDate">Date</SortingBarOption>
-                        <SortingBarOption sortParam="isCompleted">Status</SortingBarOption>
-                    </Col>
-            </Container>
-        );
-    }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        isUserAdmin: state.app.currentUserStatus.isAdmin
-    };
+            <Col
+                className={styles.sortingBarOptions}
+                sm="auto" xs="12"
+            >
+                {
+                    (currentUserData && currentUserData.currentUser.isAdmin)
+                    && <SortingBarOption sortParam="userFullName">User Name</SortingBarOption>
+                }
+                <SortingBarOption sortParam="creationDate">Date</SortingBarOption>
+                <SortingBarOption sortParam="isCompleted">Status</SortingBarOption>
+            </Col>
+        </Container>
+    );
 };
 
-export default connect(mapStateToProps)(TodosSortingBar);
-
-TodosSortingBar.propTypes = {
-    isAdmin: PropTypes.string
-};
+export default TodosSortingBar;

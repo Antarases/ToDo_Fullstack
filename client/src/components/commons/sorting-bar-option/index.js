@@ -1,56 +1,39 @@
 import React from "react";
-import { connect } from "react-redux";
+import { useQuery } from "@apollo/react-hooks";
 import { Col } from "reactstrap";
 import PropTypes from "prop-types";
 
-import { getTodos } from "../../../actions/TodoActions";
+import { GET_TODOS_PAGINATION_AND_SORT_PARAMS } from "../../../constants/graphqlQueries/todosPaginationAndSortParams";
+
 import { setTodosSortParams } from "../../../actions/TodosSortActions";
 
 import styles from "./sorting-bar-option.module.scss";
 
-class SortingBarOption extends React.Component {
-    setTodosSortParamsAndGetSortedTodos = (sortField) => {
-        let { currentTodosPage, sortField: currentSortField, sortOrder } = this.props;
+const SortingBarOption = ({ sortParam, children }) => {
+    const { data } = useQuery(GET_TODOS_PAGINATION_AND_SORT_PARAMS);
+    const {
+        todosPagination: { currentTodosPage },
+        todosSortParams: { sortField: currentSortField, sortOrder: currentSortOrder }
+    } = data.clientData;
 
-        if(sortField === currentSortField){
-            sortOrder = (sortOrder === "asc") ? "desc" : "asc";    //reversing sort direction
-        }
-        else {
-            sortOrder = "asc";
-        }
-
-        setTodosSortParams(sortField, sortOrder);
-        getTodos(currentTodosPage, sortField, sortOrder);
-    };
-
-    render() {
-        const { sortParam } = this.props;
-
-        return (
-            <Col
-                className={styles.sortingBarOption}
-                sm="auto" xs="12"
-                onClick={() => this.setTodosSortParamsAndGetSortedTodos(sortParam)}
-            >
-                { this.props.children }
-            </Col>
-        );
-    }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        currentTodosPage: state.todosPagination.currentTodosPage,
-        sortField: state.todosSortParams.sortField,
-        sortOrder: state.todosSortParams.sortOrder
-    };
+    return (
+        <Col
+            className={styles.sortingBarOption}
+            sm="auto" xs="12"
+            onClick={() => setTodosSortParams(sortParam, currentTodosPage, currentSortField, currentSortOrder)}
+        >
+            { children }
+        </Col>
+    );
 };
 
-export default connect(mapStateToProps)(SortingBarOption);
+export default SortingBarOption;
 
 SortingBarOption.propTypes = {
-    currentTodosPage: PropTypes.number,
-    sortField: PropTypes.string,
-    sortOrder: PropTypes.string,
-    sortParam: PropTypes.string
+    sortParam: PropTypes.string,
+    children: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.element,
+        PropTypes.arrayOf(PropTypes.element)
+    ]),
 };

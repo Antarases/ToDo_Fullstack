@@ -46,6 +46,7 @@ class ScrolledContainer extends React.Component {
 
     conditionallyGetMoreItems(e) {
         const { getMoreItems, isScrollReversed } = this.props;
+
         const isScrollConditionMet = isScrollReversed
             ? ((e.target.scrollHeight * (1 - COEFICIENT_OF_SCROLLING_FOR_GETTING_MORE_ITEMS)) > e.target.scrollTop)
             : ((e.target.clientHeight + e.target.scrollTop) > (e.target.scrollHeight * COEFICIENT_OF_SCROLLING_FOR_GETTING_MORE_ITEMS));

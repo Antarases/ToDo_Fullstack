@@ -1,12 +1,18 @@
-import { dispatch } from "../store/configureStore";
+import apolloClient from "../apolloClient";
 
-export function showNotificationModal(header, body, buttons, onClose, showSuccessIcon = false, showFailIcon = false) {
-    dispatch({
-        type: "NOTIFICATIONS_MODAL__SHOW",
-        modal: { header, body, buttons, onClose, showSuccessIcon, showFailIcon }
+import { SHOW_NOTIFICATION_MODAL, CLOSE_CURRENT_NOTIFICATION_MODAL } from "../constants/graphqlQueries/notificationsModal";
+
+export const showNotificationModal = (modal) => {
+    apolloClient.mutate({
+        mutation: SHOW_NOTIFICATION_MODAL,
+        variables: {
+            modal
+        }
     });
-}
+};
 
-export function closeCurrentNotificationModal() {
-    dispatch({ type: "NOTIFICATIONS_MODAL__CLOSE" });
-}
+export const closeCurrentNotificationModal = () => {
+    apolloClient.mutate({
+        mutation: CLOSE_CURRENT_NOTIFICATION_MODAL
+    });
+};

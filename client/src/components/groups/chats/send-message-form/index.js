@@ -1,25 +1,32 @@
 import React from "react";
-import { connect } from "react-redux"
+import { useQuery } from "@apollo/react-hooks";
 import PropTypes from "prop-types";
 
-import { sendMessage } from "../../../../websockets/ChatSocket";
+import { sendMessage } from "../../../../actions/ChatActions";
+
+import { GET_CURRENT_USER } from "../../../../constants/graphqlQueries/users";
 
 import { NOIMAGE_IMAGE_URL } from "../../../../constants/app";
 
 import styles from "./send-message-form.module.scss";
 
-const SendMessageForm = ({ avatar, selectedChatId, onChange }) => {
+const SendMessageForm = ({ selectedChatId, onChange }) => {
     const messageInputRef = React.createRef();
 
     const onSendButtonClick = () => {
-        sendMessage(messageInputRef.current.innerHTML, selectedChatId);
+        sendMessage(selectedChatId, messageInputRef.current.innerHTML);
 
         messageInputRef.current.innerHTML = null;
     };
 
+    const { data: currentUserData } = useQuery(GET_CURRENT_USER);
+    const currentUser = currentUserData
+        ? currentUserData.currentUser
+        : {};
+
     return (
         <section className={styles.sendMessageFormContainer}>
-            <img className={styles.avatar} src={avatar || NOIMAGE_IMAGE_URL} alt="Avatar"/>
+            <img className={styles.avatar} src={currentUser.avatar || NOIMAGE_IMAGE_URL} alt="Avatar"/>
 
             <div className={styles.messageInputWrapper}>
                 <div
@@ -27,6 +34,13 @@ const SendMessageForm = ({ avatar, selectedChatId, onChange }) => {
                     contentEditable="true"
                     placeholder="Write a message..."
                     onInput={onChange}
+                    onPaste={ (e) => {
+                        e.preventDefault();
+
+                        const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+
+                        messageInputRef.current.innerHTML = text;
+                    }}
                     ref={messageInputRef}
                 />
             </div>
@@ -41,17 +55,9 @@ const SendMessageForm = ({ avatar, selectedChatId, onChange }) => {
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        avatar: state.app.userData.avatar,
-        selectedChatId: state.chats.selectedChatId
-    };
-};
-
-export default connect(mapStateToProps)(SendMessageForm);
+export default SendMessageForm;
 
 SendMessageForm.propTypes = {
-    avatar: PropTypes.string,
     selectedChatId: PropTypes.string,
     onChange: PropTypes.func
 };

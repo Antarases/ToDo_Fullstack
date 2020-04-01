@@ -1,7 +1,7 @@
 const { AuthenticationError } = require("apollo-server-express");
 
 module.exports.assertAuthenticated = (currentUser) => {
-    if (!currentUser) {
+    if (!(currentUser && Object.keys(currentUser).length)) {
         throw new AuthenticationError("You must log in!");
     }
 };

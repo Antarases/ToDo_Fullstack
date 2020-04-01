@@ -10,14 +10,14 @@ const UserList = ({ userList, selectedUserIds = [], onClick, getMoreItems }) => 
     return (
         <section className={styles.userListContainer}>
             {
-                (userList && !!Object.keys(userList).length)
+                (userList && !!userList.length)
                     ? <ScrolledContainer
                         hideScrollbarOnMouseOut
-                        itemsAmount={userList ? Object.keys(userList).length : 0}
+                        itemsAmount={userList ? userList.length : 0}
                         getMoreItems={getMoreItems}
                     >
                         {
-                            Object.values(userList).map(user => (
+                            userList.map(user => (
                                 (user && !!Object.keys(user).length)
                                 && <User
                                     user={user}
@@ -37,7 +37,7 @@ const UserList = ({ userList, selectedUserIds = [], onClick, getMoreItems }) => 
 export default UserList;
 
 UserList.propTypes = {
-    userList: PropTypes.object,
+    userList: PropTypes.array,
     selectedUserIds: PropTypes.array,
     onClick: PropTypes.func,
     getMoreItems: PropTypes.func

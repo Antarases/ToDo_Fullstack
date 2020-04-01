@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React, { useRef } from "react";
+import { useQuery, useSubscription } from "@apollo/react-hooks";
 
 import ChatsSectionHeader from "../../groups/chats/chats-section-header";
 import ChatList from "../../groups/chats/chat-list";
@@ -9,23 +8,40 @@ import SendMessageForm from "../../groups/chats/send-message-form";
 import CreateChatForm from "../../groups/chats/create-chat-form";
 import Modal from "../../commons/modal";
 
-import { setChatSocketConnectionAndHandlers, closeChatSocketConnection } from "../../../websockets/ChatSocket";
-import { toggleCreateChatModal } from "../../../actions/ChatActions";
+import { addChatToList, addChatMessage, toggleCreateChatModal } from "../../../actions/ChatActions";
+
+import { GET_SELECTED_CHAT, SUBSCRIPTION__MESSAGE_SENT, SUBSCRIPTION__CHAT_CREATED, GET_IS_CREATE_CHAT_MODAL_OPEN } from "../../../constants/graphqlQueries/chats";
 
 import styles from "./chats-page.module.scss";
 
-const ChatsPage = ({ selectedChatId, selectedChat, isCreateChatModalOpen }) => {
-    useEffect(() => {
-        setChatSocketConnectionAndHandlers();
+const ChatsPage = () => {
+    const { data: selectedChatData } = useQuery(GET_SELECTED_CHAT, { fetchPolicy: "cache-only" });
+    const selectedChat = selectedChatData
+        ? selectedChatData.chat
+        : null;
 
-        return closeChatSocketConnection;
-    }, []);
+    const { data: isCreateChatModalOpenData } = useQuery(GET_IS_CREATE_CHAT_MODAL_OPEN);
+    const isCreateChatModalOpen = isCreateChatModalOpenData.clientData.chats.isCreateChatModalOpen;
 
     const scrolledMessagesThreadContainerRef = useRef(null);
 
+    useSubscription(SUBSCRIPTION__CHAT_CREATED, {
+        onSubscriptionData: (data) => {
+            const chat = data.subscriptionData.data.chatCreated;
+            addChatToList(chat);
+        }
+    });
+
+    useSubscription(SUBSCRIPTION__MESSAGE_SENT, {
+        onSubscriptionData: (data) => {
+            const message = data.subscriptionData.data.messageSent;
+            addChatMessage(message.chatId, message);
+        }
+    });
+
     const onMessageInputChange = () => {
         scrolledMessagesThreadContainerRef.current
-            && scrolledMessagesThreadContainerRef.current.forceUpdate();
+        && scrolledMessagesThreadContainerRef.current.forceUpdate();
     };
 
     return (
@@ -36,11 +52,11 @@ const ChatsPage = ({ selectedChatId, selectedChat, isCreateChatModalOpen }) => {
                 <section className={styles.chatListAndMessagesContainer}>
                     <ChatList />
 
-                    { selectedChatId &&
+                    { selectedChat &&
                         <section className={styles.messagesContainer}>
-                            <MessagesThread messages={selectedChat.messages} selectedChatId={selectedChatId} passthroughRef={scrolledMessagesThreadContainerRef} />
+                            <MessagesThread messages={selectedChat.messages} selectedChatId={selectedChat.id} passthroughRef={scrolledMessagesThreadContainerRef} />
 
-                            <SendMessageForm onChange={onMessageInputChange} />
+                            <SendMessageForm selectedChatId={selectedChat.id} onChange={onMessageInputChange} />
                         </section>
                     }
                 </section>
@@ -54,24 +70,4 @@ const ChatsPage = ({ selectedChatId, selectedChat, isCreateChatModalOpen }) => {
     );
 };
 
-const mapStateToProps = (state) => {
-    const selectedChatId = state.chats.selectedChatId;
-    const selectedChat = selectedChatId
-        ? state.chats.chats[selectedChatId]
-        : {};
-
-    return {
-        selectedChatId,
-        selectedChat,
-        isCreateChatModalOpen: state.chats.isCreateChatModalOpen
-    };
-};
-
-export default connect(mapStateToProps)(ChatsPage);
-
-ChatsPage.propTypes = {
-    selectedChatId: PropTypes.string,
-    selectedChat: PropTypes.object,
-    isCreateChatModalOpen: PropTypes.bool
-
-};
+export default ChatsPage;

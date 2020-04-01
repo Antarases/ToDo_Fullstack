@@ -23,7 +23,13 @@ class MessagesThread extends React.Component {
     componentDidUpdate(prevProps) {
         const { messages, passthroughRef } = this.props;
 
-        if ((passthroughRef && passthroughRef.current) && (!prevProps.messages && messages)) {
+        if (
+            (passthroughRef && passthroughRef.current)
+            && (
+                (!prevProps.messages && messages)
+                || ((prevProps.messages && messages) && (!prevProps.messages.length && messages.length))
+            )
+        ) {
             passthroughRef.current.scrollToBottom();
         }
     }
@@ -34,22 +40,22 @@ class MessagesThread extends React.Component {
         return (
             <section className={styles.chatThreadContainer}>
                 {
-                    (messages && !!Object.keys(messages).length)
+                    (messages && !!messages.length)
                         ? <ScrolledContainer
                             trackVerticalClassName={styles.trackVertical}
                             passthroughRef={passthroughRef}
-                            itemsAmount={messages ? Object.keys(messages).length : 0}
+                            itemsAmount={messages ? messages.length : 0}
                             getMoreItems={() => { getChatMessages(selectedChatId); }}
                             isScrollReversed={true}
                         >
                             {
-                                Object.values(messages).map(message => (
+                                messages.map(message => (
                                     <section className={styles.messageContainerWrapper} key={message.id}>
                                         <section className={styles.messageContainer}>
-                                            <img className={styles.avatar} src={message._user.avatar || NOIMAGE_IMAGE_URL} alt="" />
+                                            <img className={styles.avatar} src={message.author.avatar || NOIMAGE_IMAGE_URL} alt="" />
 
                                             <div className={styles.userNameAndMessageContainer}>
-                                                <div className={styles.userName}>{message._user.userFullName}</div>
+                                                <div className={styles.userName}>{message.author.userFullName}</div>
                                                 <div className={styles.message}>{message.text}</div>
                                             </div>
 
@@ -72,13 +78,16 @@ class MessagesThread extends React.Component {
 export default MessagesThread;
 
 const datePropValidation = (props, propName, componentName) => {
-    if (!moment(props[propName], "YYYY-MM-DDTHH:mm:ss.SSSZ", true).isValid()) {
+    if (
+        ((props[propName] !== null) && (props[propName] !== undefined))
+        && !moment(props[propName], "YYYY-MM-DDTHH:mm:ss.SSSZ", true).isValid()
+    ) {
         return new Error(`Prop '${propName}' of type 'Date' with invalid value supplied to message of '${componentName}' component. Validation failed.`);
     }
 };
 
 MessagesThread.propTypes = {
-    messages: PropTypes.objectOf(
+    messages: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string,
             text: PropTypes.string,

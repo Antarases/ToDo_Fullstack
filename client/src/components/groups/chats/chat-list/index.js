@@ -1,44 +1,49 @@
-import React from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React, { useEffect } from "react";
+import { useQuery } from "@apollo/react-hooks";
 import classnames from "classnames";
-import moment from "moment";
 
 import ScrolledContainer from "../../../commons/scrolled-container";
 
-import { getChatList, setSelectedChat, getChatMessages } from "../../../../actions/ChatActions";
+import { getChatList, getChatMessages, setSelectedChat } from "../../../../actions/ChatActions";
 
 import { getFormattedDate } from "../../../../helpers/functions";
 
+import { GET_CHATS_FROM_CACHE, GET_SELECTED_CHAT_ID } from "../../../../constants/graphqlQueries/chats";
+
 import styles from "./chat-list.module.scss";
 
-class ChatList extends React.Component {
-    componentDidMount() {
+const ChatList = () => {
+    useEffect(() => {
         getChatList();
-    }
+    }, []);
 
-    render() {
-        const { chats, selectedChatId } = this.props;
+    const { data: chatsData } = useQuery(GET_CHATS_FROM_CACHE);
+    const chats = chatsData.chats;
 
-        return (
-            <section className={styles.chatsContainer}>
-                {
-                    (chats && Object.keys(chats).length)
+    const { data: selectedChatIdData } = useQuery(GET_SELECTED_CHAT_ID);
+    const selectedChatId = selectedChatIdData.clientData.chats.selectedChatId;
+
+    return (
+        <section className={styles.chatsContainer}>
+            {
+                (chats && chats.length)
                     ? (
                         <ScrolledContainer
                             className={styles.scrolledContainer}
                             trackVerticalClassName={styles.trackVertical}
                             thumbVerticalClassName={styles.thumbVertical}
-                            itemsAmount={chats ? Object.keys(chats).length : 0}
+                            itemsAmount={chats ? chats.length : 0}
                             getMoreItems={getChatList}
                         >
                             {
-                                Object.values(chats).map(chat => (
+                                chats.map(chat => (
                                     <section
                                         className={classnames(styles.chat, {[styles.selected]: (chat.id === selectedChatId)})}
-                                        onClick={() => {
-                                            setSelectedChat(chat.id);
-                                            getChatMessages(chat.id);
+                                        onClick={async () => {
+                                            if (chat.id !== selectedChatId) {
+                                                await setSelectedChat(chat.id);
+                                                getChatMessages(chat.id);
+                                            }
                                         }}
                                         key={chat.id}
                                     >
@@ -56,37 +61,9 @@ class ChatList extends React.Component {
                         </ScrolledContainer>
                     )
                     : <div className={styles.noChatsText}>You have no chats yet</div>
-                }
-            </section>
-        );
-    }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        chats: state.chats.chats,
-        selectedChatId: state.chats.selectedChatId
-    };
+            }
+        </section>
+    );
 };
 
-export default connect(mapStateToProps)(ChatList);
-
-const datePropValidation = (props, propName, componentName) => {
-    if (
-        ((props[propName] !== null) && (props[propName] !== undefined))
-        && !moment(props[propName], true).isValid()
-    ) {
-        return new Error(`Prop '${propName}' of type 'Date' with invalid value supplied to '${componentName}'. Validation failed.`);
-    }
-};
-
-ChatList.propTypes = {
-    chats: PropTypes.shape({
-        id: PropTypes.string,
-        avatar: PropTypes.string,
-        name: PropTypes.string,
-        lastMessage: PropTypes.string,
-        updatingDate: datePropValidation
-    }),
-    selectedChatId: PropTypes.string
-};
+export default ChatList;

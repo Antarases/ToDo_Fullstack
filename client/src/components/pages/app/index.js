@@ -1,35 +1,30 @@
-import React from 'react';
+import React  from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import { connect } from 'react-redux';
+import { useQuery } from "@apollo/react-hooks";
 
 import Menu from "../../commons/menu";
-import NotificationsModal from "../../commons/notificationsModal";
+import NotificationsModal from "../../commons/notifications-modal";
 import LoginPage from "../login-page/index";
 import TodosPage from "../todos-page/index";
 import ChatsPage from "../chats-page/index";
 
+import { GET_CURRENT_USER } from "../../../constants/graphqlQueries/users";
+
 import styles from "./app.module.scss";
 
-import { identifyCurrentUser } from "../../../actions/AppActions";
+const App = () => {
+    const { data: currentUserData, loading: isCurrentUserDataLoading } = useQuery(GET_CURRENT_USER);
 
-class App extends React.Component{
-    componentDidMount() {
-        identifyCurrentUser();
-    }
-
-    render() {
-        const { isUserLoggedIn, isUserLoginStatusDetermining } = this.props;
-
-        return (
-            <div className={styles.todoApp}>
-                <BrowserRouter>
-                    {
-                        isUserLoginStatusDetermining
-                            ? (
-                                <div>Loading...</div>
-                            )
-                            : (
-                                isUserLoggedIn
+    return (
+        <div className={styles.todoApp}>
+            <BrowserRouter>
+                {
+                    isCurrentUserDataLoading
+                        ? (
+                            <div>Loading...</div>
+                        )
+                        : (
+                            (currentUserData && currentUserData.currentUser)
                                 ? (
                                     <React.Fragment>
                                         <Menu />
@@ -49,19 +44,11 @@ class App extends React.Component{
                                 : (
                                     <LoginPage />
                                 )
-                            )
-                    }
-                </BrowserRouter>
-            </div>
-        );
-    }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        isUserLoginStatusDetermining: state.app.isUserLoginStatusDetermining,
-        isUserLoggedIn: state.app.currentUserStatus.isLoggedIn,
-    }
+                        )
+                }
+            </BrowserRouter>
+        </div>
+    );
 };
 
-export default connect(mapStateToProps)(App);
+export default App;

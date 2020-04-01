@@ -15,9 +15,9 @@ require("./services/passport");
 
 
 mongoose.connect(keys.mongoURI, {useNewUrlParser: true, useFindAndModify: false})
-    .catch(error => console.log("First connect attempt failed: ", error));
+    .catch(error => console.error("First connect attempt failed: ", error));
 mongoose.connection.on('error', err => {
-    console.log("Sequent connect attempt failed: ", err);
+    console.error("Sequent connect attempt failed: ", err);
 });
 
 const app = express();
@@ -33,7 +33,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: ["http://localhost:3000", "ws://localhost:3000"],
     credentials: true,
 }));
 
@@ -46,9 +46,6 @@ require("./routes/authRoutes")(app);
 require("./routes/appRoutes")(app);
 require("./routes/todoRoutes")(app);
 require("./routes/chatRoutes")(app);
-
-require("./websockets/todosSocket")(httpServer);
-require("./websockets/chatsSocket")(httpServer);
 
 if (process.env.NODE_ENV === "production") {
     // Express will serve up production assets, like our main.js, or main.css files

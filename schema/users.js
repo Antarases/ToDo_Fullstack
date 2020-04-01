@@ -3,7 +3,7 @@ const { assertAuthenticated }  = require("../helpers/assertFunctions");
 const typeDefs = `
     extend type Query {
         currentUser: User
-        users: [User!]
+        users(skip: Int!, limit: Int!): [User!]
         totalUsersAmount: Int
     }
     

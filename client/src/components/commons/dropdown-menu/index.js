@@ -32,7 +32,7 @@ const DropdownMenu = ({ menuButtonText = "", children, menuContainerClassName, m
             ? React.cloneElement(child, {
                 className: classnames(child.props.className, styles.menuItem),
                 onClick: () => {
-                    child.props.onClick();
+                    child.props.onClick && child.props.onClick();
                     toggleIsMenuOpen();
                 }
             })

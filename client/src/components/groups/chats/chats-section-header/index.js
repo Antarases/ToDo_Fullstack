@@ -1,6 +1,5 @@
 import React from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import { useQuery } from "@apollo/react-hooks";
 import classnames from "classnames";
 
 import DropdownMenu from "../../../commons/dropdown-menu";
@@ -9,15 +8,20 @@ import MembersInfo from "./members-info";
 
 import { setSelectedChat, toggleCreateChatModal } from "../../../../actions/ChatActions";
 
+import { GET_SELECTED_CHAT_ID } from "../../../../constants/graphqlQueries/chats";
+
 import styles from "./chats-section-header.module.scss";
 
-const ChatsSectionHeader = ({ selectedChatId }) => {
+const ChatsSectionHeader = () => {
+    const { data: selectedChatIdData } = useQuery(GET_SELECTED_CHAT_ID);
+    const selectedChatId = selectedChatIdData
+        ? selectedChatIdData.clientData.chats.selectedChatId
+        : null;
+
     return (
         <section className={styles.chatsSectionHeader}>
             <DropdownMenu menuContainerClassName={classnames(styles.menuContainer, {[styles.hideOnSmallScreens]: selectedChatId})}>
-                <div
-                    onClick={toggleCreateChatModal}
-                >
+                <div onClick={toggleCreateChatModal}>
                     <span className={classnames(styles.icon, styles.createChat)} />
                     Create chat
                 </div>
@@ -34,14 +38,4 @@ const ChatsSectionHeader = ({ selectedChatId }) => {
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        selectedChatId: state.chats.selectedChatId
-    };
-};
-
-export default connect(mapStateToProps)(ChatsSectionHeader);
-
-ChatsSectionHeader.propTypes = {
-    selectedChatId: PropTypes.string
-};
+export default ChatsSectionHeader;

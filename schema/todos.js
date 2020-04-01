@@ -21,7 +21,7 @@ const typeDefs = `
     
     extend type Mutation {
         addTodo(text: String!, image: String): Todo!
-        editTodo(todoId: String!, text: String!, image: String!, isCompleted: Boolean!): Todo!
+        editTodo(todoId: String!, text: String!, image: String, isCompleted: Boolean!): Todo!
     }
     
     extend type Subscription {
@@ -35,8 +35,8 @@ const typeDefs = `
         text: String!
         image: String
         isCompleted: Boolean!
-        creationDate: String
-        updatingDate: String
+        creationDate: Date
+        updatingDate: Date
     }
     
     extend type User {
@@ -71,6 +71,7 @@ const resolvers = (pubsub) => ({
     Mutation: {
         addTodo: async (parent, { text, image }, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);
+
             const todo = await dataSources.todoAPI.addTodo(text, image, currentUser);
 
             pubsub.publish("TODO_ADDED", { todoAdded: todo });
@@ -92,16 +93,16 @@ const resolvers = (pubsub) => ({
         todoAdded: {
             subscribe: withFilter(
                 () => pubsub.asyncIterator("TODO_ADDED"),
-                (payload, variables, { currentUser }) => {
-                    return isAdminOrTodoAuthor(currentUser, payload.author);
+                ({ todoAdded }, variables, { currentUser }) => {
+                    return isAdminOrTodoAuthor(currentUser, todoAdded.author);
                 }
             ),
         },
         todoEdited: {
             subscribe: withFilter(
                 () => pubsub.asyncIterator("TODO_EDITED"),
-                (payload, variables, { currentUser }) => {
-                    return isAdminOrTodoAuthor(currentUser, payload.author);
+                ({ todoEdited }, variables, { currentUser }) => {
+                    return isAdminOrTodoAuthor(currentUser, todoEdited.author);
                 }
             )
         }

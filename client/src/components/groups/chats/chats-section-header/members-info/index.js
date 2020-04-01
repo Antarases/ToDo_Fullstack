@@ -1,11 +1,25 @@
 import React from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import { useQuery } from "@apollo/react-hooks";
+
+import { GET_SELECTED_CHAT } from "../../../../../constants/graphqlQueries/chats";
+import { GET_CURRENT_USER } from "../../../../../constants/graphqlQueries/users";
 
 import styles from "./members-info.module.scss";
 
-const MembersInfo = ({ selectedChat, currentUserId }) => {
-    const chatMembersAmount = selectedChat._members ? Object.keys(selectedChat._members).length : 0;
+const MembersInfo = () => {
+    const { data: currentUserData } = useQuery(GET_CURRENT_USER);
+    const currentUserId = (currentUserData && currentUserData.currentUser)
+        ? currentUserData.currentUser.id
+        : null;
+
+    const { data: selectedChatData } = useQuery(GET_SELECTED_CHAT, { fetchPolicy: "cache-only" });
+    const selectedChat = selectedChatData
+        ? selectedChatData.chat
+        : null;
+
+    const chatMembersAmount = (selectedChat && selectedChat.members)
+            ? selectedChat.members.length
+            : 0;
 
     return (
         !!chatMembersAmount
@@ -23,7 +37,7 @@ const MembersInfo = ({ selectedChat, currentUserId }) => {
                     : <React.Fragment>
                         <div className={styles.chatName}>
                             {
-                                Object.values(selectedChat._members).filter(user => (
+                                selectedChat.members.filter(user => (
                                     user.id !== currentUserId
                                 ))[0].userFullName
                             }
@@ -34,23 +48,4 @@ const MembersInfo = ({ selectedChat, currentUserId }) => {
     );
 };
 
-const mapStateToProps = (state) => {
-    const selectedChatId = state.chats.selectedChatId;
-    const selectedChat = selectedChatId
-        ? state.chats.chats[selectedChatId]
-        : {};
-
-    return {
-        selectedChat,
-        currentUserId: state.app.userData.id
-    };
-};
-
-export default connect(mapStateToProps)(MembersInfo);
-
-MembersInfo.propTypes = {
-    selectedChat: PropTypes.object,
-    currentUserId: PropTypes.string
-};
-
-
+export default MembersInfo;

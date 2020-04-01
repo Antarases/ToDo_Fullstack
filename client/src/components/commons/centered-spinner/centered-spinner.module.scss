@@ -1,0 +1,22 @@
+.container {
+	z-index: 1000;
+	position: absolute;
+	background-color: rgba(100, 100, 100, 0.5);
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.fixed {
+	position: fixed;
+	z-index: 99;
+}
+.spinner{
+	width: 60px !important;
+	height: 60px !important;
+	-webkit-filter: grayscale(100%);
+	filter: grayscale(100%);
+}

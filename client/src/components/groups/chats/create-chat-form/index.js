@@ -1,22 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import { useQuery } from "@apollo/react-hooks";
 import classnames from "classnames";
 
 import UserList from "../../../commons/user-list";
 
-import { createChat } from "../../../../websockets/ChatSocket";
-import { getUserList, toggleCreateChatModal } from "../../../../actions/ChatActions";
+import { toggleCreateChatModal, createChat } from "../../../../actions/ChatActions";
+import { getUserList } from "../../../../actions/UserActions";
+
+import { GET_CURRENT_USER, GET_USERS_FROM_CACHE } from "../../../../constants/graphqlQueries/users";
 
 import styles from "./create-chat-form.module.scss";
 
-const CreateChatForm = ({ userList }) => {
+const CreateChatForm = () => {
     useEffect(() => {
         getUserList();
     }, []);
 
     const [chatName, setChatName] = useState("");
     const [selectedUserIds, setSelectedUserIds] = useState([]);
+
+    const { data: currentUserData } = useQuery(GET_CURRENT_USER);
+    const currentUser = currentUserData
+        ? currentUserData.currentUser
+        : null;
+
+    const { data: usersData } = useQuery(GET_USERS_FROM_CACHE);
+    const userList = (usersData && currentUser)
+        ? usersData.users.filter(user => (
+            user.id !== currentUser.id
+        ))
+        : [];
 
     const handleUserSelection = (selectedUserId) => {
         if (selectedUserIds.indexOf(selectedUserId) === -1) {
@@ -78,14 +91,4 @@ const CreateChatForm = ({ userList }) => {
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        userList: state.chats.userList
-    };
-};
-
-export default connect(mapStateToProps)(CreateChatForm);
-
-CreateChatForm.propTypes = {
-    userList: PropTypes.object
-};
+export default CreateChatForm;

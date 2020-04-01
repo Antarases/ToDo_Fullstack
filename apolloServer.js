@@ -6,9 +6,15 @@ const { UserAPI, TodoAPI, ChatAPI } = require("./datasources");
 module.exports = new ApolloServer({
     schema,
     context: async ({ req, connection }) => {
-        // TODO Set context upon connection during WebSocket
         if (connection) {
-            return connection.context;
+            return {
+                currentUser: UserAPI.userReducer(connection.context.currentUser),
+                dataSources: {
+                    userAPI: new UserAPI(),
+                    todoAPI: new TodoAPI(),
+                    chatAPI: new ChatAPI(),
+                }
+            };
         } else {
             return {
                 currentUser: UserAPI.userReducer(req.user),
@@ -17,10 +23,14 @@ module.exports = new ApolloServer({
         }
     },
     subscriptions: {
-        onConnect: (connectionParams, webSocket) => {
-            // TODO check connectionParams to determine whether to allow WebSocket connection; throw an error if user is unauthenticated.
-            return true;
-        }
+        onConnect: (connectionParams) => {
+            if (connectionParams && connectionParams.currentUser) {
+                return connectionParams;
+            } else {
+                throw new Error("You must log in!");
+            }
+        },
+        path: "/graphql_ws"
     },
     dataSources: () => ({
         userAPI: new UserAPI(),
@@ -29,7 +39,8 @@ module.exports = new ApolloServer({
     }),
     playground: {
         settings: {
-            'request.credentials': 'same-origin',
-        }
+            "request.credentials": "same-origin",
+        },
+        subscriptionEndpoint: "/graphql_ws"
     },
 });

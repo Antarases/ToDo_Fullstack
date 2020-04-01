@@ -1,5 +1,17 @@
-import { dispatch } from "../store/configureStore";
+import apolloClient from "../apolloClient";
 
-export const setTodosSortParams = (sortField, sortOrder) => {
-    dispatch({ type: "TODOS_SORT_PARAMS__SET_SORT_PARAMS", sortField, sortOrder });
+import {SET_TODOS_SORT_PARAMS } from "../constants/graphqlQueries/todosPaginationAndSortParams";
+
+export const setTodosSortParams = (newSortField, currentTodosPage, currentSortField, currentSortOrder) => {
+    const sortOrder = ((newSortField === currentSortField) && (currentSortOrder === "asc"))   //reversing sort direction
+        ? "desc"
+        : "asc";
+
+    apolloClient.mutate({
+        mutation: SET_TODOS_SORT_PARAMS,
+        variables: {
+            sortField: newSortField,
+            sortOrder
+        }
+    });
 };

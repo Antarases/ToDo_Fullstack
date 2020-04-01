@@ -51,6 +51,12 @@ class ChatAPI {
             : [];
     }
 
+    async getChatById(chatId) {
+        const chat = await Chat.findById(chatId);
+
+        return ChatAPI.chatReducer(chat)
+    }
+
     async getChatMembersByChatId(chatId) {
         const queryMemberIdsResult = await Chat.findById(chatId, "_members");
         return queryMemberIdsResult._members;

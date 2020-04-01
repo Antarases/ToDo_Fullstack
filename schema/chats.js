@@ -5,9 +5,10 @@ const { assertAuthenticated, assertChatMember }  = require("../helpers/assertFun
 const typeDefs = `
     extend type Query {
         chats(skip: Int!, limit: Int!): [Chat!]
+        chat(chatId: String!): Chat!
         totalChatsAmount: Int
         messages(chatId: String!, skip: Int!, limit: Int!): [Message!]
-        totalMessagesAmount(chatId: String!): Int
+        totalChatMessagesAmount(chatId: String!): Int
     }
     
     extend type Mutation {
@@ -25,8 +26,8 @@ const typeDefs = `
         name: String!
         members: [User!]
         lastMessage: String
-        creationDate: String
-        updatingDate: String
+        creationDate: Date
+        updatingDate: Date
         messages(skip: Int!, limit: Int!): [Message!]
     }
     
@@ -35,8 +36,8 @@ const typeDefs = `
         text: String!
         author: User!
         chatId: String!
-        creationDate: String
-        updatingDate: String
+        creationDate: Date
+        updatingDate: Date
     }
     
     extend type User {
@@ -46,9 +47,12 @@ const typeDefs = `
 
 module.exports.typeDefs = typeDefs;
 
+const isAuthenticatedChatMember = async (chatId, currentUser, dataSources) => {
+    if (!(currentUser && Object.keys(currentUser).length)) {
+        return false;
+    }
 
-const isChatMember = async (chatId, currentUser, dataSource) => {
-    const chatMemberIds = await dataSource.chatAPI.getChatMembersByChatId(chatId);
+    const chatMemberIds = await dataSources.chatAPI.getChatMembersByChatId(chatId, dataSources);
 
     return chatMemberIds.includes(currentUser.id);
 };
@@ -59,6 +63,12 @@ const resolvers = (pubsub) => ({
             assertAuthenticated(currentUser);
 
             return dataSources.chatAPI.getChatsByUserId(currentUser.id, skip, limit);
+        },
+        chat: (parent, { chatId }, { dataSources, currentUser }) => {
+            assertAuthenticated(currentUser);
+            assertChatMember(currentUser, chatId, dataSources.chatAPI);
+
+            return dataSources.chatAPI.getChatById(chatId);
         },
         totalChatsAmount: (parent, args, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);
@@ -71,7 +81,7 @@ const resolvers = (pubsub) => ({
 
             return dataSources.chatAPI.getMessagesByChatId(chatId, skip, limit);
         },
-        totalMessagesAmount: (parent, { chatId }, { dataSources, currentUser }) => {
+        totalChatMessagesAmount: (parent, { chatId }, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);
             assertChatMember(currentUser, chatId, dataSources.chatAPI);
 
@@ -84,7 +94,7 @@ const resolvers = (pubsub) => ({
 
             const chat = await dataSources.chatAPI.createChat(chatName, userIds);
 
-            pubsub.publish("CHAT_CREATED", { chatCreated: chat });
+            pubsub.publish("CHAT_CREATED", { chatCreated: chat, chatId: chat.id });
 
             return chat;
         },
@@ -94,7 +104,7 @@ const resolvers = (pubsub) => ({
 
             const message = await dataSources.chatAPI.sendMessage(currentUser, chatId, text);
 
-            pubsub.publish("MESSAGE_SENT", { messageSent: message });
+            pubsub.publish("MESSAGE_SENT", { messageSent: message, chatId });
 
             return message;
         }
@@ -103,16 +113,16 @@ const resolvers = (pubsub) => ({
         chatCreated: {
             subscribe: withFilter(
                 () => pubsub.asyncIterator("CHAT_CREATED"),
-                async ({ id }, variables, { dataSource, currentUser }) => {
-                    return await isChatMember(id, currentUser, dataSource);
+                async ({ chatId }, variables, { dataSources, currentUser }) => {
+                    return await isAuthenticatedChatMember(chatId, currentUser, dataSources);
                 }
             )
         },
         messageSent: {
             subscribe: withFilter(
                 () => pubsub.asyncIterator("MESSAGE_SENT"),
-                async ({ chatId }, variables, { dataSource, currentUser }) => {
-                    return await isChatMember(chatId, currentUser, dataSource);
+                async ({ chatId }, variables, { dataSources, currentUser }) => {
+                    return await isAuthenticatedChatMember(chatId, currentUser, dataSources);
                 }
             )
         },

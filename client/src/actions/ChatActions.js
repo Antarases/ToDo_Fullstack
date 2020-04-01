@@ -1,133 +1,378 @@
-import axios from "axios";
-import { dispatch, getCurrentState } from "../store/configureStore";
+import apolloClient from "../apolloClient";
 
-import { FETCHED_CHATS_LIMIT, FETCHED_MESSAGES_LIMIT, FETCHED_USERS_LIMIT, MESSAGE_ID_SUFFIX } from "../constants/chats";
-import { LISTS_FETCH_THROTTLING_TIME } from "../constants/app";
+import { showNotificationModal } from "./NotificationsModalActions";
 
-const isNewListRequestsAllowed = (isListLoading, timeOfEndingLoadingFullList) => {
-    return !isListLoading
-        && (!timeOfEndingLoadingFullList || (Date.now() >= (timeOfEndingLoadingFullList + LISTS_FETCH_THROTTLING_TIME)));
+import { isNewListRequestsAllowed } from "../helpers/functions";
+
+import { GET_CURRENT_USER } from "../constants/graphqlQueries/users";
+import { CLEAR_CURRENT_CHAT_MESSAGES, RESET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_SELECTED_CHAT_ID, SET_SELECTED_CHAT_ID, GET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, GET_IS_CHAT_LIST_LOADING, SET_IS_CHAT_LIST_LOADING, ADD_CHATS_TO_CHAT_LIST, GET_CHATS, GET_CHATS_FROM_CACHE,  GET_TOTAL_CHATS_AMOUNT, GET_TOTAL_CHAT_MESSAGES_AMOUNT, GET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_IS_MESSAGE_LIST_LOADING, SET_IS_MESSAGE_LIST_LOADING, GET_CHAT_MESSAGES, GET_CHAT_MESSAGES_AMOUNT_FROM_CACHE, ADD_MESSAGES_TO_MESSAGE_LIST, ADD_CHAT_MESSAGE, SEND_MESSAGE, TOGGLE_CREATE_CHAT_MODAL, CREATE_CHAT, ADD_CHAT_TO_LIST } from "../constants/graphqlQueries/chats";
+import { FETCHED_CHATS_LIMIT, FETCHED_MESSAGES_LIMIT } from "../constants/chats";
+
+import { initialData } from "../schema";
+
+
+export const clearCurrentChatMessages = () => {
+    apolloClient.mutate({
+        mutation: CLEAR_CURRENT_CHAT_MESSAGES
+    })
+};
+
+export const resetTimeOfEndingLoadingFullCurrentChatMessageList = () => {
+    apolloClient.mutate({
+        mutation: RESET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST
+    })
+};
+
+export const getSelectedChatId = async () => {
+    const { data: selectedChatIdData } = await apolloClient.query({
+        query: GET_SELECTED_CHAT_ID
+    });
+
+    return selectedChatIdData.clientData.chats.selectedChatId;
+};
+
+export const setSelectedChatId = (chatId) => {
+    apolloClient.mutate({
+        mutation: SET_SELECTED_CHAT_ID,
+        variables: {
+            chatId
+        }
+    });
+};
+
+export const setSelectedChat = async (chatId) => {
+    await Promise.all([
+        clearCurrentChatMessages(),
+        resetTimeOfEndingLoadingFullCurrentChatMessageList(),
+        setSelectedChatId(chatId)
+    ]);
+};
+
+const getTimeOfEndingLoadingFullChatList = async () => {
+    const { data: timeOfEndingLoadingFullChatListData } = await apolloClient.query({
+        query: GET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST
+    });
+
+    return timeOfEndingLoadingFullChatListData.clientData.chats.timeOfEndingLoadingFullChatList;
+};
+
+const setTimeOfEndingLoadingFullChatList = (time) => {
+    apolloClient.mutate({
+        mutation: SET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST,
+        variables: {
+            time
+        }
+    });
+};
+
+const getIsChatListLoading = async () => {
+    const { data: isChatListLoadingData } = await apolloClient.query({
+        query: GET_IS_CHAT_LIST_LOADING
+    });
+
+    return isChatListLoadingData.clientData.chats.isChatListLoading;
+};
+
+const setIsChatListLoading = (isLoading) => {
+    apolloClient.mutate({
+        mutation: SET_IS_CHAT_LIST_LOADING,
+        variables: {
+            isLoading
+        }
+    });
+};
+
+const getChatsFromCache = async () => {
+    const { data: chatsData } = await apolloClient.query({
+        query: GET_CHATS_FROM_CACHE
+    });
+
+    return chatsData.chats;
+};
+
+const getTotalChatsAmount = async () => {
+    const { data: totalChatsAmountData } = await apolloClient.query({
+        query: GET_TOTAL_CHATS_AMOUNT,
+        fetchPolicy: "no-cache"
+    });
+
+    return totalChatsAmountData
+        ? totalChatsAmountData.totalChatsAmount
+        : null;
+};
+
+const addChatsToChatList = (chats) => {
+    apolloClient.mutate({
+        mutation: ADD_CHATS_TO_CHAT_LIST,
+        variables: {
+            chats
+        }
+    });
 };
 
 export const getChatList = async () => {
     try {
-        const { isChatListLoading, chats, timeOfEndingLoadingFullChatList } = getCurrentState().chats;
-        const currentChatsAmount = Object.keys(chats).length;
+        const [
+            timeOfEndingLoadingFullChatList,
+            isChatListLoading,
+            currentChats
+        ] = await Promise.all([
+            getTimeOfEndingLoadingFullChatList(),
+            getIsChatListLoading(),
+            getChatsFromCache()
+        ]);
+
+        const currentChatsAmount = currentChats.length;
 
         if (
             isNewListRequestsAllowed(isChatListLoading, timeOfEndingLoadingFullChatList)
         ) {
             setIsChatListLoading(true);
 
-            const users = await axios.get(`/chats/get_chat_list/?skip=${currentChatsAmount}&limit=${FETCHED_CHATS_LIMIT}`);
-            const { chats, totalChatsAmount } = users.data;
-
-            if (chats && Object.keys(chats).length) {
-                const newChats = {};
-                chats.forEach(chat => {
-                    const newChatMembers = {};
-                    chat._members.forEach(member => {
-                        newChatMembers[member.id] = member;
+            const [
+                chats,
+                totalChatsAmount
+            ] = await Promise.all([
+                async function() {
+                    const { data: chatsData } = await apolloClient.query({
+                        query: GET_CHATS,
+                        variables: {
+                            skip: currentChatsAmount,
+                            limit: FETCHED_CHATS_LIMIT
+                        },
+                        fetchPolicy: "no-cache"
                     });
 
-                    newChats[chat.id] = chat;
-                    newChats[chat.id]._members = newChatMembers;
-                });
+                    return chatsData
+                        ? chatsData.chats
+                        : initialData.chats;
+                }(),
+                getTotalChatsAmount()
+            ]);
 
-                dispatch({ type: "CHATS__ADD_CHATS_TO_CHAT_LIST", chats: newChats, totalChatsAmount });
+            const fetchedChatsAmount = chats ? chats.length : 0;
+
+            if (fetchedChatsAmount) {
+                addChatsToChatList(chats);
             }
 
             if ((currentChatsAmount + chats.length) >= totalChatsAmount) {
-                dispatch({ type: "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST", time: Date.now() });
+                setTimeOfEndingLoadingFullChatList(Date.now());
             }
             setIsChatListLoading(false);
         }
     } catch (error) {
         console.error("An error occured during getting chat list.", error);
+
+        showNotificationModal({
+            body: "An error occured during getting chat list. " + error,
+            buttons: [{ text: "OK" }],
+            showFailIcon: true
+        });
     }
 };
 
-export const setIsChatListLoading = (isLoading) => {
-    dispatch({ type: "CHATS__SET_IS_CHAT_LIST_LOADING", isLoading });
+const getIsMessageListLoading = async () => {
+    const { data: isMessageListLoadingData } = await apolloClient.query({
+        query: GET_IS_MESSAGE_LIST_LOADING
+    });
+
+    return isMessageListLoadingData.clientData.chats.isMessageListLoading;
 };
 
-export const setSelectedChat = (chatId) => {
-    dispatch({ type: "CHATS__CLEAR_CURRENT_CHAT_MESSAGES" });
-    dispatch({ type: "CHATS__RESET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST" });
-    dispatch({ type: "CHATS__SET_SELECTED_CHAT", chatId });
+const setIsMessageListLoading = (isLoading) => {
+    apolloClient.mutate({
+        mutation: SET_IS_MESSAGE_LIST_LOADING,
+        variables: {
+            isLoading
+        }
+    });
+};
+
+const getTimeOfEndingLoadingFullCurrentChatMessageList = async () => {
+    const { data: timeOfEndingLoadingFullCurrentChatMessageListData } = await apolloClient.query({
+        query: GET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST
+    });
+
+    return timeOfEndingLoadingFullCurrentChatMessageListData.clientData.chats.timeOfEndingLoadingFullCurrentChatMessageList;
+};
+
+const setTimeOfEndingLoadingFullCurrentChatMessageList = (time) => {
+    apolloClient.mutate({
+        mutation: SET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST,
+        variables: {
+            time
+        }
+    });
+};
+
+const getChatMessagesAmount = async (chatId) => {
+    const { data: chatMessagesAmountData } = await apolloClient.query({
+        query: GET_CHAT_MESSAGES_AMOUNT_FROM_CACHE,
+        variables: {
+            chatId
+        },
+        fetchPolicy: "no-cache"
+    });
+
+    return chatMessagesAmountData.chats__getChatMessagesAmountFromCache.messagesAmount;
+};
+
+const getTotalChatMessagesAmount = async (chatId) => {
+    const { data: totalChatMessagesAmountData } = await apolloClient.query({
+        query: GET_TOTAL_CHAT_MESSAGES_AMOUNT,
+        variables: {
+            chatId
+        },
+        fetchPolicy: "no-cache"
+    });
+
+    return totalChatMessagesAmountData
+        ? totalChatMessagesAmountData.totalChatMessagesAmount
+        : null;
+};
+
+export const addChatMessage = (chatId, message) => {
+    apolloClient.mutate({
+        mutation: ADD_CHAT_MESSAGE,
+        variables: {
+            chatId,
+            message
+        }
+    });
+};
+
+const addMessagesToMessageList = (chatId, messages) => {
+    apolloClient.mutate({
+        mutation: ADD_MESSAGES_TO_MESSAGE_LIST,
+        variables: {
+            chatId,
+            messages
+        }
+    });
 };
 
 export const getChatMessages = async (chatId) => {
     try {
-        const { chats, isMessageListLoading, timeOfEndingLoadingFullCurrentChatMessageList } = getCurrentState().chats;
-        const selectedChatMessages = chats[chatId].messages;
-        const currentMessagesAmount = selectedChatMessages ? Object.keys(selectedChatMessages).length : 0;
+        const [
+            currentMessagesAmount,
+            isMessageListLoading,
+            timeOfEndingLoadingFullCurrentChatMessageList
+        ] = await Promise.all([
+            getChatMessagesAmount(chatId),
+            getIsMessageListLoading(),
+            getTimeOfEndingLoadingFullCurrentChatMessageList()
+        ]);
 
         if (
             isNewListRequestsAllowed(isMessageListLoading, timeOfEndingLoadingFullCurrentChatMessageList)
         ) {
             setIsMessageListLoading(true);
 
-            const res = await axios.get(`/chats/get_chat_messages/?chatId=${chatId}&skip=${currentMessagesAmount}&limit=${FETCHED_MESSAGES_LIMIT}`);
-            const { messages, totalMessagesAmount } = res.data;
-            const fetchedMessagesAmount = messages ? Object.keys(messages).length : 0;
+            const [
+                messages,
+                totalChatMessagesAmount
+            ] = await Promise.all([
+                async function() {
+                    const { data: chatMessagesData } = await apolloClient.query({
+                        query: GET_CHAT_MESSAGES,
+                        variables: {
+                            chatId,
+                            skip: currentMessagesAmount,
+                            limit: FETCHED_MESSAGES_LIMIT
+                        },
+                        fetchPolicy: "no-cache"
+                    });
+
+                    return chatMessagesData
+                        ? chatMessagesData.chat.messages
+                        : null;
+                }(),
+                getTotalChatMessagesAmount(chatId)
+            ]);
+            const fetchedMessagesAmount = messages ? messages.length : 0;
 
             if (fetchedMessagesAmount) {
-                const newMessages = {};
-                messages.forEach(message => {
-                    newMessages[message.id + MESSAGE_ID_SUFFIX] = message;  //MESSAGE_ID_SUFFIX is added to preserve messages order
-                });
-
-                dispatch({ type: "CHATS__ADD_MESSAGES_TO_MESSAGE_LIST", chatId, messages: newMessages, totalCurrentChatMessagesAmount: totalMessagesAmount });
+                addMessagesToMessageList(chatId, messages);
             }
 
-            if ((currentMessagesAmount + fetchedMessagesAmount) >= totalMessagesAmount) {
-                dispatch({ type: "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST", time: Date.now() });
+            const selectedChatId = await getSelectedChatId();
+
+            if (
+                (chatId === selectedChatId)
+                && (currentMessagesAmount + fetchedMessagesAmount) >= totalChatMessagesAmount)
+            {
+                setTimeOfEndingLoadingFullCurrentChatMessageList(Date.now())
             }
+
             setIsMessageListLoading(false);
         }
     } catch (error) {
         console.error("An error occured during getting chat messages.", error);
+
+        showNotificationModal({
+            body: "An error occured during getting chat messages. " + error,
+            buttons: [{ text: "OK" }],
+            showFailIcon: true
+        });
     }
 };
 
-export const setIsMessageListLoading = (isLoading) => {
-    dispatch({ type: "CHATS__SET_IS_MESSAGE_LIST_LOADING", isLoading });
-};
-
-export const getUserList = async () => {
-    try {
-        const { isUserListLoading, userList, timeOfEndingLoadingFullUserList } = getCurrentState().chats;
-        const currentUsersAmount = Object.keys(userList).length;
-
-        if (
-            isNewListRequestsAllowed(isUserListLoading, timeOfEndingLoadingFullUserList)
-        ) {
-            setIsUserListLoading(true);
-
-            const users = await axios.get(`/api/user_list/?skip=${currentUsersAmount}&limit=${FETCHED_USERS_LIMIT}`);
-            const { userList, totalUsersAmount } = users.data;
-
-            const newUsers = {};
-            userList.forEach(user => {
-                newUsers[user.id] = user;
-            });
-
-            dispatch({ type: "CHATS__ADD_USERS_TO_USER_LIST", users: newUsers, totalUsersAmount });
-            if ((currentUsersAmount + userList.length) >= totalUsersAmount) {
-                dispatch({ type: "CHATS__SET_TIME_OF_ENDING_LOADING_FULL_USER_LIST", time: Date.now() });
-            }
-            setIsUserListLoading(false);
+export const sendMessage = async (chatId, text) => {
+    apolloClient.mutate({
+        mutation: SEND_MESSAGE,
+        variables: {
+            chatId,
+            text
         }
-    } catch (error) {
-        console.error("An error occured during getting user list.", error);
-    }
-};
-
-export const setIsUserListLoading = (isLoading) => {
-    dispatch({ type: "CHATS__SET_IS_USER_LIST_LOADING", isLoading });
+    })
+    .catch(error => {
+        showNotificationModal({
+            body: "An error occurred during sending message. " + error,
+            buttons: [{ text: "OK" }],
+            showFailIcon: true
+        });
+    });
 };
 
 export const toggleCreateChatModal = () => {
-    dispatch({ type: "CHATS__TOGGLE_CREATE_CHAT_MODAL" });
+    apolloClient.mutate({
+        mutation: TOGGLE_CREATE_CHAT_MODAL
+    });
+};
+
+export const createChat = async (chatName, userIds) => {
+    const { data: currentUserData } = await apolloClient.query({
+        query: GET_CURRENT_USER
+    });
+
+    const currentUserId = currentUserData
+        ? currentUserData.currentUser.id
+        : null;
+
+    if (currentUserId) {
+        apolloClient.mutate({
+            mutation: CREATE_CHAT,
+            variables: {
+                chatName,
+                userIds: [...userIds, currentUserId]
+            }
+        })
+        .catch(error => {
+            showNotificationModal({
+                body: "An error occurred during chat creation. " + error,
+                buttons: [{ text: "OK" }],
+                showFailIcon: true
+            });
+        });
+    }
+};
+
+export const addChatToList = (chat) => {
+    apolloClient.mutate({
+        mutation: ADD_CHAT_TO_LIST,
+        variables: {
+            chat
+        }
+    });
 };

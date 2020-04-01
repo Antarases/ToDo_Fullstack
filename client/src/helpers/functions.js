@@ -1,5 +1,8 @@
 import moment from "moment";
 
+import { LISTS_FETCH_THROTTLING_TIME } from "../constants/app";
+
+
 export function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
         return response.json();
@@ -50,6 +53,11 @@ export async function getCompressedBase64Image(file, imageWidth = 320) {
         }
     });
 }
+
+export const isNewListRequestsAllowed = (isListLoading, timeOfEndingLoadingFullList) => {
+    return !isListLoading
+        && (!timeOfEndingLoadingFullList || (Date.now() >= (timeOfEndingLoadingFullList + LISTS_FETCH_THROTTLING_TIME)));
+};
 
 
 export const getFormattedDate = (date) => {

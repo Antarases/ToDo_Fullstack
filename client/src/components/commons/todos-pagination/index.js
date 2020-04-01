@@ -1,89 +1,88 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { useQuery } from "@apollo/react-hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight }  from "@fortawesome/free-solid-svg-icons";
 import classnames from "classnames";
 
-import { getTodos, setEditableTodoId } from "../../../actions/TodoActions";
-
 import { Container, Button } from "reactstrap";
+
+import { setEditableTodoId } from "../../../actions/TodoActions";
+import { setCurrentTodosPage } from "../../../actions/TodosPaginationActions";
+
+import { GET_TODOS_PAGINATION_AND_SORT_PARAMS } from "../../../constants/graphqlQueries/todosPaginationAndSortParams";
+import { GET_TOTAL_TODOS_AMOUNT } from "../../../constants/graphqlQueries/todos";
+import { TODOS_PER_PAGE } from "../../../constants/todosPagination";
 
 import styles from "./todos-pagination.module.scss";
 
-const TodosPagination = ({
-    currentTodosPage,
-    totalTodoPagesAmount,
-    sortField,
-    sortOrder,
-    className
-}) => (
-    <Container
-        tag="section"
-        className={classnames(styles.pagination, className)}
-    >
-        <span className={styles.paginationText}>
-            {`Page `}
-            <span className={styles.bold}>{currentTodosPage}</span>
-            {` of `}
-            <span className={styles.bold}>{totalTodoPagesAmount}</span>
-        </span>
+const TodosPagination = ({ className }) => {
+    const { data: todosPaginationAndSortParamsData } = useQuery(GET_TODOS_PAGINATION_AND_SORT_PARAMS);
+    const {
+        todosPagination: { currentTodosPage }
+    } = todosPaginationAndSortParamsData.clientData;
 
-        <Button
-            className={classnames(styles.button, styles.prev)}
-            color={
-                currentTodosPage === 1
-                    ? "secondary"
-                    : "primary"
-            }
-            size="sm"
-            disabled={currentTodosPage === 1}
-            onClick={() => {
-                setEditableTodoId(null);
-                const nextPage = currentTodosPage - 1;
+    const { data: totalTodosAmountData } = useQuery(GET_TOTAL_TODOS_AMOUNT);
 
-                getTodos(nextPage, sortField, sortOrder, nextPage);
-            }}
+    const totalTodoPagesAmount = totalTodosAmountData
+        ? Math.ceil(totalTodosAmountData.totalTodosAmount / TODOS_PER_PAGE)
+        : null;
+
+    return (
+        <Container
+            tag="section"
+            className={classnames(styles.pagination, className)}
         >
-            <FontAwesomeIcon icon={faAngleRight} className={styles.arrowIcon} size="lg" rotation={180} />
-        </Button>
+            <span className={styles.paginationText}>
+                {`Page `}
+                <span className={styles.bold}>{currentTodosPage}</span>
+                {` of `}
+                <span className={styles.bold}>{totalTodoPagesAmount}</span>
+            </span>
 
-        <Button
-            className={classnames(styles.button, styles.next)}
-            color={
-                currentTodosPage === totalTodoPagesAmount
-                    ? "secondary"
-                    : "primary"
-            }
-            size="sm"
-            disabled={currentTodosPage === totalTodoPagesAmount}
-            onClick={() => {
-                setEditableTodoId(null);
-                const nextPage = currentTodosPage + 1;
+            <Button
+                className={classnames(styles.button, styles.prev)}
+                color={
+                    currentTodosPage === 1
+                        ? "secondary"
+                        : "primary"
+                }
+                size="sm"
+                disabled={currentTodosPage === 1}
+                onClick={() => {
+                    setEditableTodoId(null);
 
-                getTodos(nextPage, sortField, sortOrder, nextPage);
-            }}
-        >
-            <FontAwesomeIcon icon={faAngleRight} className={styles.arrowIcon} size="lg" />
-        </Button>
-    </Container>
-);
+                    const nextPage = currentTodosPage - 1;
+                    setCurrentTodosPage(nextPage);
+                }}
+            >
+                <FontAwesomeIcon icon={faAngleRight} className={styles.arrowIcon} size="lg" rotation={180} />
+            </Button>
 
-const mapStateToProps = (state) => {
-    return {
-        currentTodosPage: state.todosPagination.currentTodosPage,
-        totalTodoPagesAmount: state.todosPagination.totalTodoPagesAmount,
-        sortField: state.todosSortParams.sortField,
-        sortOrder: state.todosSortParams.sortOrder
-    }
+            <Button
+                className={classnames(styles.button, styles.next)}
+                color={
+                    currentTodosPage === totalTodoPagesAmount
+                        ? "secondary"
+                        : "primary"
+                }
+                size="sm"
+                disabled={currentTodosPage === totalTodoPagesAmount}
+                onClick={() => {
+                    setEditableTodoId(null);
+
+                    const nextPage = currentTodosPage + 1;
+                    setCurrentTodosPage(nextPage);
+                }}
+            >
+                <FontAwesomeIcon icon={faAngleRight} className={styles.arrowIcon} size="lg" />
+            </Button>
+        </Container>
+    );
 };
 
-export default connect(mapStateToProps)(TodosPagination);
+export default TodosPagination;
 
 TodosPagination.propTypes = {
-    currentTodosPage: PropTypes.number,
-    totalTodoPagesAmount: PropTypes.number,
-    sortField: PropTypes.string,
-    sortOrder: PropTypes.string,
     className: PropTypes.string
 };

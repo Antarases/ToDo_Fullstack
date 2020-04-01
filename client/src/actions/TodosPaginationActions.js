@@ -1,5 +1,12 @@
-import { dispatch } from "../store/configureStore";
+import apolloClient from "../apolloClient";
+
+import { SET_CURRENT_TODOS_PAGE } from "../constants/graphqlQueries/todosPaginationAndSortParams";
 
 export const setCurrentTodosPage = (pageNumber) => {
-    dispatch({ type: "TODOS_PAGINATION__SET_CURRENT_PAGE", pageNumber });
+    apolloClient.mutate({
+        mutation: SET_CURRENT_TODOS_PAGE,
+        variables: {
+            pageNumber
+        }
+    });
 };

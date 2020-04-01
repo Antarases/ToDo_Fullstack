@@ -1,10 +1,5 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-
-import { getTodos, setEditableTodoId } from "../../../actions/TodoActions";
-
-import { setTodoSocketConnectionAndHandlers, closeTodoSocketConnection } from "../../../websockets/TodoSocket";
+import React  from "react";
+import { useQuery, useSubscription } from "@apollo/react-hooks";
 
 import EditTodoForm from "../../groups/todos/edit-todo-form"
 import AddTodo from "../../groups/todos/add-todo";
@@ -13,20 +8,58 @@ import TodosPagination from "../../commons/todos-pagination";
 import TodoList from "../../groups/todos/todo-list";
 import Modal from "../../commons/modal";
 
-import { INITIAL_TODOS_PAGE } from "../../../constants/todosPagination";
-import { initialState as sortParamsInitialState } from "../../../reducers/todosSortParams";
+import { setEditableTodoId } from "../../../actions/TodoActions";
+import { showNotificationModal } from "../../../actions/NotificationsModalActions";
+
+import { GET_TODOS, GET_EDITABLE_TODO_ID, SUBSCRIPTION__TODO_ADDED, SUBSCRIPTION__TODO_EDITED } from "../../../constants/graphqlQueries/todos";
+import { GET_TODOS_PAGINATION_AND_SORT_PARAMS } from "../../../constants/graphqlQueries/todosPaginationAndSortParams";
 
 import styles from "./todos-page.module.scss";
 
-const TodosPage = ({ isTodos, editableTodoId }) => {
-    useEffect(() => {
-        (async () => {
-            await getTodos(INITIAL_TODOS_PAGE, sortParamsInitialState.sortField, sortParamsInitialState.sortOrder);
-            setTodoSocketConnectionAndHandlers();
-        })();
+const TodosPage = () => {
+    const { data: todosPaginationAndSortParamsData, } = useQuery(GET_TODOS_PAGINATION_AND_SORT_PARAMS);
+    const {
+        todosPagination: { currentTodosPage },
+        todosSortParams: { sortField, sortOrder }
+    } = todosPaginationAndSortParamsData.clientData;
 
-        return closeTodoSocketConnection;
-    }, []);
+    const { data: todosData, loading: isTodosLoading, refetch: refetchTodos } = useQuery(GET_TODOS, {
+        variables: {
+            page: currentTodosPage,
+            sortField,
+            sortOrder
+        },
+        fetchPolicy: "cache-and-network",
+        onError: (error) => {
+            console.error("An error occurred during getting todos.", error);
+
+            showNotificationModal({
+                body: "An error occurred during getting todos.",
+                buttons: [{ text: "OK" }],
+                showFailIcon: true
+            });
+        }
+
+    });
+    const todos = todosData
+        ? todosData.todos
+        : [];
+    const isTodos = !!todos.length;
+
+    const { data: editableTodoIdData } = useQuery(GET_EDITABLE_TODO_ID);
+    const { editableTodoId } = editableTodoIdData.clientData.todos;
+
+    useSubscription(SUBSCRIPTION__TODO_ADDED, {
+        onSubscriptionData: () => {
+            refetchTodos();
+        }
+    });
+
+    useSubscription(SUBSCRIPTION__TODO_EDITED, {
+        onSubscriptionData: () => {
+            refetchTodos();
+        }
+    });
 
     return (
         <section className={styles.todosPageContainer}>
@@ -34,7 +67,7 @@ const TodosPage = ({ isTodos, editableTodoId }) => {
 
             { isTodos && <TodosSortingBar /> }
             { isTodos && <TodosPagination /> }
-            <TodoList />
+            <TodoList todos={todos} isTodosLoading={isTodosLoading} />
             { isTodos && <TodosPagination className={styles.bottomTodoPagination} /> }
 
             {
@@ -47,16 +80,4 @@ const TodosPage = ({ isTodos, editableTodoId }) => {
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        isTodos: !!Object.keys(state.todos.todos).length,
-        editableTodoId: state.todos.editableTodoId
-    }
-};
-
-export default connect(mapStateToProps)(TodosPage);
-
-TodosPage.propTypes = {
-    isTodos: PropTypes.bool,
-    editableTodoId: PropTypes.string
-};
+export default TodosPage;
