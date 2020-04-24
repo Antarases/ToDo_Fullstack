@@ -44,7 +44,7 @@ class ChatAPI {
                     limit: +limit
                 }
             });
-        const chats = chatsQueryResult &&chatsQueryResult._chats;
+        const chats = chatsQueryResult && chatsQueryResult._chats;
 
         return Array.isArray(chats)
             ? chats.map(chat => ChatAPI.chatReducer(chat))
@@ -67,39 +67,50 @@ class ChatAPI {
         return user._chats && user._chats.length;
     }
 
-    async getMessagesByChatId(chatId, skip, limit) {
-        skip = +skip;
+    async getMessagesByChatId(chatId, cursor, limit) {
         limit = +limit;
-
-        const allCurrentChatMessages = await Message.find({ _chat: chatId });
-        const totalMessagesAmount = allCurrentChatMessages.length;
-
-        if (totalMessagesAmount >= (skip + limit)) {
-            skip = totalMessagesAmount - (skip + limit);
-        } else {
-            limit = totalMessagesAmount - skip;
-            skip = 0;
-        }
 
         let messages;
         if (limit !== 0) {
-            messages = await Message
-                .find(
-                    { _chat: chatId },
-                    null,
-                    {
-                        sort: { creationDate: "asc"},
-                        skip: skip,
-                        limit: limit
-                    }
-                );
+            if (cursor) {
+                messages = await Message
+                    .find(
+                        { _chat: chatId, creationDate: { $lt: cursor } },
+                        null,
+                        {
+                            sort: { creationDate: "desc"},
+                            limit: limit
+                        }
+                    );
+            } else {
+                messages = await Message
+                    .find(
+                        { _chat: chatId },
+                        null,
+                        {
+                            sort: { creationDate: "desc"},
+                            limit: limit
+                        }
+                    );
+            }
+
+            messages = Array.isArray(messages)
+                ? messages
+                    .reverse()
+                    .map(message => ChatAPI.messageReducer(message))
+                : [];
         } else {
             messages = [];
         }
 
-        return Array.isArray(messages)
-            ? messages.map(message => ChatAPI.messageReducer(message))
-            : [];
+        return {
+            data: messages,
+            paginationMetadata: {
+                nextCursor: messages.length
+                    ? JSON.stringify(Number(messages[0].creationDate))
+                    : null
+            }
+        };
     }
 
     async getTotalMessagesAmountByChatId(chatId) {

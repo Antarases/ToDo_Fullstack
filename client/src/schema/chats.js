@@ -43,12 +43,18 @@ const chatReducer = (chat) => {
             id: chat.id || null,
             name: chat.name || null,
             members: chat.members || null,
-            messages: messagesReducer(chat.messages),
+            messages: messagesReducer(chat.messages && chat.messages.data),
             lastMessage: chat.lastMessage || null,
             creationDate: chat.creationDate || null,
             updatingDate: chat.updatingDate || null
         }
         : null;
+};
+
+const chatsReducer = (chats) => {
+    return (chats && chats.length)
+        ? chats.map(chat => chatReducer(chat))
+        : [];
 };
 
 
@@ -97,10 +103,28 @@ const chatResolvers = {
 
             const queryResults = cache.readQuery({ query });
 
+            let normalizedChats = chatsReducer(chats);
+            normalizedChats = normalizedChats.map(chat => {
+                return {
+                    ...chat,
+                    messages: chat.messages.map(message => {
+                        return {
+                            ...message,
+                            author: {
+                                ...message.author,
+                                __typename: "User"
+                            },
+                            __typename: "Message"
+                        }
+                    }),
+                    __typename: "Chat"
+                }
+            });
+
             const newData = {
                 chats: [
                     ...queryResults.chats,
-                    ...chats
+                    ...normalizedChats
                 ]
             };
 
@@ -172,6 +196,31 @@ const chatResolvers = {
                 clientData: {
                     chats: {
                         selectedChatId: chatId,
+                        __typename: "Chats"
+                    },
+                    __typename: "ClientData"
+                }
+            };
+
+            cache.writeQuery({ query, data: newData });
+        },
+        chats__setMessagesCursor: (parent, { messagesCursor }, { cache }) => {
+            const query = gql`
+                query SetMessagesCursor {
+                    clientData @client {
+                        chats {
+                            messagesCursor
+                            __typename
+                        }
+                        __typename
+                    }
+                }
+            `;
+
+            const newData = {
+                clientData: {
+                    chats: {
+                        messagesCursor,
                         __typename: "Chats"
                     },
                     __typename: "ClientData"

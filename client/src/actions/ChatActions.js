@@ -5,7 +5,7 @@ import { showNotificationModal } from "./NotificationsModalActions";
 import { isNewListRequestsAllowed } from "../helpers/functions";
 
 import { GET_CURRENT_USER } from "../constants/graphqlQueries/users";
-import { CLEAR_CURRENT_CHAT_MESSAGES, RESET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_SELECTED_CHAT_ID, SET_SELECTED_CHAT_ID, GET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, GET_IS_CHAT_LIST_LOADING, SET_IS_CHAT_LIST_LOADING, ADD_CHATS_TO_CHAT_LIST, GET_CHATS, GET_CHATS_FROM_CACHE,  GET_TOTAL_CHATS_AMOUNT, GET_TOTAL_CHAT_MESSAGES_AMOUNT, GET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_IS_MESSAGE_LIST_LOADING, SET_IS_MESSAGE_LIST_LOADING, GET_CHAT_MESSAGES, GET_CHAT_MESSAGES_AMOUNT_FROM_CACHE, ADD_MESSAGES_TO_MESSAGE_LIST, ADD_CHAT_MESSAGE, SEND_MESSAGE, TOGGLE_CREATE_CHAT_MODAL, CREATE_CHAT, ADD_CHAT_TO_LIST } from "../constants/graphqlQueries/chats";
+import { CLEAR_CURRENT_CHAT_MESSAGES, RESET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_SELECTED_CHAT_ID, SET_SELECTED_CHAT_ID, GET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, GET_IS_CHAT_LIST_LOADING, SET_IS_CHAT_LIST_LOADING, ADD_CHATS_TO_CHAT_LIST, GET_CHATS, GET_CHATS_FROM_CACHE,  GET_TOTAL_CHATS_AMOUNT, GET_TOTAL_CHAT_MESSAGES_AMOUNT, GET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_IS_MESSAGE_LIST_LOADING, SET_IS_MESSAGE_LIST_LOADING, GET_MESSAGES_CURSOR, SET_MESSAGES_CURSOR, GET_CHAT_MESSAGES, GET_CHAT_MESSAGES_AMOUNT_FROM_CACHE, ADD_MESSAGES_TO_MESSAGE_LIST, ADD_CHAT_MESSAGE, SEND_MESSAGE, TOGGLE_CREATE_CHAT_MODAL, CREATE_CHAT, ADD_CHAT_TO_LIST } from "../constants/graphqlQueries/chats";
 import { FETCHED_CHATS_LIMIT, FETCHED_MESSAGES_LIMIT } from "../constants/chats";
 
 import { initialData } from "../schema";
@@ -44,7 +44,8 @@ export const setSelectedChat = async (chatId) => {
     await Promise.all([
         clearCurrentChatMessages(),
         resetTimeOfEndingLoadingFullCurrentChatMessageList(),
-        setSelectedChatId(chatId)
+        setSelectedChatId(chatId),
+        setMessagesCursor(initialData.clientData.chats.messagesCursor)
     ]);
 };
 
@@ -172,6 +173,23 @@ export const getChatList = async () => {
     }
 };
 
+const getMessagesCursor = async () => {
+    const { data: messagesCursorData } = await apolloClient.query({
+        query: GET_MESSAGES_CURSOR
+    });
+
+    return messagesCursorData.clientData.chats.messagesCursor;
+};
+
+const setMessagesCursor = (messagesCursor) => {
+    apolloClient.mutate({
+        mutation: SET_MESSAGES_CURSOR,
+        variables: {
+            messagesCursor
+        }
+    });
+};
+
 const getIsMessageListLoading = async () => {
     const { data: isMessageListLoadingData } = await apolloClient.query({
         query: GET_IS_MESSAGE_LIST_LOADING
@@ -256,10 +274,12 @@ export const getChatMessages = async (chatId) => {
     try {
         const [
             currentMessagesAmount,
+            currentMessagesCursor,
             isMessageListLoading,
             timeOfEndingLoadingFullCurrentChatMessageList
         ] = await Promise.all([
             getChatMessagesAmount(chatId),
+            getMessagesCursor(),
             getIsMessageListLoading(),
             getTimeOfEndingLoadingFullCurrentChatMessageList()
         ]);
@@ -278,7 +298,7 @@ export const getChatMessages = async (chatId) => {
                         query: GET_CHAT_MESSAGES,
                         variables: {
                             chatId,
-                            skip: currentMessagesAmount,
+                            cursor: currentMessagesCursor,
                             limit: FETCHED_MESSAGES_LIMIT
                         },
                         fetchPolicy: "no-cache"
@@ -290,11 +310,15 @@ export const getChatMessages = async (chatId) => {
                 }(),
                 getTotalChatMessagesAmount(chatId)
             ]);
-            const fetchedMessagesAmount = messages ? messages.length : 0;
+
+            const fetchedMessagesAmount = (messages && messages.data) ? messages.data.length : 0;
 
             if (fetchedMessagesAmount) {
-                addMessagesToMessageList(chatId, messages);
+                addMessagesToMessageList(chatId, messages.data);
             }
+
+            messages.paginationMetadata.nextCursor
+                && setMessagesCursor(messages.paginationMetadata.nextCursor);
 
             const selectedChatId = await getSelectedChatId();
 

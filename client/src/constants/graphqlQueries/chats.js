@@ -74,8 +74,13 @@ export const GET_CHATS = gql`
                 avatar
                 isAdmin
             }
-            messages(skip: 0, limit: 0) @connection(key: "messages") {  #this returns an empty array; required to firing queries on cache for getting current messages amount.
-                id
+            messages(cursor: "", limit: 0) @connection(key: "messages") {  #this returns an empty data array; required to firing queries on cache for getting current messages amount.
+                data {
+                    id
+                }
+                paginationMetadata {
+                    nextCursor
+                }
             }
             lastMessage
             creationDate
@@ -110,22 +115,43 @@ export const GET_TOTAL_CHATS_AMOUNT = gql`
     }
 `;
 
+export const GET_MESSAGES_CURSOR = gql`
+    query GetMessagesCursor {
+        clientData @client {
+            chats {
+                messagesCursor
+            }
+        }
+    }
+`;
+
+export const SET_MESSAGES_CURSOR = gql`
+    mutation SetMessagesCursor($messagesCursor: String!) {
+        chats__setMessagesCursor(messagesCursor: $messagesCursor) @client
+    }
+`;
+
 export const GET_CHAT_MESSAGES = gql`
-    query GetChatMessages($chatId: String!, $skip: Int!, $limit: Int!) {
+    query GetChatMessages($chatId: String!, $cursor: String!, $limit: Int!) {
         chat(chatId: $chatId) {
-            messages(skip: $skip, limit: $limit) {
-                id
-                text
-                author {
+            messages(cursor: $cursor, limit: $limit) {
+                data {
                     id
-                    googleId
-                    userFullName
-                    email
-                    avatar
-                    isAdmin
+                    text
+                    author {
+                        id
+                        googleId
+                        userFullName
+                        email
+                        avatar
+                        isAdmin
+                    }
+                    creationDate
+                    updatingDate
                 }
-                creationDate
-                updatingDate
+                paginationMetadata {
+                    nextCursor
+                }
             }
         }
     }
@@ -299,8 +325,13 @@ export const CREATE_CHAT = gql`
                 avatar
                 isAdmin
             }
-            messages(skip: 0, limit: 0) @connection(key: "messages") {  #this returns an empty array; required to firing queries on cache for getting current messages amount.
-                id
+            messages(cursor: "", limit: 0) @connection(key: "messages") {  #this returns an empty data array; required to firing queries on cache for getting current messages amount.
+                data {
+                    id
+                }
+                paginationMetadata {
+                    nextCursor
+                }
             }
             lastMessage
             creationDate
@@ -328,8 +359,13 @@ export const SUBSCRIPTION__CHAT_CREATED = gql`
                 avatar
                 isAdmin
             }
-            messages(skip: 0, limit: 0) @connection(key: "messages") {  #this returns an empty array; required to firing queries on cache for getting current messages amount.
-                id
+            messages(cursor: "", limit: 0) @connection(key: "messages") {  #this returns an empty data array; required to firing queries on cache for getting current messages amount.
+                data {
+                    id
+                }
+                paginationMetadata {
+                    nextCursor
+                }
             }
             lastMessage
             creationDate

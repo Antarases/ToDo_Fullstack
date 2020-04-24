@@ -7,7 +7,7 @@ const typeDefs = `
         chats(skip: Int!, limit: Int!): [Chat!]
         chat(chatId: String!): Chat!
         totalChatsAmount: Int
-        messages(chatId: String!, skip: Int!, limit: Int!): [Message!]
+        messages(chatId: String!, cursor: String!, limit: Int!): MessagesConnection!
         totalChatMessagesAmount(chatId: String!): Int
     }
     
@@ -28,7 +28,7 @@ const typeDefs = `
         lastMessage: String
         creationDate: Date
         updatingDate: Date
-        messages(skip: Int!, limit: Int!): [Message!]
+        messages(cursor: String!, limit: Int!): MessagesConnection!
     }
     
     type Message {
@@ -38,6 +38,15 @@ const typeDefs = `
         chatId: String!
         creationDate: Date
         updatingDate: Date
+    }
+    
+    type MessagesConnection {
+        data: [Message!]
+        paginationMetadata: PaginationMetadata
+    }
+    
+    type PaginationMetadata {
+        nextCursor: String
     }
     
     extend type User {
@@ -75,11 +84,11 @@ const resolvers = (pubsub) => ({
 
             return dataSources.chatAPI.getTotalChatsAmountByUserId(currentUser.id);
         },
-        messages: (parent, { chatId, skip, limit }, { dataSources, currentUser }) => {
+        messages: (parent, { chatId, cursor, limit }, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);
             assertChatMember(currentUser, chatId, dataSources.chatAPI);
 
-            return dataSources.chatAPI.getMessagesByChatId(chatId, skip, limit);
+            return dataSources.chatAPI.getMessagesByChatId(chatId, cursor, limit);
         },
         totalChatMessagesAmount: (parent, { chatId }, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);
@@ -133,8 +142,8 @@ const resolvers = (pubsub) => ({
 
             return dataSources.userAPI.getUsersByIds(members);
         },
-        messages: ({ id }, { skip, limit }, { dataSources }) => {
-            return dataSources.chatAPI.getMessagesByChatId(id, skip, limit);
+        messages: ({ id }, { cursor, limit }, { dataSources }) => {
+            return dataSources.chatAPI.getMessagesByChatId(id, cursor, limit);
         }
     },
     Message: {
