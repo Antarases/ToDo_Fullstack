@@ -204,6 +204,93 @@ const chatResolvers = {
 
             cache.writeQuery({ query, data: newData });
         },
+        chats__relocateChatToTopOfChatList: (parent, { chatId }, { cache, getCacheKey }) => {
+            const query = gql`
+                query RelocateChatToTopOfChatList {
+                    chats @client {
+                        id
+                        name
+                        members {
+                            id
+                            googleId
+                            userFullName
+                            email
+                            avatar
+                            isAdmin
+                            __typename
+                        }
+                        messages {
+                            id
+                            text
+                            author {
+                                id
+                                googleId
+                                userFullName
+                                email
+                                avatar
+                                isAdmin
+                                __typename
+                            }
+                            creationDate
+                            updatingDate
+                            __typename
+                        }
+                        lastMessage
+                        creationDate
+                        updatingDate
+                        __typename
+                    }
+                }
+            `;
+            const queryResults = cache.readQuery({ query });
+
+            const cacheId = getCacheKey({ __typename: "Chat", id: chatId });
+            const fragment = gql`
+                fragment GetChat on Chat {
+                    id
+                    name
+                    members {
+                        id
+                        googleId
+                        userFullName
+                        email
+                        avatar
+                        isAdmin
+                        __typename
+                    }
+                    messages {
+                        id
+                        text
+                        author {
+                            id
+                            googleId
+                            userFullName
+                            email
+                            avatar
+                            isAdmin
+                            __typename
+                        }
+                        creationDate
+                        updatingDate
+                        __typename
+                    }
+                    lastMessage
+                    creationDate
+                    updatingDate
+                    __typename
+                }
+            `;
+            const chat = cache.readFragment({ fragment, id: cacheId });
+
+            const newData = {
+                chats: [
+                    { ...chat },
+                    ...queryResults.chats.filter(chat => (chat.id !== chatId))
+                ]
+            };
+
+            cache.writeQuery({ query, data: newData });
+        },
         chats__setMessagesCursor: (parent, { messagesCursor }, { cache }) => {
             const query = gql`
                 query SetMessagesCursor {

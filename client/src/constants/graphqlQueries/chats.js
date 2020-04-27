@@ -109,6 +109,12 @@ export const GET_CHATS_FROM_CACHE = gql`
     }
 `;
 
+export const RELOCATE_CHAT_TO_TOP_OF_CHAT_LIST = gql`
+    mutation RelocateChatToTopOfChatList($chatId: String!) {
+        chats__relocateChatToTopOfChatList(chatId: $chatId) @client
+    }
+`;
+
 export const GET_TOTAL_CHATS_AMOUNT = gql`
     query GetTotalChatsAmount {
         totalChatsAmount
