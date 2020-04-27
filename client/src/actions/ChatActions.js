@@ -5,7 +5,7 @@ import { showNotificationModal } from "./NotificationsModalActions";
 import { isNewListRequestsAllowed } from "../helpers/functions";
 
 import { GET_CURRENT_USER } from "../constants/graphqlQueries/users";
-import { CLEAR_CURRENT_CHAT_MESSAGES, RESET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_SELECTED_CHAT_ID, SET_SELECTED_CHAT_ID, GET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, GET_IS_CHAT_LIST_LOADING, SET_IS_CHAT_LIST_LOADING, ADD_CHATS_TO_CHAT_LIST, GET_CHATS, GET_CHATS_FROM_CACHE, RELOCATE_CHAT_TO_TOP_OF_CHAT_LIST, GET_TOTAL_CHATS_AMOUNT, GET_TOTAL_CHAT_MESSAGES_AMOUNT, GET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_IS_MESSAGE_LIST_LOADING, SET_IS_MESSAGE_LIST_LOADING, GET_MESSAGES_CURSOR, SET_MESSAGES_CURSOR, GET_CHAT_MESSAGES, GET_CHAT_MESSAGES_AMOUNT_FROM_CACHE, ADD_MESSAGES_TO_MESSAGE_LIST, ADD_CHAT_MESSAGE, SEND_MESSAGE, TOGGLE_CREATE_CHAT_MODAL, CREATE_CHAT, ADD_CHAT_TO_LIST } from "../constants/graphqlQueries/chats";
+import { CLEAR_CURRENT_CHAT_MESSAGES, RESET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_SELECTED_CHAT_ID, SET_SELECTED_CHAT_ID, GET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, GET_IS_CHAT_LIST_LOADING, SET_IS_CHAT_LIST_LOADING, ADD_CHATS_TO_CHAT_LIST, GET_CHATS, GET_CHATS_FROM_CACHE, GET_CHAT_BY_ID, GET_CHAT_BY_ID_FROM_CACHE, ADD_CHAT_TO_CHAT_LIST, RELOCATE_CHAT_TO_TOP_OF_CHAT_LIST, GET_TOTAL_CHATS_AMOUNT, GET_TOTAL_CHAT_MESSAGES_AMOUNT, GET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_IS_MESSAGE_LIST_LOADING, SET_IS_MESSAGE_LIST_LOADING, GET_MESSAGES_CURSOR, SET_MESSAGES_CURSOR, GET_CHAT_MESSAGES, GET_CHAT_MESSAGES_AMOUNT_FROM_CACHE, ADD_MESSAGES_TO_MESSAGE_LIST, ADD_CHAT_MESSAGE, SEND_MESSAGE, TOGGLE_CREATE_CHAT_MODAL, CREATE_CHAT, ADD_CHAT_TO_LIST } from "../constants/graphqlQueries/chats";
 import { FETCHED_CHATS_LIMIT, FETCHED_MESSAGES_LIMIT } from "../constants/chats";
 
 import { initialData } from "../schema";
@@ -173,8 +173,41 @@ export const getChatList = async () => {
     }
 };
 
-export const relocateChatToTopOfChatList = (chatId) => {
+export const getChatById = async (chatId) => {
+    const { data: chatData } = await apolloClient.query({
+        query: GET_CHAT_BY_ID,
+        variables: {
+            chatId
+        },
+        fetchPolicy: "no-cache"
+    });
+
+    return chatData.chat;
+};
+
+export const getChatByIdFromCache = async (chatId) => {
+    const { data: chatData } = await apolloClient.query({
+        query: GET_CHAT_BY_ID_FROM_CACHE,
+        variables: {
+            chatId
+        },
+        fetchPolicy: "no-cache"
+    });
+
+    return chatData.chats__getChatByIdFromCache;
+};
+
+export const addChatToChatList = (chat) => {
     apolloClient.mutate({
+        mutation: ADD_CHAT_TO_CHAT_LIST,
+        variables: {
+            chat
+        }
+    });
+};
+
+export const relocateChatToTopOfChatList = async (chatId) => {
+    await apolloClient.mutate({
         mutation: RELOCATE_CHAT_TO_TOP_OF_CHAT_LIST,
         variables: {
             chatId

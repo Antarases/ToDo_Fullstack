@@ -109,6 +109,45 @@ export const GET_CHATS_FROM_CACHE = gql`
     }
 `;
 
+export const GET_CHAT_BY_ID = gql`
+    query GetChatById($chatId: String!) {
+        chat(chatId: $chatId) {
+            id
+            name
+            members {
+                id
+                googleId
+                userFullName
+                email
+                avatar
+                isAdmin
+            }
+            messages(cursor: "", limit: 0) @connection(key: "messages") {  #this returns an empty data array; required to firing queries on cache for getting current messages amount.
+                data {
+                    id
+                }
+                paginationMetadata {
+                    nextCursor
+                }
+            }
+            lastMessage
+            creationDate
+            updatingDate
+        }
+    }
+`;
+
+export const GET_CHAT_BY_ID_FROM_CACHE = gql`
+    query GetChatByIdFromCache($chatId: String!) {
+        chats__getChatByIdFromCache(chatId: $chatId) @client
+    }
+`;
+export const ADD_CHAT_TO_CHAT_LIST = gql`
+    mutation AddChatToChatList($chat: Chat!) {
+        chats__addChatToChatList(chat: $chat) @client
+    }
+`;
+
 export const RELOCATE_CHAT_TO_TOP_OF_CHAT_LIST = gql`
     mutation RelocateChatToTopOfChatList($chatId: String!) {
         chats__relocateChatToTopOfChatList(chatId: $chatId) @client

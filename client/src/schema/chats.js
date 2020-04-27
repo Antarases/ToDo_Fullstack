@@ -60,6 +60,19 @@ const chatsReducer = (chats) => {
 
 const chatResolvers = {
     Query: {
+        chats__getChatByIdFromCache: (parent, { chatId }, { cache, getCacheKey }) => {
+            const cacheId = getCacheKey({ __typename: "Chat", id: chatId });
+
+            const fragment = gql`
+                fragment GetChatByIdFromCache on Chat {
+                    id
+                }
+            `;
+
+            const chat = cache.readFragment({ fragment, id: cacheId });
+
+            return chat;
+        },
         chats__getChatMessagesAmountFromCache: (parent, { chatId }, { cache, getCacheKey }) => {
             const cacheId = getCacheKey({ __typename: "Chat", id: chatId });
 
@@ -130,7 +143,7 @@ const chatResolvers = {
 
             cache.writeQuery({ query, data: newData });
         },
-        chats__addChatToList: (parent, { chat }, { cache }) => {
+        chats__addChatToChatList: (parent, { chat }, { cache }) => {
             const query = gql`
                 query AddChatToList {
                     chats @client {
@@ -143,6 +156,7 @@ const chatResolvers = {
                             email
                             avatar
                             isAdmin
+                            __typename
                         }
                         messages {
                             id
@@ -154,9 +168,11 @@ const chatResolvers = {
                                 email
                                 avatar
                                 isAdmin
+                                __typename
                             }
                             creationDate
                             updatingDate
+                            __typename
                         }
                         lastMessage
                         creationDate
@@ -167,12 +183,26 @@ const chatResolvers = {
             `;
 
             const queryResults = cache.readQuery({ query });
+
+            let normalizedChat = chatReducer(chat);
+            normalizedChat = {
+                ...normalizedChat,
+                messages: normalizedChat.messages.map(message => {
+                    return {
+                        ...message,
+                        author: {
+                            ...message.author,
+                            __typename: "User"
+                        },
+                        __typename: "Message"
+                    }
+                }),
+                __typename: "Chat"
+            };
+
             const newData = {
                 chats: [
-                    {
-                        ...chatReducer(chat),
-                        __typename: "Chat"
-                    },
+                    normalizedChat,
                     ...queryResults.chats
                 ]
             };

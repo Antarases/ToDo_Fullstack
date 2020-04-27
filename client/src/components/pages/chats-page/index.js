@@ -8,7 +8,7 @@ import SendMessageForm from "../../groups/chats/send-message-form";
 import CreateChatForm from "../../groups/chats/create-chat-form";
 import Modal from "../../commons/modal";
 
-import { addChatToList, relocateChatToTopOfChatList, addChatMessage, toggleCreateChatModal } from "../../../actions/ChatActions";
+import { addChatToList, getChatByIdFromCache, relocateChatToTopOfChatList, getChatById, addChatToChatList, addChatMessage, toggleCreateChatModal } from "../../../actions/ChatActions";
 
 import { GET_SELECTED_CHAT, SUBSCRIPTION__MESSAGE_SENT, SUBSCRIPTION__CHAT_CREATED, GET_IS_CREATE_CHAT_MODAL_OPEN } from "../../../constants/graphqlQueries/chats";
 
@@ -33,12 +33,25 @@ const ChatsPage = () => {
     });
 
     useSubscription(SUBSCRIPTION__MESSAGE_SENT, {
-        onSubscriptionData: (data) => {
-            const message = data.subscriptionData.data.messageSent;
+        onSubscriptionData: async (data) => {
+            try {
+                const message = data.subscriptionData.data.messageSent;
+                const chatId = message.chatId;
 
-            relocateChatToTopOfChatList(message.chatId);
+                const isChatInCache = !!(await getChatByIdFromCache(chatId));
 
-            addChatMessage(message.chatId, message);
+                if (isChatInCache) {
+                    await relocateChatToTopOfChatList(chatId);
+
+                    addChatMessage(chatId, message);
+                } else {
+                    const chat = await getChatById(chatId);
+
+                    addChatToChatList(chat);
+                }
+            } catch (error) {
+                console.error(`An error occured during execution of callback of subscription to message receiving.`, error);
+            }
         }
     });
 
