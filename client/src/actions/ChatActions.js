@@ -179,7 +179,7 @@ export const getChatList = async () => {
             chats.paginationMetadata.nextCursor
                 && setChatsCursor(chats.paginationMetadata.nextCursor);
 
-            if ((currentChatsAmount + chats.length) >= totalChatsAmount) {
+            if ((currentChatsAmount + fetchedChatsAmount) >= totalChatsAmount) {
                 setTimeOfEndingLoadingFullChatList(Date.now());
             }
             setIsChatListLoading(false);
