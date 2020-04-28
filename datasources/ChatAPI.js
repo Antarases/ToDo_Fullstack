@@ -119,7 +119,7 @@ class ChatAPI {
                         null,
                         {
                             sort: { creationDate: "desc"},
-                            limit: limit
+                            limit
                         }
                     );
             } else {
@@ -129,7 +129,7 @@ class ChatAPI {
                         null,
                         {
                             sort: { creationDate: "desc"},
-                            limit: limit
+                            limit
                         }
                     );
             }
