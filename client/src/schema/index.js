@@ -38,6 +38,7 @@ export const initialData = {
         },
         users: {
             __typename: "Users",
+            usersCursor: "",
             isUserListLoading: false,
             timeOfEndingLoadingFullUserList: null,
         },

@@ -42,6 +42,31 @@ const userResolvers = {
 
             cache.writeQuery({ query, data: newData });
         },
+        users__setUsersCursor: (parent, { usersCursor }, { cache }) => {
+            const query = gql`
+                        query SetUsersCursor {
+                            clientData @client {
+                                users {
+                                    usersCursor
+                                    __typename
+                                }
+                                __typename
+                            }
+                        }
+                    `;
+
+            const newData = {
+                clientData: {
+                    users: {
+                        usersCursor,
+                        __typename: "Users"
+                    },
+                    __typename: "ClientData"
+                }
+            };
+
+            cache.writeQuery({ query, data: newData });
+        },
         users__setIsUserListLoading: (parent, { isLoading }, { cache }) => {
             const query = gql`
                 query SetIsUserListLoading {

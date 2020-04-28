@@ -12,23 +12,57 @@ class UserAPI {
                 email: user.email,
                 avatar: user.avatar,
                 isAdmin: user.isAdmin,
-                chats: user._chats
+                chats: user._chats,
+                creationDate: user.creationDate,
+                updatingDate: user.updatingDate
             }
             : null;
     };
 
-    async getUsers(skip, limit) {
-        const userList = await User
-            .find(
-                {},
-                null,
-                { skip: +skip, limit: +limit }
-            )
-            .exec();
+    async getUsers(cursor, limit) {
+        limit = +limit;
 
-        return Array.isArray(userList)
-            ? userList.map(user => UserAPI.userReducer(user))
-            : [];
+        let users;
+        if (limit > 0) {
+            if (cursor) {
+                users = await User
+                    .find(
+                        { creationDate: { $gt: cursor } },
+                        null,
+                        {
+                            sort: { creationDate: "asc"},
+                            limit
+                        }
+                    )
+                    .exec();
+            } else {
+                users = await User
+                    .find(
+                        {},
+                        null,
+                        {
+                            sort: { creationDate: "asc"},
+                            limit
+                        }
+                    )
+                    .exec();
+            }
+
+            users = Array.isArray(users)
+                ? users.map(user => UserAPI.userReducer(user))
+                : [];
+        } else {
+            users = []
+        }
+
+        return {
+            data: users,
+            paginationMetadata: {
+                nextCursor: users.length
+                    ? JSON.stringify(Number(users[users.length - 1].creationDate))
+                    : null
+            }
+        };
     }
 
     getUsersByIds(userIds) {

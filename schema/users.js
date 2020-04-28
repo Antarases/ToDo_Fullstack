@@ -3,7 +3,7 @@ const { assertAuthenticated }  = require("../helpers/assertFunctions");
 const typeDefs = `
     extend type Query {
         currentUser: User
-        users(skip: Int!, limit: Int!): [User!]
+        users(cursor: String!, limit: Int!): UsersConnection!
         totalUsersAmount: Int
     }
     
@@ -15,6 +15,11 @@ const typeDefs = `
         avatar: String
         isAdmin: Boolean!
     }
+    
+    type UsersConnection {
+        data: [User!]
+        paginationMetadata: PaginationMetadata
+    }
 `;
 
 module.exports.typeDefs = typeDefs;
@@ -23,10 +28,10 @@ module.exports.typeDefs = typeDefs;
 const resolvers = {
     Query: {
         currentUser: (parent, args, context) => context.currentUser,
-        users: (parent, {skip, limit}, { dataSources, currentUser }) => {
+        users: (parent, {cursor, limit}, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);
 
-            return dataSources.userAPI.getUsers(skip, limit);
+            return dataSources.userAPI.getUsers(cursor, limit);
         },
         totalUsersAmount: (parent, args, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);

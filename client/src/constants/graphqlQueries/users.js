@@ -14,14 +14,19 @@ export const GET_CURRENT_USER = gql`
 `;
 
 export const GET_USERS = gql`
-    query GetUsers($skip: Int!, $limit: Int!) {
-        users(skip: $skip, limit: $limit) @connection(key: "users") {
-            id
-            googleId
-            userFullName
-            email
-            avatar
-            isAdmin
+    query GetUsers($cursor: String!, $limit: Int!) {
+        users(cursor: $cursor, limit: $limit) @connection(key: "users") {
+            data {
+                id
+                googleId
+                userFullName
+                email
+                avatar
+                isAdmin
+            }
+            paginationMetadata {
+                nextCursor
+            }
         }
     }
 `;
@@ -55,6 +60,22 @@ export const GET_TOTAL_USERS_AMOUNT = gql`
 export const ADD_USERS_TO_USER_LIST = gql`
     mutation AddUsersToUserList($users: [User!]) {
         users__addUsersToUserList(users: $users) @client
+    }
+`;
+
+export const GET_USERS_CURSOR = gql`
+    query GetUsersCursor {
+        clientData @client {
+            users {
+                usersCursor
+            }
+        }
+    }
+`;
+
+export const SET_USERS_CURSOR = gql`
+    mutation SetUsersCursor($usersCursor: String!) {
+        users__setUsersCursor(usersCursor: $usersCursor) @client
     }
 `;
 

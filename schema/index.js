@@ -25,6 +25,10 @@ const typeDefs =  `
     type Subscription {
         _empty: String
     }
+    
+    type PaginationMetadata {
+        nextCursor: String
+    }
 `;
 
 const resolvers = {

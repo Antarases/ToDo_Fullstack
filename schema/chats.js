@@ -35,10 +35,6 @@ const typeDefs = `
         data: [Chat!]
         paginationMetadata: PaginationMetadata
     }
-   
-    type PaginationMetadata {
-        nextCursor: String
-    }
     
     type Message {
         id: String!
