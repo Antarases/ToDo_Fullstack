@@ -35,7 +35,7 @@ class ChatAPI {
         limit = +limit;
 
         let chats;
-        if (limit !== 0) {
+        if (limit > 0) {
             if (cursor) {
                 const chatsQueryResult = await User
                     .findById(
@@ -111,7 +111,7 @@ class ChatAPI {
         limit = +limit;
 
         let messages;
-        if (limit !== 0) {
+        if (limit > 0) {
             if (cursor) {
                 messages = await Message
                     .find(
