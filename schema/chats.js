@@ -4,7 +4,7 @@ const { assertAuthenticated, assertChatMember }  = require("../helpers/assertFun
 
 const typeDefs = `
     extend type Query {
-        chats(skip: Int!, limit: Int!): [Chat!]
+        chats(cursor: String!, limit: Int!): ChatsConnection!
         chat(chatId: String!): Chat!
         totalChatsAmount: Int
         messages(chatId: String!, cursor: String!, limit: Int!): MessagesConnection!
@@ -31,6 +31,15 @@ const typeDefs = `
         messages(cursor: String!, limit: Int!): MessagesConnection!
     }
     
+    type ChatsConnection {
+        data: [Chat!]
+        paginationMetadata: PaginationMetadata
+    }
+   
+    type PaginationMetadata {
+        nextCursor: String
+    }
+    
     type Message {
         id: String!
         text: String!
@@ -45,12 +54,8 @@ const typeDefs = `
         paginationMetadata: PaginationMetadata
     }
     
-    type PaginationMetadata {
-        nextCursor: String
-    }
-    
     extend type User {
-        chats(skip: Int!, limit: Int!): [Chat!]
+        chats(cursor: String!, limit: Int!): ChatsConnection!
     }
 `;
 
@@ -68,10 +73,10 @@ const isAuthenticatedChatMember = async (chatId, currentUser, dataSources) => {
 
 const resolvers = (pubsub) => ({
     Query: {
-        chats: (parent, { skip, limit }, { dataSources, currentUser }) => {
+        chats: (parent, { cursor, limit }, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);
 
-            return dataSources.chatAPI.getChatsByUserId(currentUser.id, skip, limit);
+            return dataSources.chatAPI.getChatsByUserId(currentUser.id, cursor, limit);
         },
         chat: (parent, { chatId }, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);
@@ -152,10 +157,10 @@ const resolvers = (pubsub) => ({
         },
     },
     User: {
-        chats: (parent, { skip, limit }, { dataSources, currentUser }) => {
+        chats: (parent, { cursor, limit }, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);
 
-            return dataSources.chatAPI.getChatsByUserId(parent.id, skip, limit);
+            return dataSources.chatAPI.getChatsByUserId(parent.id, cursor, limit);
         },
     }
 });

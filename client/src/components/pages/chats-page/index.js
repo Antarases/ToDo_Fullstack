@@ -8,7 +8,7 @@ import SendMessageForm from "../../groups/chats/send-message-form";
 import CreateChatForm from "../../groups/chats/create-chat-form";
 import Modal from "../../commons/modal";
 
-import { addChatToList, getChatByIdFromCache, relocateChatToTopOfChatList, getChatById, addChatToChatList, addChatMessage, toggleCreateChatModal } from "../../../actions/ChatActions";
+import { getChatByIdFromCache, relocateChatToTopOfChatList, getChatById, addChatToChatList, addChatMessage, toggleCreateChatModal } from "../../../actions/ChatActions";
 
 import { GET_SELECTED_CHAT, SUBSCRIPTION__MESSAGE_SENT, SUBSCRIPTION__CHAT_CREATED, GET_IS_CREATE_CHAT_MODAL_OPEN } from "../../../constants/graphqlQueries/chats";
 
@@ -28,7 +28,8 @@ const ChatsPage = () => {
     useSubscription(SUBSCRIPTION__CHAT_CREATED, {
         onSubscriptionData: (data) => {
             const chat = data.subscriptionData.data.chatCreated;
-            addChatToList(chat);
+
+            addChatToChatList(chat);
         }
     });
 

@@ -145,7 +145,7 @@ const chatResolvers = {
         },
         chats__addChatToChatList: (parent, { chat }, { cache }) => {
             const query = gql`
-                query AddChatToList {
+                query AddChatToChatList {
                     chats @client {
                         id
                         name
@@ -205,6 +205,31 @@ const chatResolvers = {
                     normalizedChat,
                     ...queryResults.chats
                 ]
+            };
+
+            cache.writeQuery({ query, data: newData });
+        },
+        chats__setChatsCursor: (parent, { chatsCursor }, { cache }) => {
+            const query = gql`
+                query SetChatsCursor {
+                    clientData @client {
+                        chats {
+                            chatsCursor
+                            __typename
+                        }
+                        __typename
+                    }
+                }
+            `;
+
+            const newData = {
+                clientData: {
+                    chats: {
+                        chatsCursor,
+                        __typename: "Chats"
+                    },
+                    __typename: "ClientData"
+                }
             };
 
             cache.writeQuery({ query, data: newData });

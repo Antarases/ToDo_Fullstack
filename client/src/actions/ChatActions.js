@@ -5,7 +5,7 @@ import { showNotificationModal } from "./NotificationsModalActions";
 import { isNewListRequestsAllowed } from "../helpers/functions";
 
 import { GET_CURRENT_USER } from "../constants/graphqlQueries/users";
-import { CLEAR_CURRENT_CHAT_MESSAGES, RESET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_SELECTED_CHAT_ID, SET_SELECTED_CHAT_ID, GET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, GET_IS_CHAT_LIST_LOADING, SET_IS_CHAT_LIST_LOADING, ADD_CHATS_TO_CHAT_LIST, GET_CHATS, GET_CHATS_FROM_CACHE, GET_CHAT_BY_ID, GET_CHAT_BY_ID_FROM_CACHE, ADD_CHAT_TO_CHAT_LIST, RELOCATE_CHAT_TO_TOP_OF_CHAT_LIST, GET_TOTAL_CHATS_AMOUNT, GET_TOTAL_CHAT_MESSAGES_AMOUNT, GET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_IS_MESSAGE_LIST_LOADING, SET_IS_MESSAGE_LIST_LOADING, GET_MESSAGES_CURSOR, SET_MESSAGES_CURSOR, GET_CHAT_MESSAGES, GET_CHAT_MESSAGES_AMOUNT_FROM_CACHE, ADD_MESSAGES_TO_MESSAGE_LIST, ADD_CHAT_MESSAGE, SEND_MESSAGE, TOGGLE_CREATE_CHAT_MODAL, CREATE_CHAT, ADD_CHAT_TO_LIST } from "../constants/graphqlQueries/chats";
+import { CLEAR_CURRENT_CHAT_MESSAGES, RESET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_SELECTED_CHAT_ID, SET_SELECTED_CHAT_ID, GET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST, GET_IS_CHAT_LIST_LOADING, SET_IS_CHAT_LIST_LOADING, GET_CHATS_CURSOR, SET_CHATS_CURSOR, ADD_CHATS_TO_CHAT_LIST, GET_CHATS, GET_CHATS_FROM_CACHE, GET_CHAT_BY_ID, GET_CHAT_BY_ID_FROM_CACHE, ADD_CHAT_TO_CHAT_LIST, RELOCATE_CHAT_TO_TOP_OF_CHAT_LIST, GET_TOTAL_CHATS_AMOUNT, GET_TOTAL_CHAT_MESSAGES_AMOUNT, GET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, SET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST, GET_IS_MESSAGE_LIST_LOADING, SET_IS_MESSAGE_LIST_LOADING, GET_MESSAGES_CURSOR, SET_MESSAGES_CURSOR, GET_CHAT_MESSAGES, GET_CHAT_MESSAGES_AMOUNT_FROM_CACHE, ADD_MESSAGES_TO_MESSAGE_LIST, ADD_CHAT_MESSAGE, SEND_MESSAGE, TOGGLE_CREATE_CHAT_MODAL, CREATE_CHAT } from "../constants/graphqlQueries/chats";
 import { FETCHED_CHATS_LIMIT, FETCHED_MESSAGES_LIMIT } from "../constants/chats";
 
 import { initialData } from "../schema";
@@ -91,6 +91,23 @@ const getChatsFromCache = async () => {
     return chatsData.chats;
 };
 
+const getChatsCursor = async () => {
+    const { data: chatsCursorData } = await apolloClient.query({
+        query: GET_CHATS_CURSOR
+    });
+
+    return chatsCursorData.clientData.chats.chatsCursor;
+};
+
+const setChatsCursor = (chatsCursor) => {
+    apolloClient.mutate({
+        mutation: SET_CHATS_CURSOR,
+        variables: {
+            chatsCursor
+        }
+    });
+};
+
 const getTotalChatsAmount = async () => {
     const { data: totalChatsAmountData } = await apolloClient.query({
         query: GET_TOTAL_CHATS_AMOUNT,
@@ -114,13 +131,15 @@ const addChatsToChatList = (chats) => {
 export const getChatList = async () => {
     try {
         const [
-            timeOfEndingLoadingFullChatList,
+            currentChats,
+            currentChatsCursor,
             isChatListLoading,
-            currentChats
+            timeOfEndingLoadingFullChatList
         ] = await Promise.all([
-            getTimeOfEndingLoadingFullChatList(),
+            getChatsFromCache(),
+            getChatsCursor(),
             getIsChatListLoading(),
-            getChatsFromCache()
+            getTimeOfEndingLoadingFullChatList()
         ]);
 
         const currentChatsAmount = currentChats.length;
@@ -138,7 +157,7 @@ export const getChatList = async () => {
                     const { data: chatsData } = await apolloClient.query({
                         query: GET_CHATS,
                         variables: {
-                            skip: currentChatsAmount,
+                            cursor: currentChatsCursor,
                             limit: FETCHED_CHATS_LIMIT
                         },
                         fetchPolicy: "no-cache"
@@ -151,11 +170,14 @@ export const getChatList = async () => {
                 getTotalChatsAmount()
             ]);
 
-            const fetchedChatsAmount = chats ? chats.length : 0;
+            const fetchedChatsAmount = (chats && chats.data) ? chats.data.length : 0;
 
             if (fetchedChatsAmount) {
-                addChatsToChatList(chats);
+                addChatsToChatList(chats.data);
             }
+
+            chats.paginationMetadata.nextCursor
+                && setChatsCursor(chats.paginationMetadata.nextCursor);
 
             if ((currentChatsAmount + chats.length) >= totalChatsAmount) {
                 setTimeOfEndingLoadingFullChatList(Date.now());
@@ -432,13 +454,4 @@ export const createChat = async (chatName, userIds) => {
             });
         });
     }
-};
-
-export const addChatToList = (chat) => {
-    apolloClient.mutate({
-        mutation: ADD_CHAT_TO_LIST,
-        variables: {
-            chat
-        }
-    });
 };

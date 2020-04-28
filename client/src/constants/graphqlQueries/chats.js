@@ -62,29 +62,34 @@ export const ADD_CHATS_TO_CHAT_LIST = gql`
 `;
 
 export const GET_CHATS = gql`
-    query GetChats($skip: Int!, $limit: Int!) {
-        chats(skip: $skip, limit: $limit) @connection(key: "chats") {
-            id
-            name
-            members {
+    query GetChats($cursor: String!, $limit: Int!) {
+        chats(cursor: $cursor, limit: $limit) @connection(key: "chats") {
+            data {
                 id
-                googleId
-                userFullName
-                email
-                avatar
-                isAdmin
-            }
-            messages(cursor: "", limit: 0) @connection(key: "messages") {  #this returns an empty data array; required to firing queries on cache for getting current messages amount.
-                data {
+                name
+                members {
                     id
+                    googleId
+                    userFullName
+                    email
+                    avatar
+                    isAdmin
                 }
-                paginationMetadata {
-                    nextCursor
+                messages(cursor: "", limit: 0) @connection(key: "messages") {  #this returns an empty data array; required to firing queries on cache for getting current messages amount.
+                    data {
+                        id
+                    }
+                    paginationMetadata {
+                        nextCursor
+                    }
                 }
+                lastMessage
+                creationDate
+                updatingDate
             }
-            lastMessage
-            creationDate
-            updatingDate
+            paginationMetadata {
+                nextCursor
+            }
         }
     }
 `;
@@ -145,6 +150,22 @@ export const GET_CHAT_BY_ID_FROM_CACHE = gql`
 export const ADD_CHAT_TO_CHAT_LIST = gql`
     mutation AddChatToChatList($chat: Chat!) {
         chats__addChatToChatList(chat: $chat) @client
+    }
+`;
+
+export const GET_CHATS_CURSOR = gql`
+    query GetChatsCursor {
+        clientData @client {
+            chats {
+                chatsCursor
+            }
+        }
+    }
+`;
+
+export const SET_CHATS_CURSOR = gql`
+    mutation SetChatsCursor($chatsCursor: String!) {
+        chats__setChatsCursor(chatsCursor: $chatsCursor) @client
     }
 `;
 
@@ -382,12 +403,6 @@ export const CREATE_CHAT = gql`
             creationDate
             updatingDate
          }
-    }
-`;
-
-export const ADD_CHAT_TO_LIST = gql`
-    mutation AddChatToList($chat: Chat!) {
-        chats__addChatToList(chat: $chat) @client
     }
 `;
 

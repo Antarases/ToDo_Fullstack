@@ -31,24 +31,64 @@ class ChatAPI {
             : null;
     }
 
-    async getChatsByUserId(userId, skip, limit) {
-        const chatsQueryResult = await User
-            .findById(
-                userId,
-                "_chats"
-            )
-            .populate({ path: "_chats", model: Chat,
-                options: {
-                    sort: { updatingDate: "desc"},
-                    skip: +skip,
-                    limit: +limit
-                }
-            });
-        const chats = chatsQueryResult && chatsQueryResult._chats;
+    async getChatsByUserId(userId, cursor, limit) {
+        limit = +limit;
 
-        return Array.isArray(chats)
-            ? chats.map(chat => ChatAPI.chatReducer(chat))
-            : [];
+        let chats;
+        if (limit !== 0) {
+            if (cursor) {
+                const chatsQueryResult = await User
+                    .findById(
+                        userId,
+                        "_chats"
+                    )
+                    .populate({
+                        path: "_chats",
+                        model: Chat,
+                        // "match", "sort" and "limit" applies only to the Chat model, not to the User model.
+                        match: {
+                            "updatingDate": { $lt: cursor }
+                        },
+                        options: {
+                            sort: { updatingDate: "desc" },
+                            limit
+                        }
+                    });
+
+                chats = chatsQueryResult && chatsQueryResult._chats;
+            } else {
+                const chatsQueryResult = await User
+                    .findById(
+                        userId,
+                        "_chats"
+                    )
+                    .populate({
+                        path: "_chats",
+                        model: Chat,
+                        options: {
+                            sort: { updatingDate: "desc" },
+                            limit
+                        }
+                    });
+
+                chats = chatsQueryResult && chatsQueryResult._chats;
+            }
+
+            chats = Array.isArray(chats)
+                ? chats.map(chat => ChatAPI.chatReducer(chat))
+                : [];
+        } else {
+            chats = [];
+        }
+
+        return {
+            data: chats,
+            paginationMetadata: {
+                nextCursor: chats.length
+                    ? JSON.stringify(Number(chats[chats.length - 1].creationDate))
+                    : null
+            }
+        };
     }
 
     async getChatById(chatId) {

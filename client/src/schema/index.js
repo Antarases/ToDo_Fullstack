@@ -28,6 +28,7 @@ export const initialData = {
         chats: {
             __typename: "Chats",
             selectedChatId: null,
+            chatsCursor: "",
             messagesCursor: "",
             isChatListLoading: false,
             timeOfEndingLoadingFullChatList: null,
