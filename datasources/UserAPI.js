@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const helpers = require("../helpers/functions");
 
 const User = mongoose.model("users");
 
@@ -20,6 +21,7 @@ class UserAPI {
     };
 
     async getUsers(cursor, limit) {
+        cursor = helpers.decodeBase64ToString(cursor);
         limit = +limit;
 
         let users;
@@ -59,7 +61,7 @@ class UserAPI {
             data: users,
             paginationMetadata: {
                 nextCursor: users.length
-                    ? JSON.stringify(Number(users[users.length - 1].creationDate))
+                    ? helpers.encodeStringToBase64(JSON.stringify(Number(users[users.length - 1].creationDate)))
                     : null
             }
         };

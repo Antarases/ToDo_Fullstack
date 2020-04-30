@@ -10,5 +10,15 @@ module.exports = {
         }
 
         return {sortField, sortOrder};
+    },
+    encodeStringToBase64: (string) => {
+        const buffer = Buffer.from(string, "utf8");
+
+        return buffer.toString("base64");
+    },
+    decodeBase64ToString: (base64String) => {
+        const buffer = Buffer.from(base64String, "base64");
+
+        return buffer.toString("utf8")
     }
 };

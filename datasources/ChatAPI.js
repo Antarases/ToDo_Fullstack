@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const helpers = require("../helpers/functions");
 
 const User = mongoose.model("users");
 const Chat = mongoose.model("chats");
@@ -32,6 +33,7 @@ class ChatAPI {
     }
 
     async getChatsByUserId(userId, cursor, limit) {
+        cursor = helpers.decodeBase64ToString(cursor);
         limit = +limit;
 
         let chats;
@@ -85,7 +87,7 @@ class ChatAPI {
             data: chats,
             paginationMetadata: {
                 nextCursor: chats.length
-                    ? JSON.stringify(Number(chats[chats.length - 1].creationDate))
+                    ? helpers.encodeStringToBase64(JSON.stringify(Number(chats[chats.length - 1].creationDate)))
                     : null
             }
         };
@@ -108,6 +110,7 @@ class ChatAPI {
     }
 
     async getMessagesByChatId(chatId, cursor, limit) {
+        cursor = helpers.decodeBase64ToString(cursor);
         limit = +limit;
 
         let messages;
@@ -147,7 +150,7 @@ class ChatAPI {
             data: messages,
             paginationMetadata: {
                 nextCursor: messages.length
-                    ? JSON.stringify(Number(messages[0].creationDate))
+                    ? helpers.encodeStringToBase64(JSON.stringify(Number(messages[0].creationDate)))
                     : null
             }
         };
