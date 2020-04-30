@@ -12,7 +12,7 @@ export function checkStatus(response) {
     }
 }
 
-export function getBase64(file) {
+export function encodeFileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -25,7 +25,7 @@ export async function getCompressedBase64Image(file, imageWidth = 320) {
     return new Promise(async (resolve, reject) => {
         try {
             const fileName = file.name;
-            const imageBase64 = await getBase64(file);
+            const imageBase64 = await encodeFileToBase64(file);
 
             const img = new Image();
             img.onload = () => {
@@ -44,7 +44,7 @@ export async function getCompressedBase64Image(file, imageWidth = 320) {
                         lastModified: Date.now()
                     });
 
-                    resolve(await getBase64(file));
+                    resolve(await encodeFileToBase64(file));
                 }, 'image/jpeg', 1);
             };
             img.src = imageBase64;
