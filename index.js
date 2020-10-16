@@ -32,6 +32,20 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+//for handling passport's serializeUser/deserializeUser errors (besides of other)
+app.use(function(err, req, res, next) {
+    if (err) {
+        req.logout();
+        if (req.originalUrl == "/") {
+            next(); // for not redirecting login page to itself
+        } else {
+            res.redirect("/");
+        }
+    } else {
+        next();
+    }
+});
+
 app.use(cors({
     origin: ["http://localhost:3000", "ws://localhost:3000"],
     credentials: true,
