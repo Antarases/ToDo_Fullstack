@@ -1,6 +1,6 @@
 import React  from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 
 import Menu from "../../commons/menu";
 import NotificationsModal from "../../commons/notifications-modal";

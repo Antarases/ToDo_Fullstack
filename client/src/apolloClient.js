@@ -1,11 +1,7 @@
-import { ApolloClient } from "apollo-client";
-import { InMemoryCache  } from "apollo-cache-inmemory";
-import { HttpLink } from "apollo-link-http";
-import { onError } from "apollo-link-error";
-import { ApolloLink } from "apollo-link";
-import { WebSocketLink } from "apollo-link-ws";
-import { split } from "apollo-link";
-import { getMainDefinition } from "apollo-utilities";
+import {ApolloClient, ApolloLink, HttpLink, split, InMemoryCache, gql, isReference} from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
+import { WebSocketLink } from "@apollo/client/link/ws";
+import { getMainDefinition } from "@apollo/client/utilities";
 
 import { GET_CURRENT_USER } from "./constants/graphqlQueries/users";
 import { SERVER_HTTP_URI, SERVER_WS_URI } from "./constants/app";
@@ -59,6 +55,56 @@ const link = split(
 );
 
 const cache = new InMemoryCache({
+    typePolicies: {
+        Query: {
+            fields: {
+                clientData: {
+                    merge: true,
+                },
+                chat: {
+                    read(existingData, { args, canRead, isReference, toReference, readField }) {
+                        // Generally, the string below should be used according to the documentation (https://www.apollographql.com/docs/react/caching/advanced-topics/#cache-redirects)
+                        // But due to bug (https://github.com/apollographql/apollo-client/issues/9074) a workaround is used.
+                        // return existingData || toReference({ __typename: "Chat", id: args.id });
+
+                        const reference = toReference({ __typename: 'Chat', id: args?.id });
+                        // Check if reference is not empty (regression from Apollo client since 3.4.8)
+                        const referenceData = reference && readField('id', reference) ? reference : undefined;
+
+                        return existingData || referenceData;
+                    }
+                }
+            }
+        },
+        ClientData: {
+            fields: {
+                todos: {
+                    merge: true
+                },
+                todosPagination: {
+                    merge: true
+                },
+                todosSortParams: {
+                    merge: true
+                },
+                chats: {
+                    merge: true
+                },
+                users: {
+                    merge: true
+                },
+                notificationsModal: {
+                    merge: true
+                }
+            }
+        },
+        Chats: {
+            merge: true
+        },
+        Users: {
+            merge: true
+        }
+    },
     cacheRedirects: {
         Query: {
             chat: (parent, { id }, { getCacheKey }) => {
@@ -88,7 +134,14 @@ apolloClient = new ApolloClient({
 });
 
 export const writeInitialCacheData = () => {
-    cache.writeData({
+    cache.writeQuery({
+        query: gql`
+            query WriteInitialData {
+                clientData @client,
+                chats @client,
+                users @client
+            }
+        `,
         data: initialData
     });
 };

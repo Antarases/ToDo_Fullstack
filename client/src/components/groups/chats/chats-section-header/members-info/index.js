@@ -1,5 +1,5 @@
 import React from "react";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 
 import { GET_SELECTED_CHAT } from "../../../../../constants/graphqlQueries/chats";
 import { GET_CURRENT_USER } from "../../../../../constants/graphqlQueries/users";

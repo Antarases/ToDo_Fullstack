@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "@apollo/client";
 
 export const GET_TODOS_PAGINATION_AND_SORT_PARAMS = gql`
     query GetTodosPaginationAndSortParams {

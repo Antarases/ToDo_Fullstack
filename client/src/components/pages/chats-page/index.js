@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { useQuery, useSubscription } from "@apollo/react-hooks";
+import { useQuery, useSubscription } from "@apollo/client";
 
 import ChatsSectionHeader from "../../groups/chats/chats-section-header";
 import ChatList from "../../groups/chats/chat-list";

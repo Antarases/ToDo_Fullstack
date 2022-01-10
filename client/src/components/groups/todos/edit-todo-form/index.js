@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLazyQuery } from "@apollo/react-hooks";
+import { useLazyQuery } from "@apollo/client";
 import classnames from "classnames";
 
 import { Container, Row, Col, Input, Button } from "reactstrap";

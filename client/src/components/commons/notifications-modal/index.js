@@ -1,5 +1,5 @@
 import React from "react";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import classnames from "classnames";
 import PropTypes from "prop-types";

@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "@apollo/client";
 
 const userResolvers = {
     Query: {
@@ -90,7 +90,7 @@ const userResolvers = {
                 }
             };
 
-            cache.writeData({ query, data: newData });
+            cache.writeQuery({ query, data: newData });
         },
         users__setTimeOfEndingLoadingFullUserList: (parent, { time }, { cache }) => {
             const query = gql`

@@ -1,5 +1,5 @@
 import React  from "react";
-import { useQuery, useSubscription } from "@apollo/react-hooks";
+import { useQuery, useSubscription } from "@apollo/client";
 
 import EditTodoForm from "../../groups/todos/edit-todo-form"
 import AddTodo from "../../groups/todos/add-todo";

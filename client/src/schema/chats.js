@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "@apollo/client";
 
 import { initialData } from "./index";
 
@@ -539,7 +539,7 @@ const chatResolvers = {
                 }
             };
 
-            cache.writeData({ query, data: newData });
+            cache.writeQuery({ query, data: newData });
         },
         chats__setIsMessageListLoading: (parent, { isLoading }, { cache }) => {
             const query = gql`
@@ -564,7 +564,7 @@ const chatResolvers = {
                 }
             };
 
-            cache.writeData({ query, data: newData });
+            cache.writeQuery({ query, data: newData });
         },
         chats__setTimeOfEndingLoadingFullChatList: (parent, { time }, { cache }) => {
             const query = gql`

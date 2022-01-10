@@ -27,7 +27,7 @@ class ChatAPI {
                 authorId: message._user,
                 chatId: message._chat,
                 creationDate: message.creationDate,
-                updatingDate: message.creationDate,
+                updatingDate: message.updatingDate,
             }
             : null;
     }
@@ -87,7 +87,7 @@ class ChatAPI {
             data: chats,
             paginationMetadata: {
                 nextCursor: chats.length
-                    ? helpers.encodeStringToBase64(JSON.stringify(Number(chats[chats.length - 1].creationDate)))
+                    ? helpers.encodeStringToBase64(JSON.stringify(Number(chats[chats.length - 1].updatingDate)))
                     : null
             }
         };

@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "@apollo/client";
 
 export const SHOW_NOTIFICATION_MODAL = gql`
     mutation ShowNotificationModal($modal: Object) {

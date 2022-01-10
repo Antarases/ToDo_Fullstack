@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "@apollo/client";
 import merge from "lodash/merge";
 
 import todoResolvers from "./todos";

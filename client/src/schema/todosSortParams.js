@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "@apollo/client";
 
 import { initialData } from "./index";
 
@@ -34,7 +34,7 @@ const todosSortParamsResolvers = {
                 }
             };
 
-            cache.writeData({ query, data: newData });
+            cache.writeQuery({ query, data: newData });
         },
     }
 };

@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "@apollo/client";
 
 export const GET_TODOS = gql`
     query GetTodosAndTodosAmount($page: Int!, $sortField: AllowedSortFields, $sortOrder: AllowedSortOrders) {
