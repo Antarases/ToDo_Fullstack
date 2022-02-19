@@ -57,7 +57,7 @@ class ScrolledContainer extends React.Component {
     };
 
     render() {
-        const { children, maxHeight, hideScrollbarOnMouseOut, getMoreItems, isScrollReversed, itemsAmount, trackVerticalClassName, thumbVerticalClassName, passthroughRef, ...restProps } = this.props;
+        const { children, maxHeight, hideScrollbarOnMouseOut, getMoreItems, isScrollReversed, itemsAmount, contentContainerClassName, trackVerticalClassName, thumbVerticalClassName, passthroughRef, ...restProps } = this.props;
         const { isScrollbarHidden } = this.state;
 
         return (
@@ -74,7 +74,7 @@ class ScrolledContainer extends React.Component {
                 {...restProps}
                 ref={mergeRefs([this.scrollbarRef, passthroughRef])}
             >
-                <div className={styles.contentContainer}>
+                <div className={classnames(styles.contentContainer, contentContainerClassName)}>
                     { children }
                 </div>
             </Scrollbar>
@@ -91,6 +91,7 @@ ScrolledContainer.propTypes = {
     getMoreItems: PropTypes.func,
     isScrollReversed: PropTypes.bool,
     itemsAmount: PropTypes.number,
+    contentContainerClassName: PropTypes.string,
     trackVerticalClassName: PropTypes.string,
     thumbVerticalClassName: PropTypes.string,
     passthroughRef: PropTypes.object

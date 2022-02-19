@@ -1,7 +1,7 @@
 const  { ApolloServer } = require("apollo-server-express");
 
 const schema = require("./schema");
-const { UserAPI, TodoAPI, ChatAPI } = require("./datasources");
+const { UserAPI, TodoAPI, ChatAPI, EventAPI } = require("./datasources");
 
 module.exports = new ApolloServer({
     schema,
@@ -13,6 +13,7 @@ module.exports = new ApolloServer({
                     userAPI: new UserAPI(),
                     todoAPI: new TodoAPI(),
                     chatAPI: new ChatAPI(),
+                    eventAPI: new EventAPI(),
                 }
             };
         } else {
@@ -36,6 +37,7 @@ module.exports = new ApolloServer({
         userAPI: new UserAPI(),
         todoAPI: new TodoAPI(),
         chatAPI: new ChatAPI(),
+        eventAPI: new EventAPI(),
     }),
     playground: {
         settings: {

@@ -1,7 +1,11 @@
+import FailedX from "./failedX.svg";
+import SuccessCheck from "./successCheck.svg";
+import Spinner from "./loading.gif";
+
 let Icons = {
-    FailedX: require("./failedX.svg"),
-    SuccessCheck: require("./successCheck.svg"),
-    Spinner: require("./loading.gif")
+    FailedX,
+    SuccessCheck,
+    Spinner
 };
 
 export default Icons;

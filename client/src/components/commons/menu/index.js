@@ -27,6 +27,16 @@ const Menu = () => {
             key="/messages"
         >
             Messages
+        </NavLink>,
+
+        <NavLink
+            to="/events"
+            exact
+            className={styles.link}
+            activeClassName={styles.selectedLink}
+            key="/events"
+        >
+            Events
         </NavLink>
     ];
 

@@ -10,7 +10,7 @@ const DropdownMenu = ({ menuButtonText = "", children, menuContainerClassName, m
             let menuContainerElem = document.getElementsByClassName(menuContainerClassName);
 
             if (
-                !menuContainerElem[0].contains(e.target)
+                !menuContainerElem[0]?.contains(e.target)
             ) {
                 setIsMenuOpen(false);
             }

@@ -7,6 +7,7 @@ import NotificationsModal from "../../commons/notifications-modal";
 import LoginPage from "../login-page/index";
 import TodosPage from "../todos-page/index";
 import ChatsPage from "../chats-page/index";
+import EventsPage from "../events-page/index";
 
 import { GET_CURRENT_USER } from "../../../constants/graphqlQueries/users";
 
@@ -33,6 +34,7 @@ const App = () => {
                                             <Switch>
                                                 <Route exact path="/" component={TodosPage} />
                                                 <Route exact path="/messages" component={ChatsPage} />
+                                                <Route exact path="/events" component={EventsPage} />
 
                                                 <Redirect to="/" />
                                             </Switch>

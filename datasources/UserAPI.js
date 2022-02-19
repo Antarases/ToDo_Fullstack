@@ -14,6 +14,7 @@ class UserAPI {
                 avatar: user.avatar,
                 isAdmin: user.isAdmin,
                 chats: user._chats,
+                appliedEvents: user._appliedEvents,
                 creationDate: user.creationDate,
                 updatingDate: user.updatingDate
             }
@@ -67,8 +68,8 @@ class UserAPI {
         };
     }
 
-    getUsersByIds(userIds) {
-        return User.find({ _id: { $in: userIds} });
+    async getUsersByIds(userIds) {
+        return await User.find({ _id: { $in: userIds} });
     }
 
     async getUserById(userId) {
@@ -77,8 +78,8 @@ class UserAPI {
         return UserAPI.userReducer(user);
     }
 
-    getTotalUsersAmount() {
-        return User.countDocuments();
+    async getTotalUsersAmount() {
+        return await  User.countDocuments();
     }
 }
 

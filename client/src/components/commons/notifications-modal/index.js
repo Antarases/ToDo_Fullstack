@@ -21,11 +21,23 @@ const close = (callback) => {
 const NotificationsModal = ({ className, contentClassName, ...restProps }) => {
     const { data: currentModalData } = useQuery(GET_CURRENT_NOTIFICATION_MODAL);
     const currentModal = currentModalData.clientData.notificationsModal.currentModal;
-    const { header, body, buttons, onClose, showSuccessIcon, showFailIcon } = currentModal || {};
+    const { header, body, buttons, onClose, showSuccessIcon, showFailIcon, closeOnBackdropClick } = currentModal || {};
 
     return (currentModal && (header || body))
         ? (
-            <Modal isOpen={true} onClosed={() => close(onClose)} centered className={classnames(className, styles.notificationsDialog)} contentClassName={classnames(contentClassName, styles.content)} backdropClassName={styles.modalBackdrop} zIndex="1500" modalTransition={{ timeout: 150, exit: false }} backdropTransition={{ timeout: 150, exit: false }} {...restProps}>
+            <Modal
+                isOpen={true}
+                onClosed={() => close(onClose)}
+                toggle={() => closeOnBackdropClick && close(onClose)}
+                centered
+                className={classnames(className, styles.notificationsDialog)}
+                contentClassName={classnames(contentClassName, styles.content)}
+                backdropClassName={styles.modalBackdrop}
+                zIndex="1500"
+                modalTransition={{ timeout: 150, exit: false }}
+                backdropTransition={{ timeout: 150, exit: false }}
+                {...restProps}
+            >
                 {
                     header
                     && <ModalHeader>{ header }</ModalHeader>

@@ -1,0 +1,76 @@
+.createEventForm {
+  padding-bottom: 50px;
+
+  .title {
+    margin-bottom: 4px;
+    font-size: 23px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .formFieldContainer {
+    margin-top: 8px;
+
+    .label:not(.thumbnailLabel),
+    .thumbnailLabel .labelText {
+      margin-bottom: 1px;
+    }
+
+    &.thumbnailContainer {
+      .thumbnailLabel {
+        margin-bottom: 0;
+      }
+
+      .fileInput {
+        display: none;
+      }
+
+      .thumbnailFileName {
+        margin: 8px 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .thumbnailPreview {
+        width: 100%;
+        max-width: 400px;
+        max-height: 300px;
+        display: block;
+        object-fit: contain;
+        border: 1px solid rgba(0, 0, 0, 0.23);
+      }
+    }
+
+    .input,
+    .dateTimePicker .dateTimeInputWrapper {
+      fieldset {
+        top: 0px;
+
+        legend {
+          display: none;
+        }
+      }
+    }
+
+    &.dateContainer {
+      flex-direction: column;
+
+      .dateTimePicker:not(.disabled),
+      .dateTimeInputWrapper:not(.disabled),
+      .dateTimeInput:not(.disabled) {
+        cursor: pointer;
+      }
+    }
+
+    .required:after {
+      content:"*";
+      color: #ed2626;
+      margin-left: 2px;
+    }
+  }
+
+  .submitButtonContainer {
+    margin-top: 22px;
+  }
+}

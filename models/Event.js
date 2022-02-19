@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const userSchema = new Schema({
-    googleId: String,
-    userFullName: String,
-    email: String,
-    avatar: String,
-    isAdmin: { type: Boolean, default: false },
-    _chats: [{ type: Schema.Types.ObjectId, ref: "chats" }],
-    _appliedEvents: [{ type: Schema.Types.ObjectId, ref: "events" }]
+const eventSchema = new Schema({
+    title: { type: String, required: true },
+    description: String,
+    image: String,
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
+    _participants: [{ type: Schema.Types.ObjectId, ref: "users" }]
 }, {
     timestamps: { createdAt: "creationDate", updatedAt: "updatingDate" },
     toJSON: {   //  enable to see virtuals in output when using console.log(obj)
@@ -25,4 +24,4 @@ const userSchema = new Schema({
     }
 });
 
-mongoose.model("users", userSchema);
+mongoose.model("events", eventSchema);

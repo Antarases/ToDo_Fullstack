@@ -10,6 +10,7 @@ const todoTypeDefs = require("./todos").typeDefs;
 const todoResolvers = require("./todos").resolvers(pubsub);
 const chatTypeDefs = require("./chats").typeDefs;
 const chatResolvers = require("./chats").resolvers(pubsub);
+const { typeDefs: eventTypeDefs, resolvers: eventResolvers } = require("./events");
 
 const typeDefs =  `
     scalar Date
@@ -54,8 +55,8 @@ const resolvers = {
 };
 
 const schema = makeExecutableSchema({
-    typeDefs: [ typeDefs, userTypeDefs, todoTypeDefs, chatTypeDefs ],
-    resolvers: merge(resolvers, userResolvers, todoResolvers, chatResolvers),
+    typeDefs: [ typeDefs, userTypeDefs, todoTypeDefs, chatTypeDefs, eventTypeDefs ],
+    resolvers: merge(resolvers, userResolvers, todoResolvers, chatResolvers, eventResolvers),
 });
 
 module.exports = schema;

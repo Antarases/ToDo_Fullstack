@@ -59,8 +59,8 @@ class TodoAPI {
             : [];
     }
 
-    getTotalTodosAmount(userId, isAdmin) {
-        return Todo
+    async getTotalTodosAmount(userId, isAdmin) {
+        return await Todo
             .find(isAdmin ? {} : {_user: userId})
             .countDocuments();
     }

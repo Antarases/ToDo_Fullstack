@@ -66,7 +66,7 @@ class MessagesThread extends React.Component {
                             }
                         </ScrolledContainer>
                         : (
-                            <div className={styles.noMessagesText}>You have no chats yet</div>
+                            <div className={styles.noMessagesText}>You have no messages yet</div>
                         )
 
                 }

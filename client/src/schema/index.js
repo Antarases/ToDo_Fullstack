@@ -36,6 +36,15 @@ export const initialData = {
             timeOfEndingLoadingFullCurrentChatMessageList: null,
             isCreateChatModalOpen: false
         },
+        events: {
+            __typename: "Events",
+            eventsCursor: "",
+            appliedEventsCursor: "",
+            isEventListLoading: false,
+            isAppliedEventListLoading: false,
+            timeOfEndingLoadingFullEventList: null,
+            timeOfEndingLoadingFullAppliedEventList: null,
+        },
         users: {
             __typename: "Users",
             usersCursor: "",
@@ -49,6 +58,8 @@ export const initialData = {
         }
     },
     chats: [],
+    events: [],
+    appliedEvents: [],
     users: []
 };
 

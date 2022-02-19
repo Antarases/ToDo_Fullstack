@@ -8,7 +8,7 @@
     "npm": ">=6.8.0-next.0"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "node --trace-warnings index.js",
     "server": "nodemon index.js",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
@@ -26,7 +26,7 @@
     "graphql": "^15.8.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
-    "mongoose": "^5.6.5",
+    "mongoose": "^6.2.2",
     "nodemon": "^1.18.11",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^2.0.0"

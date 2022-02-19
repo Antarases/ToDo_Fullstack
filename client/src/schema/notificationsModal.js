@@ -27,7 +27,8 @@ const notificationModalResolvers = {
                     buttons: modal.buttons,
                     onClose: modal.onClose,
                     showSuccessIcon: modal.showSuccessIcon,
-                    showFailIcon: modal.showFailIcon
+                    showFailIcon: modal.showFailIcon,
+                    closeOnBackdropClick: modal.closeOnBackdropClick
                 }
             ];
             const newData = {

@@ -54,7 +54,7 @@ const link = split(
     httpLink,
 );
 
-const cache = new InMemoryCache({
+export const cache = new InMemoryCache({
     typePolicies: {
         Query: {
             fields: {
@@ -90,6 +90,9 @@ const cache = new InMemoryCache({
                 chats: {
                     merge: true
                 },
+                events: {
+                    merge: true
+                },
                 users: {
                     merge: true
                 },
@@ -99,6 +102,12 @@ const cache = new InMemoryCache({
             }
         },
         Chats: {
+            merge: true
+        },
+        Events: {
+            merge: true
+        },
+        AppliedEvents: {
             merge: true
         },
         Users: {
@@ -139,6 +148,8 @@ export const writeInitialCacheData = () => {
             query WriteInitialData {
                 clientData @client,
                 chats @client,
+                events @client
+                appliedEvents @client
                 users @client
             }
         `,

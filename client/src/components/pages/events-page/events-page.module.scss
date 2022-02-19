@@ -1,0 +1,30 @@
+.eventsPage {
+  display: flex;
+  flex-direction: column;
+  max-width: 1140px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 16px 0 40px;
+
+  .tabs {
+    flex-direction: row;
+    margin: 10px 0;
+    text-align: center;
+
+    .tab {
+      display: inline-block;
+      margin-right: 18px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &.selectedTab {
+        text-decoration: underline;
+      }
+    }
+  }
+}

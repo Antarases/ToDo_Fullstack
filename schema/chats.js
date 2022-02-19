@@ -74,9 +74,9 @@ const resolvers = (pubsub) => ({
 
             return dataSources.chatAPI.getChatsByUserId(currentUser.id, cursor, limit);
         },
-        chat: (parent, { chatId }, { dataSources, currentUser }) => {
+        chat: async (parent, { chatId }, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);
-            assertChatMember(currentUser, chatId, dataSources.chatAPI);
+            await assertChatMember(currentUser, chatId, dataSources.chatAPI);
 
             return dataSources.chatAPI.getChatById(chatId);
         },
@@ -85,15 +85,15 @@ const resolvers = (pubsub) => ({
 
             return dataSources.chatAPI.getTotalChatsAmountByUserId(currentUser.id);
         },
-        messages: (parent, { chatId, cursor, limit }, { dataSources, currentUser }) => {
+        messages: async (parent, { chatId, cursor, limit }, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);
-            assertChatMember(currentUser, chatId, dataSources.chatAPI);
+            await assertChatMember(currentUser, chatId, dataSources.chatAPI);
 
             return dataSources.chatAPI.getMessagesByChatId(chatId, cursor, limit);
         },
-        totalChatMessagesAmount: (parent, { chatId }, { dataSources, currentUser }) => {
+        totalChatMessagesAmount: async (parent, { chatId }, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);
-            assertChatMember(currentUser, chatId, dataSources.chatAPI);
+            await assertChatMember(currentUser, chatId, dataSources.chatAPI);
 
             return dataSources.chatAPI.getTotalMessagesAmountByChatId(chatId);
         },
@@ -110,7 +110,7 @@ const resolvers = (pubsub) => ({
         },
         sendMessage: async (parent, { chatId, text }, { dataSources, currentUser }) => {
             assertAuthenticated(currentUser);
-            assertChatMember(currentUser, chatId, dataSources.chatAPI);
+            await assertChatMember(currentUser, chatId, dataSources.chatAPI);
 
             const message = await dataSources.chatAPI.sendMessage(currentUser, chatId, text);
 

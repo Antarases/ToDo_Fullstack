@@ -3,6 +3,8 @@ export const NOIMAGE_IMAGE_URL = "https://c-lj.gnst.jp/public/img/common/noimage
 export const LISTS_FETCH_THROTTLING_TIME = 10000;
 export const COEFICIENT_OF_SCROLLING_FOR_GETTING_MORE_ITEMS = 0.7;
 
+export const DATE_TIME_INPUT_FORMAT = "D MMM YYYY, HH:mm";
+
 const SERVER_HTTP_URI_SHEME = (process.env.NODE_ENV === "production")
     ? "https"
     : "http";

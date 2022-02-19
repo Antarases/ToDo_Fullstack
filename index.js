@@ -10,11 +10,12 @@ require("./models/User");
 require("./models/Todo");
 require("./models/Chat");
 require("./models/Message");
+require("./models/Event");
 
 require("./services/passport");
 
 
-mongoose.connect(keys.mongoURI, {useNewUrlParser: true, useFindAndModify: false})
+mongoose.connect(keys.mongoURI)
     .catch(error => console.error("First connect attempt failed: ", error));
 mongoose.connection.on('error', err => {
     console.error("Sequent connect attempt failed: ", err);
