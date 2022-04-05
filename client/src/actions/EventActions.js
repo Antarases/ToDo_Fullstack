@@ -10,13 +10,11 @@ import { FETCHED_EVENTS_LIMIT } from "../constants/events";
 import {initialData} from "../schema";
 import {GET_CURRENT_USER} from "../constants/graphqlQueries/users";
 
-
-const EVENT_FIELDS_FRAGMENT = gql`
-    fragment EventFieldsFragment on Event {
+const EVENT_FIELDS_WITHOUT_IMAGE_FRAGMENT = gql`
+    fragment EventFieldsWithoutImageFragment on Event {
         id
         title
         description
-        image
         startDate
         endDate
         participants {
@@ -25,6 +23,14 @@ const EVENT_FIELDS_FRAGMENT = gql`
         creationDate
         updatingDate
     }
+`;
+
+const EVENT_FIELDS_FRAGMENT = gql`
+    fragment EventFieldsFragment on Event {
+        ...EventFieldsWithoutImageFragment
+        image
+    }
+    ${EVENT_FIELDS_WITHOUT_IMAGE_FRAGMENT}
 `;
 
 export const GET_EVENTS_FROM_CACHE = gql`
@@ -51,7 +57,10 @@ const addEventsToEventList = (events) => {
         return {
             events: [
                 ...data?.events,
-                ...events
+                ...events.map(event => ({
+                    image: event.image || null,
+                    ...event
+                }))
             ]
         };
     });
@@ -191,6 +200,41 @@ const setTimeOfEndingLoadingFullEventList = (time) => {
     });
 };
 
+const getEventsImages = async (eventsCursor) => {
+    const eventsData = await apolloClient.query({
+        query: gql`
+            query GetAllEvents($cursor: String!, $limit: Int!) {
+                allEvents(cursor: $cursor, limit: $limit) @connection(key: "allEvents") {
+                    data {
+                        id
+                        image
+                    }
+                }
+            }
+        `,
+        variables: {
+            cursor: eventsCursor,
+            limit: FETCHED_EVENTS_LIMIT
+        },
+        fetchPolicy: "no-cache"
+    });
+
+    eventsData?.data?.allEvents?.data.forEach(event => {
+        cache.updateFragment({
+            id: "Event:" + event.id,
+            fragment: gql`
+                fragment EventImageFragment on Event {
+                    id
+                    image
+                }
+            `,
+        }, (data) => ({
+            ...data,
+            image: event.image
+        }));
+    });
+};
+
 export const getEventList = async () => {
     try {
         const [
@@ -222,14 +266,14 @@ export const getEventList = async () => {
                             query GetAllEvents($cursor: String!, $limit: Int!) {
                                 allEvents(cursor: $cursor, limit: $limit) @connection(key: "allEvents") {
                                     data {
-                                        ...EventFieldsFragment
+                                        ...EventFieldsWithoutImageFragment
                                     }
                                     paginationMetadata {
                                         nextCursor
                                     }
                                 }
                             }
-                            ${EVENT_FIELDS_FRAGMENT}
+                            ${EVENT_FIELDS_WITHOUT_IMAGE_FRAGMENT}
                         `,
                         variables: {
                             cursor: eventsCursor,
@@ -256,6 +300,10 @@ export const getEventList = async () => {
                 setTimeOfEndingLoadingFullEventList(Date.now());
             }
             setIsEventListLoading(false);
+
+            if (fetchedEventsAmount) {
+                getEventsImages(eventsCursor);
+            }
         }
     } catch (error) {
         console.error("An error occurred during getting event list.", error);
