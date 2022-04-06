@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": ">=11.9.0",
-    "npm": ">=6.8.0-next.0"
+    "node": "16.13.2",
+    "npm": "8.1.2"
   },
   "scripts": {
     "start": "node --trace-warnings index.js",
