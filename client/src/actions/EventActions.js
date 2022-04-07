@@ -393,7 +393,10 @@ const addEventsToAppliedEventList = (appliedEvents) => {
         return {
             appliedEvents: [
                 ...data?.appliedEvents,
-                ...appliedEvents
+                ...appliedEvents.map(appliedEvent => ({
+                    image: appliedEvent.image || null,
+                    ...appliedEvent
+                }))
             ]
         };
     });
@@ -533,6 +536,41 @@ const setTimeOfEndingLoadingFullAppliedEventList = (time) => {
     });
 };
 
+const getAppliedEventImages = async (appliedEventsCursor) => {
+    const appliedEventsData = await apolloClient.query({
+        query: gql`
+            query GetAppliedEvents($cursor: String!, $limit: Int!) {
+                appliedEvents(cursor: $cursor, limit: $limit) @connection(key: "appliedEvents") {
+                    data {
+                        id
+                        image
+                    }
+                }
+            }
+        `,
+        variables: {
+            cursor: appliedEventsCursor,
+            limit: FETCHED_EVENTS_LIMIT
+        },
+        fetchPolicy: "no-cache"
+    });
+
+    appliedEventsData?.data?.appliedEvents?.data.forEach(appliedEvent => {
+        cache.updateFragment({
+            id: "Event:" + appliedEvent.id,
+            fragment: gql`
+                fragment AppliedEventImageFragment on Event {
+                    id
+                    image
+                }
+            `,
+        }, (data) => ({
+            ...data,
+            image: appliedEvent.image
+        }));
+    });
+};
+
 export const getAppliedEventList = async () => {
     try {
         const [
@@ -564,14 +602,14 @@ export const getAppliedEventList = async () => {
                             query GetAppliedEvents($cursor: String!, $limit: Int!) {
                                 appliedEvents(cursor: $cursor, limit: $limit) @connection(key: "appliedEvents") {
                                     data {
-                                        ...EventFieldsFragment
+                                        ...EventFieldsWithoutImageFragment
                                     }
                                     paginationMetadata {
                                         nextCursor
                                     }
                                 }
                             }
-                            ${EVENT_FIELDS_FRAGMENT}
+                            ${EVENT_FIELDS_WITHOUT_IMAGE_FRAGMENT}
                         `,
                         variables: {
                             cursor: appliedEventsCursor,
@@ -598,6 +636,10 @@ export const getAppliedEventList = async () => {
                 setTimeOfEndingLoadingFullAppliedEventList(Date.now());
             }
             setIsAppliedEventListLoading(false);
+
+            if (fetchedAppliedEventsAmount) {
+                getAppliedEventImages(appliedEventsCursor);
+            }
         }
     } catch (error) {
         console.error("An error occurred during getting applied event list.", error);
