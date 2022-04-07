@@ -200,7 +200,7 @@ const setTimeOfEndingLoadingFullEventList = (time) => {
     });
 };
 
-const getEventsImages = async (eventsCursor) => {
+const getEventImages = async (eventsCursor) => {
     const eventsData = await apolloClient.query({
         query: gql`
             query GetAllEvents($cursor: String!, $limit: Int!) {
@@ -302,7 +302,7 @@ export const getEventList = async () => {
             setIsEventListLoading(false);
 
             if (fetchedEventsAmount) {
-                getEventsImages(eventsCursor);
+                getEventImages(eventsCursor);
             }
         }
     } catch (error) {
