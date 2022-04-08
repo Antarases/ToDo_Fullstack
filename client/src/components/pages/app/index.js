@@ -1,13 +1,14 @@
-import React  from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 
-import Menu from "../../commons/menu";
-import NotificationsModal from "../../commons/notifications-modal";
-import LoginPage from "../login-page/index";
-import TodosPage from "../todos-page/index";
-import ChatsPage from "../chats-page/index";
-import EventsPage from "../events-page/index";
+import SuspenseFallback from "../../commons/suspense-fallback";
+const Menu = lazy(() => import("../../commons/menu"));
+const NotificationsModal = lazy(() => import("../../commons/notifications-modal"));
+const LoginPage = lazy(() => import("../login-page/index"));
+const TodosPage = lazy(() => import("../todos-page/index"));
+const ChatsPage = lazy(() => import("../chats-page/index"));
+const EventsPage = lazy(() => import("../events-page/index"));
 
 import { GET_CURRENT_USER } from "../../../constants/graphqlQueries/users";
 
@@ -22,29 +23,33 @@ const App = () => {
                 {
                     isCurrentUserDataLoading
                         ? (
-                            <div>Loading...</div>
+                            <SuspenseFallback />
                         )
                         : (
                             (currentUserData && currentUserData.currentUser)
                                 ? (
-                                    <React.Fragment>
+                                    <Suspense fallback={<SuspenseFallback />}>
                                         <Menu />
 
                                         <div className={styles.pageWrapper}>
-                                            <Switch>
-                                                <Route exact path="/" component={TodosPage} />
-                                                <Route exact path="/messages" component={ChatsPage} />
-                                                <Route exact path="/events" component={EventsPage} />
+                                            <Suspense fallback={<SuspenseFallback />}>
+                                                <Switch>
+                                                    <Route exact path="/" component={TodosPage} />
+                                                    <Route exact path="/messages" component={ChatsPage} />
+                                                    <Route exact path="/events" component={EventsPage} />
 
-                                                <Redirect to="/" />
-                                            </Switch>
+                                                    <Redirect to="/" />
+                                                </Switch>
+                                            </Suspense>
                                         </div>
 
                                         <NotificationsModal/>
-                                    </React.Fragment>
+                                    </Suspense>
                                 )
                                 : (
-                                    <LoginPage />
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <LoginPage />
+                                    </Suspense>
                                 )
                         )
                 }

@@ -1,11 +1,11 @@
-import React, { useRef } from "react";
+import React, { Suspense, lazy, useRef} from "react";
 import { useQuery, useSubscription } from "@apollo/client";
 
 import ChatsSectionHeader from "../../groups/chats/chats-section-header";
 import ChatList from "../../groups/chats/chat-list";
-import MessagesThread from "../../groups/chats/messages-thread";
-import SendMessageForm from "../../groups/chats/send-message-form";
-import CreateChatForm from "../../groups/chats/create-chat-form";
+const MessagesThread = lazy(() => import("../../groups/chats/messages-thread"));
+const SendMessageForm = lazy(() => import("../../groups/chats/send-message-form"));
+const CreateChatForm = lazy(() => import("../../groups/chats/create-chat-form"));
 import Modal from "../../commons/modal";
 
 import { getChatByIdFromCache, relocateChatToTopOfChatList, getChatById, addChatToChatList, addChatMessage, toggleCreateChatModal } from "../../../actions/ChatActions";
@@ -71,17 +71,20 @@ const ChatsPage = () => {
 
                     { selectedChat &&
                         <section className={styles.messagesContainer}>
-                            <MessagesThread messages={selectedChat.messages} selectedChatId={selectedChat.id} passthroughRef={scrolledMessagesThreadContainerRef} />
+                            <Suspense fallback={""}>
+                                <MessagesThread messages={selectedChat.messages} selectedChatId={selectedChat.id} passthroughRef={scrolledMessagesThreadContainerRef} />
 
-                            <SendMessageForm selectedChatId={selectedChat.id} onChange={onMessageInputChange} />
+                                <SendMessageForm selectedChatId={selectedChat.id} onChange={onMessageInputChange} />
+                            </Suspense>
                         </section>
                     }
                 </section>
             </section>
 
-
             <Modal isOpen={isCreateChatModalOpen} toggleModal={toggleCreateChatModal}>
-                <CreateChatForm />
+                <Suspense fallback={""}>
+                    <CreateChatForm />
+                </Suspense>
             </Modal>
         </section>
     );

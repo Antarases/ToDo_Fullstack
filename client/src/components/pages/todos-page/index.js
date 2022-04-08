@@ -1,7 +1,7 @@
-import React  from "react";
+import React, { Suspense, lazy }  from "react";
 import { useQuery, useSubscription } from "@apollo/client";
 
-import EditTodoForm from "../../groups/todos/edit-todo-form"
+const EditTodoForm = lazy(() => import("../../groups/todos/edit-todo-form"));
 import AddTodo from "../../groups/todos/add-todo";
 import TodosSortingBar from "../../groups/todos/todos-sorting-bar";
 import TodosPagination from "../../commons/todos-pagination";
@@ -73,7 +73,9 @@ const TodosPage = () => {
             {
                 !!editableTodoId
                 && <Modal isOpen={true} toggleModal={() => setEditableTodoId(null)} contentClassName={styles.modalContent}>
-                    <EditTodoForm />
+                    <Suspense fallback={""}>
+                        <EditTodoForm />
+                    </Suspense>
                 </Modal>
             }
         </section>

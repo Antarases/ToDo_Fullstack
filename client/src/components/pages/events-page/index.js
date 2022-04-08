@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import {useQuery} from "@apollo/client";
+import React, { lazy, useState } from "react";
+import { useQuery } from "@apollo/client";
 import classnames from "classnames";
 
 import { Container, Row, Col } from "reactstrap";
 
 import EventList from "../../groups/events/event-list";
-import CreateEventForm from "../../groups/events/create-event-form";
+const CreateEventForm = lazy(() => import("../../groups/events/create-event-form"));
 
 import { getEventList, getAppliedEventList, GET_EVENTS_FROM_CACHE, GET_APPLIED_EVENTS_FROM_CACHE, GET_IS_EVENT_LIST_LOADING, GET_IS_APPLIED_EVENT_LIST_LOADING } from "../../../actions/EventActions";
 
