@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const compression = require('compression');
 const cookieSession = require("cookie-session");
 const passport = require("passport");
 const bodyParser = require("body-parser");
@@ -22,6 +23,8 @@ mongoose.connection.on('error', err => {
 });
 
 const app = express();
+
+app.use(compression());
 
 app.use(bodyParser.json({limit: '5120kb'}));
 app.use(
