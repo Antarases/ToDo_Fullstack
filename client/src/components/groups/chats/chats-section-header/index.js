@@ -6,7 +6,7 @@ import DropdownMenu from "../../../commons/dropdown-menu";
 import BackButton from "../../../commons/back-button";
 import MembersInfo from "./members-info";
 
-import { setSelectedChat, toggleCreateChatModal } from "../../../../actions/ChatActions";
+import { setSelectedChatId, toggleCreateChatModal } from "../../../../actions/ChatActions";
 
 import { GET_SELECTED_CHAT_ID } from "../../../../constants/graphqlQueries/chats";
 
@@ -30,7 +30,7 @@ const ChatsSectionHeader = () => {
             <BackButton
                 backButtonContainerClassName={classnames(styles.backButtonContainer, {[styles.hideOnSmallScreens]: !selectedChatId})}
                 backButtonClassName={styles.backButton}
-                onClick={() => setSelectedChat(null)}
+                onClick={() => setSelectedChatId(null)}
             />
 
             <MembersInfo />

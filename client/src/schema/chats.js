@@ -46,12 +46,16 @@ const chatReducer = (chat) => {
             messages: messagesReducer(chat.messages && chat.messages.data),
             lastMessage: chat.lastMessage || null,
             creationDate: chat.creationDate || null,
-            updatingDate: chat.updatingDate || null
+            updatingDate: chat.updatingDate || null,
+            isMessageListLoading: chat.isMessageListLoading || false,
+            timeOfEndingLoadingFullMessageList: chat.timeOfEndingLoadingFullMessageList || null,
+            messagesCursor: chat.messagesCursor || "",
+            __typename: chat.__typename
         }
         : null;
 };
 
-const chatsReducer = (chats) => {
+export const chatsReducer = (chats) => {
     return (chats && chats.length)
         ? chats.map(chat => chatReducer(chat))
         : [];
@@ -73,76 +77,8 @@ const chatResolvers = {
 
             return chat;
         },
-        chats__getChatMessagesAmountFromCache: (parent, { chatId }, { cache, getCacheKey }) => {
-            const cacheId = getCacheKey({ __typename: "Chat", id: chatId });
-
-            const fragment = gql`
-                fragment GetChatMessagesAmountFromCache on Chat {
-                    messages {
-                        id
-                    }
-                }
-            `;
-
-            const chat = cache.readFragment({ fragment, id: cacheId });
-
-            return { messagesAmount: chat.messages.length };
-        },
     },
     Mutation: {
-        chats__addChatsToChatList: (parent, { chats }, { cache }) => {
-            const query = gql`
-                query AddChatsToChatList {
-                    chats @client {
-                        id
-                        name
-                        members {
-                            id
-                            googleId
-                            userFullName
-                            email
-                            avatar
-                            isAdmin
-                            __typename
-                        }
-                        messages
-                        lastMessage
-                        creationDate
-                        updatingDate
-                        __typename
-                    }
-                }
-            `;
-
-            const queryResults = cache.readQuery({ query });
-
-            let normalizedChats = chatsReducer(chats);
-            normalizedChats = normalizedChats.map(chat => {
-                return {
-                    ...chat,
-                    messages: chat.messages.map(message => {
-                        return {
-                            ...message,
-                            author: {
-                                ...message.author,
-                                __typename: "User"
-                            },
-                            __typename: "Message"
-                        }
-                    }),
-                    __typename: "Chat"
-                }
-            });
-
-            const newData = {
-                chats: [
-                    ...queryResults.chats,
-                    ...normalizedChats
-                ]
-            };
-
-            cache.writeQuery({ query, data: newData });
-        },
         chats__addChatToChatList: (parent, { chat }, { cache }) => {
             const query = gql`
                 query AddChatToChatList {
@@ -346,31 +282,6 @@ const chatResolvers = {
 
             cache.writeQuery({ query, data: newData });
         },
-        chats__setMessagesCursor: (parent, { messagesCursor }, { cache }) => {
-            const query = gql`
-                query SetMessagesCursor {
-                    clientData @client {
-                        chats {
-                            messagesCursor
-                            __typename
-                        }
-                        __typename
-                    }
-                }
-            `;
-
-            const newData = {
-                clientData: {
-                    chats: {
-                        messagesCursor,
-                        __typename: "Chats"
-                    },
-                    __typename: "ClientData"
-                }
-            };
-
-            cache.writeQuery({ query, data: newData });
-        },
         chats__addMessagesToMessageList: (parent, { chatId, messages }, { cache, getCacheKey }) => {
             const cacheId = getCacheKey({ __typename: "Chat", id: chatId });
 
@@ -459,37 +370,6 @@ const chatResolvers = {
 
             cache.writeFragment({ fragment, id: cacheId, data: editedChat });
         },
-        chats__clearCurrentChatMessages: (parent, args , { cache, getCacheKey }) => {
-            const query = gql`
-                query GetCurrentChatId {
-                    clientData {
-                        chats {
-                            selectedChatId
-                        }
-                    }
-                } 
-            `;
-            const queryResults = cache.readQuery({ query });
-            const { selectedChatId } = queryResults.clientData.chats;
-
-            if (selectedChatId) {
-                const cacheId = getCacheKey({ __typename: "Chat", id: selectedChatId });
-
-                const fragment = gql`
-                    fragment ClearCurrentChatMessages on Chat {
-                        messages
-                        __typename
-                    }
-                `;
-
-                const editedChat = {
-                    messages: [],
-                    __typename: "Chat"
-                };
-
-                cache.writeFragment({ fragment, id: cacheId, data: editedChat });
-            }
-        },
         chats__toggleCreateChatModal: (parent, args, { cache }) => {
             const query = gql`
                 query ToggleCreateChatModal {
@@ -541,31 +421,6 @@ const chatResolvers = {
 
             cache.writeQuery({ query, data: newData });
         },
-        chats__setIsMessageListLoading: (parent, { isLoading }, { cache }) => {
-            const query = gql`
-                query SetIsMessageListLoading {
-                    clientData @client {
-                        chats {
-                            isMessageListLoading
-                            __typename
-                        }
-                        __typename
-                    }
-                }
-            `;
-
-            const newData = {
-                clientData: {
-                    chats: {
-                        isMessageListLoading: isLoading,
-                        __typename: "Chats"
-                    },
-                    __typename: "ClientData"
-                }
-            };
-
-            cache.writeQuery({ query, data: newData });
-        },
         chats__setTimeOfEndingLoadingFullChatList: (parent, { time }, { cache }) => {
             const query = gql`
                 query SetTimeOfEndingLoadingFullChatList {
@@ -583,57 +438,6 @@ const chatResolvers = {
                 clientData: {
                     chats: {
                         timeOfEndingLoadingFullChatList: time,
-                        __typename: "Chats"
-                    },
-                    __typename: "ClientData"
-                }
-            };
-
-            cache.writeQuery({ query, data: newData });
-        },
-
-        chats__setTimeOfEndingLoadingFullCurrentChatMessageList: (parent, { time }, { cache }) => {
-            const query = gql`
-                query SetTimeOfEndingLoadingFullCurrentChatMessageList {
-                    clientData @client {
-                        chats {
-                            timeOfEndingLoadingFullCurrentChatMessageList
-                            __typename
-                        }
-                        __typename
-                    }
-                }
-            `;
-
-            const newData = {
-                clientData: {
-                    chats: {
-                        timeOfEndingLoadingFullCurrentChatMessageList: time,
-                        __typename: "Chats"
-                    },
-                    __typename: "ClientData"
-                }
-            };
-
-            cache.writeQuery({ query, data: newData });
-        },
-        chats__resetTimeOfEndingLoadingFullCurrentChatMessageList: (parent, args, { cache }) => {
-            const query = gql`
-                query ResetTimeOfEndingLoadingFullCurrentChatMessageList {
-                    clientData @client {
-                        chats {
-                            timeOfEndingLoadingFullCurrentChatMessageList
-                            __typename
-                        }
-                        __typename
-                    }
-                }
-            `;
-
-            const newData = {
-                clientData: {
-                    chats: {
-                        timeOfEndingLoadingFullCurrentChatMessageList: initialData.clientData.chats.timeOfEndingLoadingFullCurrentChatMessageList,
                         __typename: "Chats"
                     },
                     __typename: "ClientData"

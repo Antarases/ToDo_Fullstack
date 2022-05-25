@@ -55,12 +55,6 @@ export const GET_SELECTED_CHAT = gql`
     }
 `;
 
-export const ADD_CHATS_TO_CHAT_LIST = gql`
-    mutation AddChatsToChatList($chats: [Chat!]) {
-        chats__addChatsToChatList(chats: $chats) @client
-    }
-`;
-
 export const GET_CHATS = gql`
     query GetChats($cursor: String!, $limit: Int!) {
         chats(cursor: $cursor, limit: $limit) @connection(key: "chats") {
@@ -181,22 +175,6 @@ export const GET_TOTAL_CHATS_AMOUNT = gql`
     }
 `;
 
-export const GET_MESSAGES_CURSOR = gql`
-    query GetMessagesCursor {
-        clientData @client {
-            chats {
-                messagesCursor
-            }
-        }
-    }
-`;
-
-export const SET_MESSAGES_CURSOR = gql`
-    mutation SetMessagesCursor($messagesCursor: String!) {
-        chats__setMessagesCursor(messagesCursor: $messagesCursor) @client
-    }
-`;
-
 export const GET_CHAT_MESSAGES = gql`
     query GetChatMessages($chatId: String!, $cursor: String!, $limit: Int!) {
         chat(chatId: $chatId) {
@@ -220,12 +198,6 @@ export const GET_CHAT_MESSAGES = gql`
                 }
             }
         }
-    }
-`;
-
-export const GET_CHAT_MESSAGES_AMOUNT_FROM_CACHE = gql`
-    query GetChatMessagesAmountFromCache($chatId: String!) {
-        chats__getChatMessagesAmountFromCache(chatId: $chatId) @client
     }
 `;
 
@@ -302,18 +274,6 @@ export const TOGGLE_CREATE_CHAT_MODAL = gql`
     }
 `;
 
-export const RESET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST = gql`
-    mutation ResetTimeOfEndingLoadingFullCurrentChatMessageList {
-        chats__resetTimeOfEndingLoadingFullCurrentChatMessageList @client
-    }
-`;
-
-export const CLEAR_CURRENT_CHAT_MESSAGES = gql`
-    mutation ClearCurrentChatMessages {
-        chats__clearCurrentChatMessages @client
-    }
-`;
-
 export const GET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST = gql`
     query GetTimeOfEndingLoadingFullChatList {
         clientData @client {
@@ -330,22 +290,6 @@ export const SET_TIME_OF_ENDING_LOADING_FULL_CHAT_LIST = gql`
     }
 `;
 
-export const GET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST = gql`
-    query GetTimeOfEndingLoadingFullCurrentChatMessageList {
-        clientData @client {
-            chats {
-                timeOfEndingLoadingFullCurrentChatMessageList
-            }
-        }
-    }
-`;
-
-export const SET_TIME_OF_ENDING_LOADING_FULL_CURRENT_CHAT_MESSAGE_LIST = gql`
-    mutation SetTimeOfEndingLoadingFullCurrentChatMessageList($time: number) {
-        chats__setTimeOfEndingLoadingFullCurrentChatMessageList(time: $time) @client
-    }
-`;
-
 export const GET_IS_CHAT_LIST_LOADING = gql`
     query GetIsChatListLoading {
         clientData @client {
@@ -359,22 +303,6 @@ export const GET_IS_CHAT_LIST_LOADING = gql`
 export const SET_IS_CHAT_LIST_LOADING = gql`
     mutation SetIsChatListLoading($isLoading: Boolean!) {
         chats__setIsChatListLoading(isLoading: $isLoading) @client
-    }
-`;
-
-export const GET_IS_MESSAGE_LIST_LOADING = gql`
-    query GetIsMessageListLoading {
-        clientData @client {
-            chats {
-                isMessageListLoading
-            }
-        }
-    }
-`;
-
-export const SET_IS_MESSAGE_LIST_LOADING = gql`
-    mutation SetIsMessageListLoading($isLoading: Boolean!) {
-        chats__setIsMessageListLoading(isLoading: $isLoading) @client
     }
 `;
 

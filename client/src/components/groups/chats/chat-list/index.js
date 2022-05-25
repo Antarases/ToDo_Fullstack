@@ -4,7 +4,7 @@ import classnames from "classnames";
 
 import ScrolledContainer from "../../../commons/scrolled-container";
 
-import { getChatList, getChatMessages, setSelectedChat } from "../../../../actions/ChatActions";
+import { getChatList, getChatMessages, setSelectedChatId } from "../../../../actions/ChatActions";
 
 import { getFormattedDate } from "../../../../helpers/functions";
 
@@ -41,7 +41,7 @@ const ChatList = () => {
                                         className={classnames(styles.chat, {[styles.selected]: (chat.id === selectedChatId)})}
                                         onClick={async () => {
                                             if (chat.id !== selectedChatId) {
-                                                await setSelectedChat(chat.id);
+                                                setSelectedChatId(chat.id);
                                                 getChatMessages(chat.id);
                                             }
                                         }}

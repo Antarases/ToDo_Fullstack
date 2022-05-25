@@ -29,11 +29,8 @@ export const initialData = {
             __typename: "Chats",
             selectedChatId: null,
             chatsCursor: "",
-            messagesCursor: "",
             isChatListLoading: false,
             timeOfEndingLoadingFullChatList: null,
-            isMessageListLoading: false,
-            timeOfEndingLoadingFullCurrentChatMessageList: null,
             isCreateChatModalOpen: false
         },
         events: {
