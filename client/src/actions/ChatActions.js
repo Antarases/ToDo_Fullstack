@@ -320,7 +320,7 @@ const setTimeOfEndingLoadingFullMessageList = (chatId, time) => {
     });
 };
 
-const getChatMessagesAmount = (chatId) => {
+export const getChatMessagesAmount = (chatId) => {
     const { messages } = cache.readFragment({
         id: "Chat:" + chatId,
         fragment: gql`

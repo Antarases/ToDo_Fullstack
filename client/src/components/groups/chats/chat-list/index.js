@@ -4,7 +4,7 @@ import classnames from "classnames";
 
 import ScrolledContainer from "../../../commons/scrolled-container";
 
-import { getChatList, getChatMessages, setSelectedChatId } from "../../../../actions/ChatActions";
+import { getChatList, getChatMessages, getChatMessagesAmount, setSelectedChatId } from "../../../../actions/ChatActions";
 
 import { getFormattedDate } from "../../../../helpers/functions";
 
@@ -42,7 +42,9 @@ const ChatList = () => {
                                         onClick={async () => {
                                             if (chat.id !== selectedChatId) {
                                                 setSelectedChatId(chat.id);
-                                                getChatMessages(chat.id);
+
+                                                (getChatMessagesAmount(chat.id) === 0)
+                                                && getChatMessages(chat.id);
                                             }
                                         }}
                                         key={chat.id}
